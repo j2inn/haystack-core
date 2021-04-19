@@ -1,0 +1,35 @@
+//
+// Copyright (c) 2011, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Feb 2011  Brian Frank  Creation
+//    6 Jan 2019  Brian Frank  New design
+//
+
+--------------------------------------------------------------------------
+def: ^equip
+is: ^entity
+docTaxonomy
+mandatory
+doc: "Equipment asset"
+children: [
+  {equip},
+  {point},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Relationships
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^equipRef
+is: ^ref
+of: ^equip
+containedBy: ^equip
+tagOn: [^equip, ^point]
+doc: "Reference to equip which contains this entity"
+--------------------------------------------------------------------------
+
+

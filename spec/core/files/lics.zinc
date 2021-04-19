@@ -1,0 +1,22 @@
+ver:"3.0" usageByProj:<<
+ver:"3.0" dis:"Usage by Project"
+projName,points
+"demo",1194
+
+>> dir:<<
+ver:"3.0" dis:"Effective License"
+name,value
+"licensee","J2 SkySpark Internal Use Only"
+"product",@1faf38c6-4595b720 "SkySpark"
+"vendor",@1306de1e-6b1fa603 "SkyFoundry"
+"points",100000
+"maintDue",2020-07-01
+"features","analytics,conn,core"
+"weather","skyfoundry"
+"devOnly",M
+
+>> dis:"License Files" status:{product:@1faf38c6-4595b720 "SkySpark" licensee:"J2 SkySpark Internal Use Only" level:"ok" more:`/doc/docSkySpark/Licensing` usage:1194 pingDown:F devOnly dis:"License OK: used 1,194 of 100,000" points:100000 mode:"ok" maintDue:2020-07-01 vendor:@1306de1e-6b1fa603 "SkyFoundry"}
+id,licensee,err,product,vendor,org,subOrg,points,maintDue,expires,devOnly,features,weather,mod
+@temp-24a298dd-d52246ac,"J2 SkySpark Internal Use Only",,@1faf38c6-4595b720 "SkySpark",@1306de1e-6b1fa603 "SkyFoundry",@1306de1e-6b1fa603 "SkyFoundry",,100000,2020-07-01,2020-06-15,M,"core,conn,analytics","skyfoundry",2019-06-23T20:40:49.643Z
+@noHostId-64cfb9d6-d000-43bc-8651-96bb3702a799,"J2 SkySpark Internal Use Only",,@1faf37a4-504b1241 "FIN on SkySpark",@1895b6cd-c2297821 "J2 Innovations",@1895b6cd-c2297821 "J2 Innovations",,100000,2021-05-01,2021-05-01,M,"fin,finstack","vendor",2020-04-14T10:20:27.344Z
+

@@ -1,0 +1,22 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Jan 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^tank
+is: ^equip
+stores: ^substance
+wikipedia: `https://en.wikipedia.org/wiki/Storage_tank`
+childrenFlatten: [^substance]
+doc: "Tank used to store a substance for temporary holding"
+children: [
+  {level sensor point},
+  {temp sensor point},
+  {pressure sensor point},
+  ]
+--------------------------------------------------------------------------
+

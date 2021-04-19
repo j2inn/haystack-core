@@ -1,0 +1,258 @@
+//
+// Copyright (c) 2011, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Feb 2011  Brian Frank  Creation
+//    9 Jan 2018  Brian Frank  New design
+//
+
+--------------------------------------------------------------------------
+def: ^absorption
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Absorption_refrigerator`
+doc: "Cooling process using energy from heat source such as hot water"
+--------------------------------------------------------------------------
+def: ^active
+is: ^marker
+doc: "Working, operative, effective"
+--------------------------------------------------------------------------
+def: ^barometric
+is: ^marker
+doc: "Relating atmospheric pressure"
+--------------------------------------------------------------------------
+def: ^blowdown
+is: ^marker
+doc: "Removal from container or pipe"
+--------------------------------------------------------------------------
+def: ^centrifugal
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Centrifugal_compressor`
+doc: "Compression via a continuous flow of fluid through an impeller"
+--------------------------------------------------------------------------
+def: ^condenser
+is: ^marker
+doc: "Device or related to process of condensation"
+--------------------------------------------------------------------------
+def: ^controls
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Control_system`
+doc: "Associated with the control system for an industrial process"
+--------------------------------------------------------------------------
+def: ^coolingOnly
+is: ^marker
+doc: "Device without heating"
+--------------------------------------------------------------------------
+def: ^chilled
+is: ^marker
+doc: "Substance is cooled using cooling process"
+--------------------------------------------------------------------------
+def: ^cur
+is: ^marker
+tagOn: ^point
+doc: "Supports current value"
+--------------------------------------------------------------------------
+def: ^delta
+is: ^marker
+doc: "Differential of fluid between entering and leaving sensors."
+--------------------------------------------------------------------------
+def: ^demand
+is: ^marker
+doc: "Rate required for a process."
+--------------------------------------------------------------------------
+def: ^dessicantDehumidifier
+is: ^marker
+doc: "Decreases humidity from air using a substance which absorbs moisture."
+--------------------------------------------------------------------------
+def: ^diverting
+is: ^marker
+doc: "Three way valve which inputs one pipe and diverts between two output pipes."
+--------------------------------------------------------------------------
+def: ^domestic
+is: ^marker
+doc: "For human use"
+--------------------------------------------------------------------------
+def: ^economizing
+is: ^marker
+doc: "Energy reduction mode which augments heating/cooling with outside air."
+--------------------------------------------------------------------------
+def: ^effective
+is: ^marker
+doc: "Current control setpoint in effect taking into account other factors"
+--------------------------------------------------------------------------
+def: ^evaporator
+is: ^marker
+doc: "Mechanism used to convert a refrigerant from its liquid to gaseous state."
+--------------------------------------------------------------------------
+def: ^export
+is: ^marker
+doc: "Supplied out of a system"
+--------------------------------------------------------------------------
+def: ^faceBypass
+is: ^marker
+doc:
+  Point of an ahu indicating air flow is by-passing the heating/cooling
+  coils. If a boolean point, then true indicates the unit is in by-pass
+  mode and false indicates by-pass is disabled. If the point is an analog
+  point then 100% indicates full by-pass mode and 0% indicates by-pass is
+  completely disabled.
+--------------------------------------------------------------------------
+def: ^fanPowered
+is: ^marker
+doc: "Device with a fan"
+--------------------------------------------------------------------------
+def: ^filter
+is: ^marker
+doc: "Related to an air or fluid filter."
+--------------------------------------------------------------------------
+def: ^freezeStat
+is: ^marker
+doc:
+  A boolean point of an ahu indicating a freezing condition.  This
+  might require a control sequence to protect the equipment. If true
+  then a freeze condition is deteted, or false if not.
+--------------------------------------------------------------------------
+def: ^ground
+is: ^marker
+doc: "Related to the surface of the earth"
+--------------------------------------------------------------------------
+def: ^heatWheel
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Thermal_wheel`
+doc: "Boolean point indicating command state of AHU's heat wheel."
+--------------------------------------------------------------------------
+def: ^his
+is: ^marker
+tagOn: ^point
+doc: "Supports historization of data"
+--------------------------------------------------------------------------
+def: ^hot
+is: ^marker
+doc: "Having high degree of heat"
+--------------------------------------------------------------------------
+def: ^hvac
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/HVAC`
+doc: "Heating, ventilation, and air conditioning"
+--------------------------------------------------------------------------
+def: ^humidifier
+is: ^marker
+doc: "Adding moisture to air"
+--------------------------------------------------------------------------
+def: ^imbalance
+is: ^marker
+doc: "Lacking balance"
+--------------------------------------------------------------------------
+def: ^import
+is: ^marker
+doc: "Received into a system"
+--------------------------------------------------------------------------
+def: ^isolation
+is: ^marker
+doc: "Actuator used to isolate an equipment from a pipe or ductwork system"
+--------------------------------------------------------------------------
+def: ^lighting
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Lighting`
+doc: "Systems associated with illumination in the built environment"
+--------------------------------------------------------------------------
+def: ^occupancy
+is: ^marker
+doc: "Number of occupants in a space."
+--------------------------------------------------------------------------
+def: ^occupants
+is: ^marker
+doc: "People who use the built ennvironment"
+--------------------------------------------------------------------------
+def: ^occupied
+is: ^marker
+doc: "Setpoint or sensor indicating occupancy of a space"
+--------------------------------------------------------------------------
+def: ^makeup
+is: ^marker
+doc: "Restore soemthing missed or lost"
+--------------------------------------------------------------------------
+def: ^mixing
+is: ^marker
+doc:
+  Three way valve which inputs two pipes and outputs a mixture
+  between the two to a single output pipe.
+--------------------------------------------------------------------------
+def: ^net
+is: ^marker
+doc: "Difference between import and export"
+--------------------------------------------------------------------------
+def: ^occ
+is: ^marker
+doc: "Occupied mode of a space"
+--------------------------------------------------------------------------
+def: ^parallel
+is: ^marker
+doc: "Circuit with multiple paths of flow"
+--------------------------------------------------------------------------
+def: ^reactive
+is: ^marker
+doc: "Relating to reactance"
+--------------------------------------------------------------------------
+def: ^reheat
+is: ^marker
+doc: "Command point for `reheats` process"
+--------------------------------------------------------------------------
+def: ^reciprocal
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Reciprocating_compressor`
+doc: "Piston compressor driven by a crankshaft"
+--------------------------------------------------------------------------
+def: ^roof
+is: ^marker
+doc: "Envelope covering the top of a building"
+--------------------------------------------------------------------------
+def: ^rotaryScrew
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Rotary-screw_compressor`
+doc: "Rotary screw compression"
+--------------------------------------------------------------------------
+def: ^series
+is: ^marker
+doc: "Circuit with single path of flow"
+--------------------------------------------------------------------------
+def: ^stage
+is: ^int
+minVal: 1
+doc:
+  Stage number of staged equipment operation such as coil or pump.
+  The first stage is 1, second stage 2, etc.
+--------------------------------------------------------------------------
+def: ^standby
+is: ^marker
+doc: "Readiness mode of a space"
+--------------------------------------------------------------------------
+def: ^switch
+is: ^marker
+doc: "Device for toggling state or routing data"
+--------------------------------------------------------------------------
+def: ^subterranean
+is: ^marker
+doc: "Below the surface of the earth"
+--------------------------------------------------------------------------
+def: ^thermal
+is: ^marker
+doc: "Related to energy of heat"
+--------------------------------------------------------------------------
+def: ^thd
+is: ^marker
+doc: "Total harmonic distortion"
+--------------------------------------------------------------------------
+def: ^unocc
+is: ^marker
+doc: "Unoccupied mode of a space"
+--------------------------------------------------------------------------
+def: ^writable
+is: ^marker
+tagOn: ^point
+doc: "Supports writing data"
+--------------------------------------------------------------------------
+def: ^zone
+is: ^marker
+doc: "Related to spaces from a system perspective"
+--------------------------------------------------------------------------
