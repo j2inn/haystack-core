@@ -23,6 +23,8 @@ npm install haystack-core
 
 ## APIs
 
+Please click [here](http://j2-docs.s3-website-us-east-1.amazonaws.com/j2inn/haystack-core/index.html) for the API documentation.
+
 ### Core Types
 
 The following core Haystack types are implemented...
