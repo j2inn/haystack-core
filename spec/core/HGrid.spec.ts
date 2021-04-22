@@ -1591,6 +1591,26 @@ describe('HGrid', function (): void {
 			})
 		}) // #setColumn()
 
+		describe('#limitColumns()', function (): void {
+			beforeEach(function (): void {
+				makeGridWithRows()
+			})
+
+			it('limits the grid columns', function (): void {
+				expect(grid.getColumnsLength()).toBe(3)
+				grid.limitColumns('col1', 'col2')
+				expect(grid.getColumnsLength()).toBe(2)
+				expect(grid.getColumnNames()).toEqual(['col1', 'col2'])
+			})
+
+			it('limits the grid columns by array', function (): void {
+				expect(grid.getColumnsLength()).toBe(3)
+				grid.limitColumns(['col1', 'col2'])
+				expect(grid.getColumnsLength()).toBe(2)
+				expect(grid.getColumnNames()).toEqual(['col1', 'col2'])
+			})
+		}) // #limitColumns()
+
 		describe('proxy', function (): void {
 			it('gets a value', function (): void {
 				expect(grid[0]).toEqual(grid.get(0))

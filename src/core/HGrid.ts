@@ -1989,6 +1989,36 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
+	 * Limit the grid only to the specified columns.
+	 *
+	 * ```typescript
+	 * grid.filter('site').limitColumns('id', 'dis').inspect()
+	 * ```
+	 *
+	 * @param names The column names.
+	 * @returns This grid instance with the column names removed.
+	 */
+	public limitColumns(...names: string[] | string[][]): this {
+		const nameSet = new Set<string>()
+
+		for (const name of names) {
+			if (typeof name === 'string') {
+				nameSet.add(name)
+			} else {
+				name.forEach(nameSet.add, nameSet)
+			}
+		}
+
+		for (const col of this.getColumns()) {
+			if (!nameSet.has(col.name)) {
+				this.removeColumn(col.name)
+			}
+		}
+
+		return this
+	}
+
+	/**
 	 * Return a haystack list for all the values in
 	 * the specified column.
 	 *
