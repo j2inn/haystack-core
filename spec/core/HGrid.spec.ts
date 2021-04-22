@@ -1655,6 +1655,19 @@ describe('HGrid', function (): void {
 			})
 		}) // #isEmpty()
 
+		describe('#range()', function (): void {
+			it('removes the first two rows', function (): void {
+				makeGridWithRows()
+
+				expect(grid.length).toBe(3)
+
+				grid.range(0, 1)
+
+				expect(grid.length).toBe(1)
+				expect(grid.get(0)?.get<HNum>('col1')?.value).toBe(2)
+			})
+		}) // #range()
+
 		describe('#isError()', function (): void {
 			it('returns false when the grid has no error', function (): void {
 				expect(grid.isError()).toBe(false)

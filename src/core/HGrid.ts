@@ -2113,6 +2113,26 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
+	 * Modifies the grid to include only rows from the start to the end.
+	 *
+	 * ```typescript
+	 * // Inspect the first 5 sites
+	 * grid.filter('site').range(0, 4).inspect()
+	 * ```
+	 *
+	 * @param start The start of the range.
+	 * @param end The end range.
+	 * @returns This grid instance.
+	 */
+	public range(start: number, end: number): this {
+		for (let i = end; i >= start; --i) {
+			this.remove(i)
+		}
+
+		return this
+	}
+
+	/**
 	 * Return the sum of values for the specified column.
 	 *
 	 * ```typescript
