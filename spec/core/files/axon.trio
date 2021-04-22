@@ -1,0 +1,34 @@
+name:foo
+private
+test
+func
+src:
+  (target: null) => do
+  end
+---
+name:boo
+private
+nodoc
+func
+src:
+  (path, rootPath: null) => do
+  end
+---
+name:goo
+nodoc
+func
+private
+doc:
+  Some docs.
+  
+  Number: Violet
+  Boolean: Green
+  String: Gray
+  Enumeration: Orange
+src:
+  (rec) => do
+    if(rec->kind == "Number") "item-numeric"
+    else if(rec->kind == "Bool") "item-boolean"
+    else if(rec->kind == "Str" and rec.has("enum")) "item-enum"
+    else if(rec->kind == "Str") "item-string"
+  end

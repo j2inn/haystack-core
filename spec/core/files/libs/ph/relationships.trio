@@ -1,0 +1,78 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   26 Mar 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^relationship
+is: ^symbol
+docTaxonomy
+doc:
+  Ref tags used to model entity-to-entity relationships.
+  See [Relationships]`docHaystack::Relationships` chapter.
+--------------------------------------------------------------------------
+def: ^transitive
+is: ^marker
+doc:
+  This marker is applied to a `relationship` to indicate it is transitive.
+  Transitivity requires that if the relationship applies to A,B and B,C
+  then it also applies to A,C.
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Contains/ContainedBy
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^containedBy
+is: ^relationship
+reciprocalOf: ^contains
+transitive
+doc: "The entity is logically contained by the referent."
+--------------------------------------------------------------------------
+def: ^contains
+is: ^relationship
+reciprocalOf: ^containedBy
+computed
+transitive
+doc: "Entities logically contained by this entity"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Input/Output
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^inputs
+is: ^relationship
+reciprocalOf: ^outputs
+transitive
+doc:
+  The entity inputs a substance from the referent.
+  The value of this tag is what is received.
+--------------------------------------------------------------------------
+def: ^outputs
+is: ^relationship
+reciprocalOf: ^inputs
+transitive
+doc:
+  The entity outputs a substance to the referent.
+  The value of this tag is what is supplied.
+--------------------------------------------------------------------------
+
+// Markers for input/output entities
+
+--------------------------------------------------------------------------
+def: ^input
+is: ^marker
+doc: "Entity inputs a substance which flows from another entity"
+--------------------------------------------------------------------------
+def: ^output
+is: ^marker
+doc: "Entity outputs a substance with flows to other entities"
+--------------------------------------------------------------------------
+
+
