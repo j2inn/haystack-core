@@ -1591,26 +1591,6 @@ describe('HGrid', function (): void {
 			})
 		}) // #setColumn()
 
-		describe('#limitColumns()', function (): void {
-			beforeEach(function (): void {
-				makeGridWithRows()
-			})
-
-			it('limits the grid columns', function (): void {
-				expect(grid.getColumnsLength()).toBe(3)
-				grid.limitColumns('col1', 'col2')
-				expect(grid.getColumnsLength()).toBe(2)
-				expect(grid.getColumnNames()).toEqual(['col1', 'col2'])
-			})
-
-			it('limits the grid columns by array', function (): void {
-				expect(grid.getColumnsLength()).toBe(3)
-				grid.limitColumns(['col1', 'col2'])
-				expect(grid.getColumnsLength()).toBe(2)
-				expect(grid.getColumnNames()).toEqual(['col1', 'col2'])
-			})
-		}) // #limitColumns()
-
 		describe('proxy', function (): void {
 			it('gets a value', function (): void {
 				expect(grid[0]).toEqual(grid.get(0))
@@ -1656,15 +1636,42 @@ describe('HGrid', function (): void {
 		}) // #isEmpty()
 
 		describe('#range()', function (): void {
-			it('removes the first two rows', function (): void {
-				makeGridWithRows()
+			beforeEach(function (): void {
+				grid = new HGrid({
+					rows: [
+						new HDict({ num: 0 }),
+						new HDict({ num: 1 }),
+						new HDict({ num: 2 }),
+						new HDict({ num: 3 }),
+						new HDict({ num: 4 }),
+						new HDict({ num: 5 }),
+						new HDict({ num: 6 }),
+						new HDict({ num: 7 }),
+						new HDict({ num: 8 }),
+						new HDict({ num: 9 }),
+					],
+				})
+			})
+
+			it('Use the first three rows', function (): void {
+				// [0, 1, 2]
+				grid.range(0, 2)
 
 				expect(grid.length).toBe(3)
+				expect(grid.get(0)?.get<HNum>('num')?.value).toBe(0)
+				expect(grid.get(1)?.get<HNum>('num')?.value).toBe(1)
+				expect(grid.get(2)?.get<HNum>('num')?.value).toBe(2)
+			})
 
-				grid.range(0, 1)
+			it('Use rows 1 to 4', function (): void {
+				// [1, 2, 3, 4]
+				grid.range(1, 4)
 
-				expect(grid.length).toBe(1)
-				expect(grid.get(0)?.get<HNum>('col1')?.value).toBe(2)
+				expect(grid.length).toBe(4)
+				expect(grid.get(0)?.get<HNum>('num')?.value).toBe(1)
+				expect(grid.get(1)?.get<HNum>('num')?.value).toBe(2)
+				expect(grid.get(2)?.get<HNum>('num')?.value).toBe(3)
+				expect(grid.get(3)?.get<HNum>('num')?.value).toBe(4)
 			})
 		}) // #range()
 
