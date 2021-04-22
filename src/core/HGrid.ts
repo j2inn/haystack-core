@@ -1035,7 +1035,24 @@ export class HGrid<DictVal extends HDict = HDict>
 			)
 		}
 
+		this.syncColumnMeta(grid)
 		return grid
+	}
+
+	/**
+	 * Synchronize column meta information from this grid to the specified grid.
+	 *
+	 * @param grid The grid to synchronize data to.
+	 */
+	private syncColumnMeta(grid: HGrid): void {
+		for (const col of this.getColumns()) {
+			const newCol = grid.getColumn(col.name)
+
+			if (newCol && !newCol.meta.equals(col.meta)) {
+				newCol.meta.clear()
+				newCol.meta.update(col.meta)
+			}
+		}
 	}
 
 	/**
@@ -1170,6 +1187,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		// Add all the newly filtered rows to the grid.
 		if (rows.length) {
 			grid.add(rows as DictVal[])
+			this.syncColumnMeta(grid)
 		}
 
 		return grid
@@ -1470,7 +1488,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * ```typescript
 	 * // Map each row to a div using React...
-	 * grid.map((dict: HDict): any => <div>{dict.toZinc()}</div>>)
+	 * grid.map((dict: HDict) => <div>{dict.toZinc()}</div>>)
 	 * ```
 	 *
 	 * @param callback A mapping callback that takes a row dict, an index number

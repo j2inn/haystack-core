@@ -1168,6 +1168,20 @@ describe('HGrid', function (): void {
 				expect(result.length).toBe(1)
 				expect(result[0]).toEqual(point)
 			})
+
+			it('copies the column meta to the new grid', function (): void {
+				const meta = new HDict({
+					boolean: true,
+					num: 12,
+					str: 'string',
+				})
+
+				grid.setColumn(0, 'col0', meta)
+
+				expect(
+					grid.filter('col0').getColumn(0)?.meta.equals(meta)
+				).toBe(true)
+			})
 		}) // #filter()
 
 		describe('#any()', function (): void {
@@ -1791,6 +1805,20 @@ describe('HGrid', function (): void {
 				expect(grid.uniqueBy(['doesNotExist']).toJSON().rows).toEqual(
 					[]
 				)
+			})
+
+			it('copies the column meta to the new grid', function (): void {
+				const meta = new HDict({
+					boolean: true,
+					num: 12,
+					str: 'string',
+				})
+
+				grid.setColumn(1, 'foo', meta)
+
+				expect(
+					grid.uniqueBy('foo').getColumn(1)?.meta.equals(meta)
+				).toBe(true)
 			})
 		}) // #uniqueBy()
 
