@@ -1,0 +1,55 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   24 Apr 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^association
+is: ^list
+of: ^symbol
+docTaxonomy
+doc:
+  Associations model ontological relationships between definitions.
+  See [Associations]`docHaystack::Associations` chapter.
+--------------------------------------------------------------------------
+def: ^reciprocalOf
+is: ^symbol
+doc:
+  Specifies the inverse of an association or relationships.
+  See [Associations]`docHaystack::Associations#reciprocalOf` and
+  [Relationships]`docHaystack::Relationships#reciprocalOf` chapter.
+--------------------------------------------------------------------------
+def: ^is
+is: ^association
+tagOn: ^def
+doc:
+  Defines one or more supertypes of a subtyping relationship.
+  See [Subtyping]`docHaystack::Subtyping` chapter.
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Tags/TagOn
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^tagOn
+is: ^association
+notInherited
+tagOn: ^def
+accumulate
+reciprocalOf: ^tags
+doc: "This tag is used on the given entity"
+--------------------------------------------------------------------------
+def: ^tags
+is: ^association
+reciprocalOf: ^tagOn
+computed
+docSection
+doc: "Tags used with this entity"
+--------------------------------------------------------------------------
+
+
+

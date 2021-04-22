@@ -1,0 +1,77 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   25 Jan 2019  Brian Frank  Creation
+//
+
+//////////////////////////////////////////////////////////////////////////
+// Feature
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^filetype
+is: ^feature
+doc: "File format type definition"
+--------------------------------------------------------------------------
+def: ^mime
+is: ^str
+tagOn: ^filetype
+doc: "Mime type formatted as type/subtype"
+--------------------------------------------------------------------------
+def: ^fileExt
+is: ^str
+tagOn: ^filetype
+doc: "Filename extension such as \"csv\""
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Types
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def:       ^filetype:csv
+dis:       "CSV"
+mime:      "text/csv"
+fileExt:   "csv"
+wikipedia: `https://wikipedia.org/wiki/Comma-separated_values`
+doc:       "Comma Separated Values - see `docHaystack::Csv`"
+--------------------------------------------------------------------------
+def:       ^filetype:json
+dis:       "JSON"
+mime:      "application/json"
+fileExt:   "json"
+wikipedia: `https://wikipedia.org/wiki/JSON`
+doc:       "Haystack JavaScript Object Notation format - see `docHaystack::Json`"
+--------------------------------------------------------------------------
+def:       ^filetype:jsonld
+dis:       "JSON-LD"
+mime:      "application/ld+json"
+fileExt:   "jsonld"
+wikipedia: `https://wikipedia.org/wiki/JSON-LD`
+doc:       "JavaScript Object Notation for Linked Data - see `docHaystack::Rdf`"
+--------------------------------------------------------------------------
+def:       ^filetype:trio
+dis:       "Trio"
+mime:      "text/trio"
+fileExt:   "trio"
+doc:       "Haystack Tag Record Input Output - see `docHaystack::Trio`"
+--------------------------------------------------------------------------
+def:       ^filetype:turtle
+dis:       "Turtle"
+mime:      "text/turtle"
+fileExt:   "ttl"
+wikipedia: `https://wikipedia.org/wiki/Turtle_(syntax)`
+doc:       "RDF Turtle - see `docHaystack::Rdf`"
+--------------------------------------------------------------------------
+def:       ^filetype:zinc
+dis:       "Zinc"
+mime:      "text/zinc"
+fileExt:   "zinc"
+doc:       "Haystack typed CSV format - see `docHaystack::Zinc`"
+--------------------------------------------------------------------------
+
+
+
+

@@ -1,0 +1,15 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   20 May 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^network
+is: ^entity
+doc:
+  Logical communications network between two or more devices.
+--------------------------------------------------------------------------
+

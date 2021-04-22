@@ -1,0 +1,99 @@
+//
+// Copyright (c) 2011, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Feb 2011  Brian Frank  Creation
+//   24 Apr 2019  Brian Frank  New design
+//
+
+--------------------------------------------------------------------------
+def: ^motor
+is: [^equip, ^elec-input]
+wikipedia: `https://en.wikipedia.org/wiki/Electric_motor`
+doc: "Equipment that converts electrical energy into mechanical energy"
+children: [
+  {run state point},
+  {enable state point},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// VFD
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^vfd
+is: ^motor
+tagOn: ^motor
+wikipedia: `https://en.wikipedia.org/wiki/Variable-frequency_drive`
+doc: "Motor with variable frequency drive."
+children: [
+  {drive speed point},
+  {drive freq point},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// VFD Points
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^drive
+is: ^phenomenon
+doc: "Related to the drive control of a `motor`"
+--------------------------------------------------------------------------
+def: ^drive-speed
+is: ^quantity
+quantityOf: ^drive
+prefUnit: ["%"]
+doc:
+  Motor speed measured in "%"; 0% is off and 100% is the fastest speed.
+--------------------------------------------------------------------------
+def: ^drive-freq
+is: ^quantity
+quantityOf: ^drive
+prefUnit: ["Hz"]
+doc:
+  Motor frequency measured in "Hz".
+--------------------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////////
+// Fan
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^fan
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Fan_(machine)`
+doc: "Fan equipment or control point"
+--------------------------------------------------------------------------
+def: ^fan-motor
+is: ^motor
+moves: ^air
+wikipedia: `https://en.wikipedia.org/wiki/Fan_(machine)`
+ductSection: ^ductSectionType
+childrenFlatten: [^ductSectionType, ^fan]
+doc: "Motor used with a fan to create air flow."
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Pump
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^pump
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Pump`
+doc: "Pump equipment or control point"
+--------------------------------------------------------------------------
+def: ^pump-motor
+is: ^motor
+moves: ^fluid
+pipeSection: ^pipeSectionType
+wikipedia: `https://en.wikipedia.org/wiki/Pump`
+childrenFlatten: [^fluid, ^pipeSectionType, ^pump]
+doc: "Motor used with a pump to move fluid."
+--------------------------------------------------------------------------
+

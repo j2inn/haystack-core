@@ -1,0 +1,45 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Jan 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^boiler
+is: [^equip, ^elec-input]
+heats: ^fluid
+heatingProcess: ^heatingProcessType
+wikipedia: `https://en.wikipedia.org/wiki/Boiler`
+doc: "Equipment to generate hot water or steam for heating"
+--------------------------------------------------------------------------
+def: ^hot-water-boiler
+is: [^boiler, ^hot-water-output]
+heats: ^hot-water
+produces: ^hot-water
+doc: "Boiler which outputs hot water"
+children: [
+  {hot water leaving pipe equip},
+  {hot water entering pipe equip},
+  {makeup water entering pipe equip},
+  {circ pipe equip},
+  {outside duct equip},
+  {flue duct equip},
+  ]
+--------------------------------------------------------------------------
+def: ^steam-boiler
+is: [^boiler, ^steam-output]
+heats: ^steam
+produces: ^steam
+doc: "Boiler which outputs steam"
+children: [
+  {steam leaving pipe equip},
+  {condensate entering pipe equip},
+  {makeup water entering pipe equip},
+  {circ pipe equip},
+  {outside duct equip},
+  {flue duct equip},
+  ]
+--------------------------------------------------------------------------
+

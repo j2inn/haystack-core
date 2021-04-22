@@ -1,0 +1,101 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Jan 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^chiller
+is: [^equip, ^elec-input]
+cools: ^chilled-water
+chillerMechanism: ^chillerMechanismType
+wikipedia: `https://en.wikipedia.org/wiki/Chiller`
+doc:
+  Equipment to remove heat from a liquid.  Chillers typically use a vapor
+  compression or an absorption refrigeration cycle.
+children: [
+  {run state point},
+  {enable state point},
+  {load cmd point},
+  {load sensor point},
+  {efficiency sensor point},
+
+  {chilled water leaving pipe equip},
+  {chilled water entering pipe equip},
+  {chilled water delta temp sensor point},
+  {chilled water delta flow sensor point},
+  {chilled water valve isolation cmd point},
+
+  {condenser water leaving pipe equip},
+  {condenser water entering pipe equip},
+  {condenser water valve isolation cmd point},
+
+  {condenser run state point},
+  {condenser refrig temp sensor point},
+  {condenser refrig pressure sensor point},
+  {evaporator refrig temp sensor point},
+  {evaporator refrig pressure sensor point},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Tags
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^coolingCapacity
+is: ^number
+tagOn: ^chiller
+doc: "Measurement of a chiller ability to remove heat measured"
+prefUnit: ["tonref", "BTU/h", "kW"]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// chillerMechanism
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^chillerMechanism
+is: ^choice
+of: ^chillerMechanismType
+doc: "Primary mechanism of chiller"
+--------------------------------------------------------------------------
+def: ^chillerMechanismType
+is: ^marker
+doc: "Primary mechanism of chiller"
+--------------------------------------------------------------------------
+def: ^chiller-absorption
+is: [^absorption, ^chillerMechanismType]
+--------------------------------------------------------------------------
+def: ^chiller-reciprocal
+is: [^reciprocal, ^chillerMechanismType]
+--------------------------------------------------------------------------
+def: ^chiller-rotaryScrew
+is: [^rotaryScrew, ^chillerMechanismType]
+--------------------------------------------------------------------------
+def: ^chiller-centrifugal
+is: [^centrifugal, ^chillerMechanismType]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Chiller Misc
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^efficiency
+is: ^marker
+doc:
+  Efficiency point of a chiller measured in "COP" or "kW/ton".
+--------------------------------------------------------------------------
+def: ^load
+is: ^marker
+doc:
+  Chiller point to command or measure the chiller's load as a percentage
+  from "0%" to "100%". When paired with cmd this models the chiller's
+  load limit. When paired with sensor this models the chiller's current
+  load factor.
+--------------------------------------------------------------------------
+
+
