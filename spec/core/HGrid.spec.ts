@@ -1539,38 +1539,6 @@ describe('HGrid', function (): void {
 			})
 		}) // #hasColumn()
 
-		describe('#removeColumn()', function (): void {
-			beforeEach(function (): void {
-				grid.addColumn('boo', meta)
-			})
-
-			it('removes a column its index number', function (): void {
-				expect(grid.removeColumn(0)).toEqual(new GridColumn('foo'))
-				expect(grid.getColumns()).toEqual([new GridColumn('boo')])
-			})
-
-			it('removes a column its name', function (): void {
-				expect(grid.removeColumn('foo')).toEqual(new GridColumn('foo'))
-				expect(grid.getColumns()).toEqual([new GridColumn('boo')])
-			})
-
-			it('returns undefined when a column cannot be removed via its index number', function (): void {
-				expect(grid.removeColumn(99)).toBeUndefined()
-				expect(grid.getColumns()).toEqual([
-					new GridColumn('foo'),
-					new GridColumn('boo'),
-				])
-			})
-
-			it('returns undefined when a column cannot be removed via its name', function (): void {
-				expect(grid.removeColumn('doesNotExist')).toBeUndefined()
-				expect(grid.getColumns()).toEqual([
-					new GridColumn('foo'),
-					new GridColumn('boo'),
-				])
-			})
-		}) // #removeColumn()
-
 		describe('#setColumn()', function (): void {
 			it('sets the column at the specified index number', function (): void {
 				const meta = HDict.make({ test: true })
@@ -1590,6 +1558,29 @@ describe('HGrid', function (): void {
 				}).toThrow()
 			})
 		}) // #setColumn()
+
+		describe('#limitColumns()', function (): void {
+			beforeEach(function (): void {
+				makeGridWithRows()
+			})
+
+			it('limits the grid columns', function (): void {
+				expect(grid.getColumnsLength()).toBe(3)
+				grid = grid.limitColumns(['col1', 'col2'])
+
+				expect(grid.getColumnsLength()).toBe(2)
+				expect(grid.getColumnNames()).toEqual(['col1', 'col2'])
+			})
+
+			it('limits the dicts with the column names', function (): void {
+				expect(grid.getColumnsLength()).toBe(3)
+				grid = grid.limitColumns(['col1', 'col2'])
+
+				expect(grid.getColumnsLength()).toBe(2)
+				expect(grid.get(0)?.keys).toEqual(['col1', 'col2'])
+				expect(grid.get(1)?.keys).toEqual(['col1', 'col2'])
+			})
+		}) // #limitColumns()
 
 		describe('proxy', function (): void {
 			it('gets a value', function (): void {
@@ -1672,6 +1663,34 @@ describe('HGrid', function (): void {
 				expect(grid.get(1)?.get<HNum>('num')?.value).toBe(2)
 				expect(grid.get(2)?.get<HNum>('num')?.value).toBe(3)
 				expect(grid.get(3)?.get<HNum>('num')?.value).toBe(4)
+			})
+
+			it('select the first four rows', function (): void {
+				// [1, 2, 3, 4]
+				grid.range(4)
+
+				expect(grid.length).toBe(4)
+				expect(grid.get(0)?.get<HNum>('num')?.value).toBe(0)
+				expect(grid.get(1)?.get<HNum>('num')?.value).toBe(1)
+				expect(grid.get(2)?.get<HNum>('num')?.value).toBe(2)
+				expect(grid.get(3)?.get<HNum>('num')?.value).toBe(3)
+			})
+
+			it('selects the first row from the start and end', function (): void {
+				grid.range(0, 0)
+				expect(grid.length).toBe(1)
+				expect(grid.get(0)?.get<HNum>('num')?.value).toBe(0)
+			})
+
+			it('selects the first row from the quantity', function (): void {
+				grid.range(1)
+				expect(grid.length).toBe(1)
+				expect(grid.get(0)?.get<HNum>('num')?.value).toBe(0)
+			})
+
+			it('removes nothing if the range is zero', function (): void {
+				grid.range(0)
+				expect(grid.length).toBe(10)
 			})
 		}) // #range()
 

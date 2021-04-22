@@ -1866,43 +1866,6 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
-	 * Remove the column via its name or index number.
-	 *
-	 * If the column is successfully removed return its instance. Otherwise
-	 * return undefined.
-	 *
-	 * ```typescript
-	 * // Remove the column via its name
-	 * grid.remove('Address)
-	 *
-	 * // Alternatively remove the column via its index number in the grid.
-	 * grid.remove(1)
-	 * ```
-	 *
-	 * @param name The name or index number of the grid column to remove.
-	 * @returns The removed column or undefined if nothing is removed.
-	 */
-	public removeColumn(name: string | number): GridColumn | undefined {
-		let index = -1
-
-		if (typeof name === 'string') {
-			for (let i = 0; i < this.$store.columns.length; ++i) {
-				if (this.$store.columns[i].name === (name as string)) {
-					index = i
-					break
-				}
-			}
-		} else {
-			index = name as number
-		}
-
-		const col =
-			index >= 0 ? this.$store.columns.splice(index, 1)[0] : undefined
-		this.rebuildColumnCache()
-		return col
-	}
-
-	/**
 	 * Set the column at the specified index number.
 	 *
 	 * ```typescript
@@ -2049,6 +2012,46 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
+	 * Limit the grid only to the specified columns.
+	 *
+	 * This will return a new instance of a grid.
+	 *
+	 * ```typescript
+	 * grid.filter('site').limitColumns(['id', 'dis']).inspect()
+	 * ```
+	 *
+	 * @param names The column names.
+	 * @returns A new grid instance with the specified columns.
+	 */
+	public limitColumns<LimitDictVal extends HDict = DictVal>(
+		names: string[]
+	): HGrid<LimitDictVal> {
+		return HGrid.make<LimitDictVal>({
+			version: this.version,
+			meta: this.meta.newCopy() as HDict,
+			rows: this.getRows().map(
+				(dict: DictVal): LimitDictVal => {
+					const newDict = new HDict()
+
+					for (const name of names) {
+						if (dict.has(name)) {
+							newDict.set(name, dict.get(name) as HVal)
+						}
+					}
+
+					return newDict as LimitDictVal
+				}
+			),
+			columns: this.getColumns()
+				.filter((col: GridColumn) => names.includes(col.name))
+				.map((col: GridColumn): {
+					name: string
+					meta?: HDict
+				} => ({ name: col.name, meta: col.meta.newCopy() as HDict })),
+		})
+	}
+
+	/**
 	 * Iterate over a grid using dicts for rows.
 	 *
 	 * This enables a 'for ... of' loop to be used directly on an iterator.
@@ -2083,23 +2086,37 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
-	 * Modifies the grid to include only rows from the start to the end.
+	 * Selects a range from the grid.
 	 *
+	 * The start and end can be used to specify a range...
 	 * ```typescript
-	 * // Inspect the first 5 sites
-	 * grid.filter('site').range(0, 4).inspect()
+	 * // from [0, 1, 2, 3, 4, 5] to [1, 2, 3, 4]
+	 * grid.filter('site').range(1, 4).inspect()
 	 * ```
 	 *
-	 * @param start The start of the range.
-	 * @param end The end range.
+	 * //If only the first argument then a quantity can be used...
+	 * ```typescript
+	 * // select the first 4 rows - [0, 1, 2, 4]...
+	 * grid.filter('site').range(4).inspect()
+	 * ```
+	 *
+	 * @param startOrQuantity The start of the range or quantity.
+	 * @param end Optional end range.
 	 * @returns This grid instance.
 	 */
-	public range(start: number, end: number): this {
+	public range(startOrQuantity: number, end?: number): this {
 		const rows = this.getRows()
 
-		for (let i = rows.length; i >= 0; --i) {
-			if (i < start || i > end) {
-				this.remove(i)
+		if (end === undefined) {
+			end = --startOrQuantity
+			startOrQuantity = 0
+		}
+
+		if (startOrQuantity <= end) {
+			for (let i = rows.length; i >= 0; --i) {
+				if (i < startOrQuantity || i > end) {
+					this.remove(i)
+				}
 			}
 		}
 
@@ -2295,13 +2312,6 @@ export class HGrid<DictVal extends HDict = HDict>
 		if (index < 0) {
 			throw new Error('Row index must be greater than zero')
 		}
-	}
-
-	/**
-	 * Rebuild the column cache.
-	 */
-	private rebuildColumnCache(): void {
-		this.$store.rebuildColumnCache()
 	}
 
 	/**
