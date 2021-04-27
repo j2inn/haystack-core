@@ -1,3 +1,13 @@
+<p align="center">
+  <a href="https://github.com/j2inn/haystack-core/actions/workflows/master-push.yaml">
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/j2inn/haystack-core/Master%20push" />
+  </a>
+
+  <a href="https://github.com/j2inn/haystack-core/blob/master/LICENSE">
+    <img alt="GitHub" src="https://img.shields.io/github/license/j2inn/haystack-core" />
+	</a>
+</p>
+
 # Haystack Core
 
 A core [haystack](https://project-haystack.org/) implementation written in TypeScript.
