@@ -22,8 +22,7 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 		it('convert an `is a` query into its subtypes', function (): void {
 			const filter =
 				'((air and output) or airHandlingEquip or ahu or doas or mau or rtu or fcu' +
-				' or crac or unitVent or heatPump or airTerminalUnit or cav or vav or (coolingOnly and vav) ' +
-				'or (fanPowered and vav))'
+				' or crac or unitVent or heatPump or airTerminalUnit or cav or vav)'
 
 			expect(parseAndGenerate('^air-output').filter).toBe(filter)
 		})

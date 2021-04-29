@@ -25,7 +25,12 @@ doc: "Petroleum based oil burned for energy"
 def: ^naturalGas
 is: ^gas
 wikipedia: `https://en.wikipedia.org/wiki/Natural_gas`
-doc: "Fossil fuel energy source consisting largely of methane and other hydrocarbons"
+doc:
+  Fossil fuel energy source consisting largely of methane and other hydrocarbons.
+
+  The energy content of natural gas varies by region within a range determined
+  on impurities in the gas.  You can find a table of these conversions
+  [here]`https://en.wikipedia.org/wiki/Heat_of_combustion#Higher_heating_values_of_natural_gases_from_various_sources`
 --------------------------------------------------------------------------
 def: ^refrig
 is: ^fluid
@@ -45,28 +50,50 @@ doc: "Petroleum derived liquid used as a fuel source"
 //////////////////////////////////////////////////////////////////////////
 
 --------------------------------------------------------------------------
+def: ^blowdown-water
+is: ^water
+doc: "Water expelled from a system to remove mineral build up"
+--------------------------------------------------------------------------
 def: ^domestic-water
 is: ^water
-doc: "Tap water for drinking, washing, cooking, and flushing of toliets"
---------------------------------------------------------------------------
-def: ^hot-water
-is: ^water
-doc: "Hot water used for HVAC heating or supply to hot taps"
+doc: "Tap water for drinking, washing, cooking, and flushing of toilets"
 --------------------------------------------------------------------------
 def: ^chilled-water
 is: ^water
-doc: "Water used for HVAC cooling"
+doc: "Water cooled for use in HVAC and industrial processes"
 wikipedia: `https://en.wikipedia.org/wiki/Chilled_water`
+--------------------------------------------------------------------------
+def: ^cold-water
+is: ^water
+doc: "Water supplied to cold taps"
 --------------------------------------------------------------------------
 def: ^condenser-water
 is: ^water
 doc: "Water used used to remove heat through condensation"
 --------------------------------------------------------------------------
+def: ^cool-water
+is: ^water
+doc: "Relatively cool water without active chilling"
+--------------------------------------------------------------------------
+def: ^ground-water
+is: ^water
+doc: "Water present under the ground or from a well"
+wikipedia: `https://en.wikipedia.org/wiki/Groundwater`
+--------------------------------------------------------------------------
+def: ^hot-water
+is: ^water
+doc: "Hot water used for HVAC heating or supplied to hot taps"
+--------------------------------------------------------------------------
 def: ^makeup-water
 is: ^water
 doc: "Water used used to makeup water loss through leaks, evaporation, or blowdown"
 --------------------------------------------------------------------------
-def: ^blowdown-water
+def: ^purge-water
 is: ^water
-doc: "Water expelled from a system to remove mineral build up"
+doc: "Water expelled from a system to remove contaminants."
 --------------------------------------------------------------------------
+def: ^warm-water
+is: ^water
+doc: "Relatively warm water without active heating"
+--------------------------------------------------------------------------
+

@@ -331,7 +331,7 @@ describe('TrioReader', function (): void {
 		it('reads `defs.trio`', function (): void {
 			const dicts = new TrioReader(readFile('defs.trio')).readAllDicts()
 
-			expect(dicts.length).toBe(546)
+			expect(dicts.length).toBe(610)
 		})
 	})
 

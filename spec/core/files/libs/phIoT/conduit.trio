@@ -23,9 +23,12 @@ childrenFlatten: [^fluid, ^pipeSectionType, ^plantLoopType]
 children: [
   {pump motor equip},
   {valve actuator equip},
-  {flow point},
-  {pressure point},
-  {temp point},
+  {flow sensor point},
+  {flow sp point},
+  {pressure sensor point},
+  {pressure sp point},
+  {temp sensor point},
+  {temp sp point},
   ]
 --------------------------------------------------------------------------
 def: ^duct
@@ -41,11 +44,20 @@ children: [
   {fan motor equip},
   {coolingCoil equip},
   {heatingCoil equip},
-  {air co2 point},
-  {air flow point},
-  {air humidity point},
-  {air pressure point},
-  {air temp point},
+  {air co2 concentration sensor point},
+  {air co2 concentration sp point},
+  {air dewPoint sensor point},
+  {air dewPoint sp point},
+  {air enthalpy sensor point},
+  {air enthalpy sp point},
+  {air flow sensor point},
+  {air flow sp point},
+  {air humidity sensor point},
+  {air humidity sp point},
+  {air pressure sensor point},
+  {air pressure sp point},
+  {air temp sensor point},
+  {air temp sp point},
   ]
 --------------------------------------------------------------------------
 def: ^wire
@@ -103,17 +115,26 @@ def: ^plantLoopType
 is: ^marker
 doc: "Plant piping loop: primary, secondary, or tertiary"
 --------------------------------------------------------------------------
-def: ^plantPrimaryLoop
+def: ^primaryLoop
 is: ^plantLoopType
-doc: "Pipework which circulates within the central plant"
+doc:
+  Pipework which circulates closest to the energy source.  In a central
+  plant, the primary loop indicates the pipes and equipment within the
+  central plant.  In context of heat exchangers between the primary
+  and secondary loops, this tag indicates the side closest to the plant.
 --------------------------------------------------------------------------
-def: ^plantSecondaryLoop
+def: ^secondaryLoop
 is: ^plantLoopType
-doc: "Pipework which circulates between the central plant and building"
+doc:
+  Pipework which circulates closest to the building or end use. In a
+  central plant, the secondary loop indicates the pipes and equipment between
+  the central plant and the building.  In context of heat exchangers between
+  the primary and secondary loops, this tag indicates the side closest to
+  the building.
 --------------------------------------------------------------------------
-def: ^plantTertiaryLoop
+def: ^tertiaryLoop
 is: ^plantLoopType
-doc: "Pipework which circulates within the building"
+doc: "Pipework which circulates within the building."
 --------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
