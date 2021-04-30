@@ -230,12 +230,12 @@ export class TrioReader implements Iterable<HDict> {
 	private tag(tags: HValObj): void {
 		const tagName = this.zinc.tagName()
 
-		this.scanner.consumeSpace()
+		this.scanner.consumeSpacesAndTabs()
 
 		let hval: HVal | undefined | null = HMarker.make()
 
 		if (this.scanner.is(':')) {
-			this.scanner.consume().consumeSpace()
+			this.scanner.consume().consumeSpacesAndTabs()
 
 			if (this.scanner.isNewLine()) {
 				hval = HStr.make(this.multiLineStringList().join('\n'))
@@ -313,12 +313,16 @@ export class TrioReader implements Iterable<HDict> {
 		const lines: string[] = []
 
 		while (!this.scanner.isEof()) {
-			// If there's no double space then break
-			if (!this.scanner.is(' ') && this.scanner.next !== ' ') {
+			// If there's no double space or tab then break
+			if (
+				!this.scanner.is(' ') &&
+				this.scanner.next !== ' ' &&
+				!this.scanner.is('	')
+			) {
 				break
 			}
 
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 
 			let str = ''
 			while (!this.scanner.isEof() && !this.scanner.isNewLine()) {
@@ -329,7 +333,7 @@ export class TrioReader implements Iterable<HDict> {
 
 			lines.push(str)
 
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 
 			if (this.scanner.isNewLine()) {
 				this.scanner.expectAndConsumeNewLine(TRIO)

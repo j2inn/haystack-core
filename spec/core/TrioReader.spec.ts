@@ -311,6 +311,82 @@ describe('TrioReader', function (): void {
 				expect(reader.readDict()).toValEqual(trioDict2)
 			})
 		})
+
+		it('Does not throw an error when reading a trio file with tabs', function (): void {
+			const trio = `
+			//
+			// Copyright (c) 2019, J2 Innovations
+			// All Rights Reserved
+			//
+			// History:
+			//   16 Dec 19  Gareth Johnson  Creation
+			//
+			--------------------------------------------------------------------------
+			name: finEdge2CloudSiteSummary
+			dis: Edge2Cloud site summary
+			func
+			nodoc
+			doc:
+				Returns summary information for a particular site.
+			src:
+							(siteId) => do
+											baseQuery: "siteRef == @" + siteId + " and point"
+			
+											pointStatus: {
+															pointCount:          "",
+															pointOk:             " and curStatus == \"ok\"",
+															pointStale:          " and curStatus == \"stale\"",
+															pointFault:          " and curStatus == \"fault\"",
+															pointDown:           " and curStatus == \"down\"",
+															pointDisabled:       " and curStatus == \"disabled\"",
+															pointUnknown:        " and curStatus == \"unknown\"",
+															pointRemoteFault:    " and curStatus == \"remoteFault\"",
+															pointRemoteDown:     " and curStatus == \"remoteDown\"",
+															pointRemoteDisabled: " and curStatus == \"remoteDisabled\"",
+															pointRemoteUnknown:  " and curStatus == \"remoteUnknown\"",
+											}
+			
+											pointData: pointStatus.map(query => parseFilter(baseQuery + query).readCount)
+											alarmData: navFilter("alarmTarget", readById(siteId), null).alarms(today)
+			
+											pointData
+															.merge({
+																			id: siteId,
+																			currentAlarms: alarmData.size,
+																			currentUnackedAlarms: alarmData.finGridFilter(not acked).size
+															})
+							end
+			--------------------------------------------------------------------------
+			name: finEdge2CloudProjectSummary
+			dis: Edge2Cloud project summary.
+			func
+			nodoc
+			doc:
+				Returns summary information for the project.
+			src:
+							() => do
+											summary: readAll(site).map(rec => finEdge2CloudSiteSummary(rec->id)).toGrid()
+											{
+															currentAlarms: summary.foldCol("currentAlarms", sum),
+															currentUnackedAlarms: summary.foldCol("currentUnackedAlarms", sum),
+															pointCount: summary.foldCol("pointCount", sum),
+															pointOk: summary.foldCol("pointOk", sum),
+															pointStale: summary.foldCol("pointStale", sum),
+															pointFault: summary.foldCol("pointFault", sum),
+															pointDown: summary.foldCol("pointDown", sum),
+															pointDisabled: summary.foldCol("pointDisabled", sum),
+															pointUnknown: summary.foldCol("pointUnknown", sum),
+															pointRemoteFault: summary.foldCol("pointRemoteFault", sum),
+															pointRemoteDown: summary.foldCol("pointRemoteDown", sum),
+															pointRemoteDisabled: summary.foldCol("pointRemoteDisabled", sum),
+															pointRemoteUnknown: summary.foldCol("pointRemoteUnknown", sum),
+											}
+							end
+			--------------------------------------------------------------------------
+			`.trim()
+
+			expect(() => new TrioReader(trio).readAllDicts()).not.toThrow()
+		})
 	}) // #readDict()
 
 	describe('reads a trio file', function (): void {
