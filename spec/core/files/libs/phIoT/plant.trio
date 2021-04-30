@@ -9,13 +9,21 @@
 --------------------------------------------------------------------------
 def: ^plant
 is: ^equip
-doc: "Central plant used to generate a substance for a process"
+doc:
+  Central plant used to generate a substance for a process.
+  See `docHaystack::Plants`.
+children: [
+   // Overall plant enable command
+   {enable cmd point}
+  ]
 --------------------------------------------------------------------------
 def: ^chilled-water-plant
 is: [^plant, ^chilled-water-output]
 produces: ^chilled-water
 condenserLoop: ^condenserLoopType
-doc: "Plant used to generate chilled water for cooling"
+doc:
+  Plant used to generate chilled water for cooling.
+  See `docHaystack::Plants`.
 children: [
   {chiller equip},
   {coolingTower equip},
@@ -30,15 +38,17 @@ children: [
   {chilled water delta temp point},
 
   {condenser water bypass pipe equip},
-  {condenser water delta flow point},
-  {condenser water delta pressure point},
-  {condenser water delta temp point},
+  {condenser water delta flow sensor point},
+  {condenser water delta pressure sensor point},
+  {condenser water delta temp sensor point},
   ]
 --------------------------------------------------------------------------
 def: ^hot-water-plant
 is: [^plant, ^hot-water-output]
 produces: ^hot-water
-doc: "Plant used to generate hot water for heating"
+doc:
+  Plant used to generate hot water for heating.
+  See `docHaystack::Plants`.
 children: [
   {hot water boiler equip},
 
@@ -60,7 +70,9 @@ children: [
 def: ^steam-plant
 is: [^plant, ^steam-output]
 produces: ^steam
-doc: "Plant used to generate steam for heating"
+doc:
+  Plant used to generate steam for heating.
+  See `docHaystack::Plants`.
 children: [
   {steam boiler equip},
 

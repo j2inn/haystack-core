@@ -20,7 +20,7 @@ doc: "Associated with electricity, electric charge"
 def: ^light
 is: ^phenomenon
 wikipedia: `https://en.wikipedia.org/wiki/Light`
-doc: "Electromagnetic radiation in the visibile spectrum"
+doc: "Electromagnetic radiation in the visible spectrum"
 --------------------------------------------------------------------------
 def: ^solar
 is: ^phenomenon
@@ -34,6 +34,8 @@ doc: "Flow of air on surface of the Earth"
 def: ^weather
 is: ^phenomenon
 wikipedia: `https://en.wikipedia.org/wiki/Weather`
-doc: "Associated with atmospheric air or phenomenon"
+doc:
+  Associated with atmospheric air or phenomenon.
+  See `docHaystack::Weather` chapter.
 --------------------------------------------------------------------------
 

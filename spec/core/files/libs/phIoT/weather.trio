@@ -10,9 +10,10 @@
 --------------------------------------------------------------------------
 def: ^weatherStation
 is: [^entity, ^geoPlace]
-docTaxonomy
 mandatory
-doc: "Logical weather station and its measurement points"
+doc:
+  Logical weather station and its measurement points.
+  See `docHaystack::Weather#stations` chapter.
 wikipedia: `https://en.wikipedia.org/wiki/Weather_station`
 children: [
   {weather air temp sensor point},
@@ -20,6 +21,7 @@ children: [
   {weather air feelsLike sensor point},
   {weather air dewPoint sensor point},
   {weather air humidity sensor point},
+  {weather air enthalpy sensor point},
   {weather atmospheric pressure sensor point},
   {weather cloudage sensor point},
   {weather daytime sensor point},
@@ -42,7 +44,9 @@ tagOn: ^weatherStation
 --------------------------------------------------------------------------
 def: ^weather-point
 is: ^point
-doc: "Weather station sensor point"
+doc:
+  Weather station observation point.
+  See `docHaystack::Weather#points` chapter.
 --------------------------------------------------------------------------
 def: ^weatherStationRef
 is: ^ref

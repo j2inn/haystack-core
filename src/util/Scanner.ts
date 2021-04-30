@@ -144,16 +144,33 @@ export class Scanner {
 	}
 
 	/**
-	 * Consume any space characters.
+	 * Consume any space and tab characters.
 	 *
-	 * This does not consume all different types of white space - just space characters.
+	 * This does not consume all different types of white space - just space and tab characters.
 	 * @returns The scanner instance.
 	 */
-	public consumeSpace(): this {
-		while (this.current === ' ') {
+	public consumeSpacesAndTabs(): this {
+		while (this.isSpaceOrTab()) {
 			this.consume()
 		}
 		return this
+	}
+
+	/**
+	 * @returns true if the current character is a space or tab.
+	 */
+	public isSpaceOrTab(): boolean {
+		return Scanner.isSpaceOrTab(this.current)
+	}
+
+	/**
+	 * Return true if the character is a space or a tab.
+	 *
+	 * @param c The character to test.
+	 * @returns True if a space or a tab.
+	 */
+	public static isSpaceOrTab(c: string | null): boolean {
+		return c === ' ' || c === '	'
 	}
 
 	/**
@@ -254,7 +271,7 @@ export class Scanner {
 	 * @returns True if white space.
 	 */
 	public static isWhiteSpace(c: string | null): boolean {
-		return c === ' ' || c === '\t' || c === '\r' || c === '\n'
+		return c === ' ' || c === '	' || c === '\t' || c === '\r' || c === '\n'
 	}
 
 	/**

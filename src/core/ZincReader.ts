@@ -70,6 +70,7 @@ export class ZincReader {
 			// Please note, some of this must match up with FilterParser#nextToken()
 			switch (this.scanner.current) {
 				case ' ':
+				case '	':
 				case '\t':
 				case '\n':
 				case '\r':
@@ -317,7 +318,7 @@ export class ZincReader {
 
 		let displayName: string | undefined
 
-		if (this.scanner.is(' ') && this.scanner.next === '"') {
+		if (this.scanner.isSpaceOrTab() && this.scanner.next === '"') {
 			this.scanner.consume()
 			displayName = this.string().value
 		}
@@ -532,7 +533,10 @@ export class ZincReader {
 	 */
 	private dateTime(dateTime: string): HDateTime {
 		// xxx timezone
-		if (!this.scanner.is(' ') || !Scanner.isUpperCase(this.scanner.next)) {
+		if (
+			!this.scanner.isSpaceOrTab() ||
+			!Scanner.isUpperCase(this.scanner.next)
+		) {
 			if (dateTime[dateTime.length - 1] === 'Z') {
 				dateTime += ' UTC'
 			} else {
@@ -691,12 +695,12 @@ export class ZincReader {
 
 		const tags: HValObj = {}
 		while (!this.scanner.isEof() && !this.scanner.is('}')) {
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 			this.tag(tags)
 
 			// Consume any commas between values.
 			// https://project-haystack.org/forum/topic/781
-			if (this.scanner.consumeSpace().is(',')) {
+			if (this.scanner.consumeSpacesAndTabs().is(',')) {
 				this.scanner.consume()
 			}
 		}
@@ -713,7 +717,7 @@ export class ZincReader {
 	 */
 	private tag(tags: HValObj): void {
 		const tagName = this.tagName()
-		this.scanner.consumeSpace()
+		this.scanner.consumeSpacesAndTabs()
 
 		let hval: HVal | undefined | null = HMarker.make()
 
@@ -729,7 +733,7 @@ export class ZincReader {
 			tags[tagName] = hval
 		}
 
-		this.scanner.consumeSpace()
+		this.scanner.consumeSpacesAndTabs()
 	}
 
 	/**
@@ -812,13 +816,13 @@ export class ZincReader {
 				list.push(hval)
 			}
 
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 
 			if (!this.scanner.is(']')) {
 				this.scanner.expect(',', Kind.List).consume()
 			}
 
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 		}
 
 		this.scanner.expect(']', Kind.List).consume()
@@ -848,10 +852,10 @@ export class ZincReader {
 			.consume()
 			.expect('r', Kind.Grid)
 			.consume()
-			.consumeSpace()
+			.consumeSpacesAndTabs()
 			.expect(':', Kind.Grid)
 			.consume()
-			.consumeSpace()
+			.consumeSpacesAndTabs()
 
 		const version = this.string().value
 
@@ -872,7 +876,7 @@ export class ZincReader {
 		const columns: { name: string; meta: HDict }[] = []
 
 		while (!this.scanner.isEof()) {
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 
 			const name = this.tagName()
 			const meta = this.gridColumnMeta()
@@ -882,7 +886,7 @@ export class ZincReader {
 				meta,
 			})
 
-			this.scanner.consumeSpace()
+			this.scanner.consumeSpacesAndTabs()
 
 			if (this.scanner.isNewLine()) {
 				this.scanner.expectAndConsumeNewLine(Kind.Grid)
@@ -912,7 +916,7 @@ export class ZincReader {
 			// Grid cells in a row
 			let index = 0
 			while (!this.scanner.isEof()) {
-				this.scanner.consumeSpace()
+				this.scanner.consumeSpacesAndTabs()
 
 				if (this.scanner.isNewLine()) {
 					// If we didn't have a value on the last iteration
@@ -954,7 +958,7 @@ export class ZincReader {
 			rows.push(cells)
 
 			// End of grid?
-			if (nested && this.scanner.consumeSpace().is('>')) {
+			if (nested && this.scanner.consumeSpacesAndTabs().is('>')) {
 				break
 			}
 		}
@@ -988,8 +992,8 @@ export class ZincReader {
 		let meta: HDict
 
 		// If there's extra meta data then consume it.
-		if (this.scanner.is(' ')) {
-			this.scanner.consumeSpace()
+		if (this.scanner.isSpaceOrTab()) {
+			this.scanner.consumeSpacesAndTabs()
 
 			const tags: HValObj = {}
 			while (!this.scanner.isEof() && !this.scanner.isNewLine()) {
@@ -1011,8 +1015,8 @@ export class ZincReader {
 		let meta: HDict
 
 		// If there's extra meta data then consume it.
-		if (this.scanner.is(' ')) {
-			this.scanner.consumeSpace()
+		if (this.scanner.isSpaceOrTab()) {
+			this.scanner.consumeSpacesAndTabs()
 
 			const tags: HValObj = {}
 			while (

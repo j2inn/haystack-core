@@ -71,7 +71,3 @@ mime:      "text/zinc"
 fileExt:   "zinc"
 doc:       "Haystack typed CSV format - see `docHaystack::Zinc`"
 --------------------------------------------------------------------------
-
-
-
-

@@ -69,9 +69,9 @@ export function isDefxDict(value: unknown): value is HDefxDict {
  * https://project-haystack.dev/doc/lib-ph/lib
  */
 export interface HLibDict extends HDefDict {
-	doc: HStr
-	version: HStr
-	baseUri: HUri
+	doc?: HStr
+	version?: HStr
+	baseUri?: HUri
 	depends?: HList<HSymbol>
 }
 
@@ -82,19 +82,9 @@ export interface HLibDict extends HDefDict {
  * @returns True if the value matches.
  */
 export function isLibDict(value: unknown): value is HLibDict {
-	if (!isDefDict(value)) {
-		return false
-	}
-
-	const dict = value as HDict
-
-	const def = dict.get<HSymbol>('def')
-
-	return !!(
-		def?.value?.startsWith('lib:') &&
-		dict.get('doc')?.isKind(Kind.Str) &&
-		dict.get('version')?.isKind(Kind.Str) &&
-		dict.get('baseUri')?.isKind(Kind.Uri)
+	return (
+		isDefDict(value) &&
+		!!value.get<HSymbol>('def')?.value?.startsWith('lib:')
 	)
 }
 
