@@ -17,7 +17,9 @@ wikipedia:`https://en.wikipedia.org/wiki/Alternating_current`
 ---
 children:[{avg ac elec current angle sensor point},{avg ac elec current imbalance sensor point},{avg ac elec current magnitude sensor point},{avg ac elec current thd sensor point},{avg ac elec pf sensor point},{avg ac elec volt angle sensor point},{avg ac elec volt imbalance sensor point},{avg ac elec volt magnitude sensor point},{avg ac elec volt thd sensor point},{equip},{phase:"A" ac elec current angle sensor point},{phase:"A" ac elec current imbalance sensor point},{phase:"A" ac elec current magnitude sensor point},{phase:"A" ac elec current thd sensor point},{phase:"A" ac elec pf sensor point},{phase:"A" ac elec volt angle sensor point},{phase:"A" ac elec volt imbalance sensor point},{phase:"A" ac elec volt magnitude sensor point},{phase:"A" ac elec volt thd sensor point},{phase:"A" active ac elec power sensor point},{phase:"A" apparent ac elec power sensor point},{phase:"A" net ac elec active energy sensor point},{phase:"A" reactive ac elec power sensor point},{point},{total ac elec demand sensor point},{total active ac elec power sensor point},{total apparent ac elec power sensor point},{total export ac elec active energy sensor point},{total import ac elec active energy sensor point},{total net ac elec active energy sensor point},{total reactive ac elec power sensor point}]
 def:^ac-elec-meter
-doc:AC Electricity meter
+doc:
+  AC Electricity meter.
+  See `docHaystack::Meters` chapter.
 is:[^elec-meter]
 lib:^lib:phIoT
 meterScope:^meterScopeType
@@ -70,7 +72,7 @@ wikipedia:`https://en.wikipedia.org/wiki/Actuator`
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^ahu
@@ -79,7 +81,7 @@ doc:
   Air Handling Unit: An enclosure with a fan that delivers air to a space
   via ductwork and performs one or more of the functions of cleaning,
   heating, cooling, humidifying, dehumidifying, ventilating or circulating
-  the air.
+  the air.  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -124,6 +126,14 @@ is:[^temp]
 lib:^lib:phScience
 prefUnit:["°C","°F"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Temperature`
+---
+def:^air-velocity
+doc:Rate of air movement as distance over time
+is:[^quantity]
+lib:^lib:phScience
+prefUnit:["m/sec","ft/min"]
+quantityOf:[^air]
 ---
 def:^airCooling
 doc:Cooling by dissipating heat into the surrounding air
@@ -133,15 +143,15 @@ wikipedia:`https://en.wikipedia.org/wiki/Air_cooling`
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^airHandlingEquip
 dehumidifies:^air
 doc:
   HVAC equipment that conditions and delivers air via one or more fans.
-  Conditioning of air includes heating, cooling, humidificiation,
-  dehumidification, and ventilation.
+  Conditioning of air includes heating, cooling, humidification,
+  dehumidification, and ventilation. See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -153,10 +163,19 @@ ventilates:^air
 wikipedia:`https://en.wikipedia.org/wiki/Air_handler`
 ---
 def:^airQuality
-doc:Measurement of contaminants in the air
-is:[^quantity]
+doc:Concentration of contaminants in the air
+is:[^concentration]
 lib:^lib:phScience
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
+---
+children:[{zone air ch2o concentration sensor point},{zone air co concentration sensor point},{zone air co2 concentration sensor point},{zone air co2 concentration sp point},{zone air nh3 concentration sensor point},{zone air no2 concentration sensor point},{zone air o3 concentration sensor point},{zone air pm01 concentration sensor point},{zone air pm10 concentration sensor point},{zone air pm25 concentration sensor point},{zone air tvoc concentration sensor point}]
+def:^airQualityZonePoints
+doc:
+  Entity with logical grouping of zone air quality points.
+  See `docHaystack::Zones#airQuality` chapter.
+is:[^pointGroup]
+lib:^lib:phIoT
 ---
 def:^airRef
 doc:Air flows from the referent to this entity
@@ -185,6 +204,11 @@ of:^airVolumeAdjustabilityType
 ---
 def:^airVolumeAdjustabilityType
 doc:Ability of air handling equip to adjust volume of air flow
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^alarm
+doc:Notification of a condition which requires attention
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -227,6 +251,61 @@ is:[^list]
 lib:^lib:ph
 of:^symbol
 ---
+atesDesign:^atesDesignType
+children:[{cool water flow thermal meter equip},{cool well equip},{equip},{extraction well equip},{flowInverter equip},{ground water flow sensor point},{ground water pressure sensor point},{ground water volume sensor point},{heatExchanger equip},{infiltration well equip},{point},{purge water flow sensor point},{purge water volume sensor point},{warm water flow thermal meter equip},{warm well equip}]
+def:^ates
+doc:
+  Aquifer Thermal Energy Storage system.
+  See `docHaystack::ATES` chapter.
+is:[^equip]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Aquifer_thermal_energy_storage`
+---
+def:^atesClosedLoop
+doc:
+  The ATES uses closed piping to transport a water/glycol mixture
+  through the ground. The system works like a heat exchanger; there
+  is no ground water transported.
+is:[^atesDesignType]
+lib:^lib:phIoT
+---
+def:^atesDesign
+doc:"Design type of the ATES underground system."
+is:[^choice]
+lib:^lib:phIoT
+of:^atesDesignType
+---
+def:^atesDesignType
+doc:"Design type of the ATES underground system."
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^atesDoublet
+doc:"The ATES has one or more pairs of a separate warm and cool well."
+is:[^atesDesignType]
+lib:^lib:phIoT
+---
+def:^atesDoubletPaired
+doc:
+  The ATES is as a doublet, but with specific warm and cool wells linked together.
+  These linked wells do not exchange water with other wells.
+is:[^atesDesignType]
+lib:^lib:phIoT
+---
+def:^atesMono
+doc:
+  The ATES has only one physical well.  This well is deep enough
+  to penetrate two layers of groundwater.
+is:[^atesDesignType]
+lib:^lib:phIoT
+---
+def:^atesUnidirectional
+doc:
+  Similar to a doublet, but water always flows in the same direction from
+  the extraction to the infiltration well.
+is:[^atesDesignType]
+lib:^lib:phIoT
+---
 def:^atmospheric
 doc:Related to the atmosphere of the earth
 is:[^marker]
@@ -238,6 +317,7 @@ is:[^pressure]
 lib:^lib:phScience
 prefUnit:["millibar","inHg"]
 quantityOf:[^weather]
+wikipedia:`https://en.wikipedia.org/wiki/Pressure`
 ---
 def:^avg
 doc:"Average; central or typical value; median"
@@ -304,7 +384,7 @@ is:[^protocol]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Bluetooth`
 ---
-children:[{equip},{point}]
+children:[{alarm sensor point},{equip},{point}]
 def:^boiler
 doc:Equipment to generate hot water or steam for heating
 heatingProcess:^heatingProcessType
@@ -316,7 +396,7 @@ wikipedia:`https://en.wikipedia.org/wiki/Boiler`
 def:^bool
 doc:
   Boolean value 'true' or 'false'.
-  See [Kinds chatper]`docHaystack::Kinds#bool`.
+  See [Kinds chapter]`docHaystack::Kinds#bool`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -341,11 +421,38 @@ is:[^marker]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Centrifugal_compressor`
 ---
+def:^ch2o
+doc:"Formaldehyde (CH₂O)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Formaldehyde`
+---
+def:^ch2o-concentration
+doc:"Concentration of formaldehyde (CH₂O) in the air."
+is:[^airQuality]
+lib:^lib:phScience
+prefUnit:["µg/m³","ppb"]
+quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
+---
+def:^ch4
+doc:"Methane (CH₄)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Methane`
+---
+def:^ch4-emission
+doc:"Greenhouse gas emission of methane (CH₄) into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
+---
 accumulate
 def:^children
 doc:
   List of prototypes contained by this entity.
-  See [Protos chatper]`docHaystack::Protos` for more details.
+  See [Protos chapter]`docHaystack::Protos` for more details.
 is:[^list]
 lib:^lib:ph
 of:^dict
@@ -353,7 +460,7 @@ of:^dict
 def:^childrenFlatten
 doc:
   List of aspects to flatten into children prototypes.
-  See [Protos chatper]`docHaystack::Protos` for more details.
+  See [Protos chapter]`docHaystack::Protos` for more details.
 is:[^list]
 lib:^lib:ph
 of:^symbol
@@ -364,7 +471,7 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^chilled-water
-doc:Water used for HVAC cooling
+doc:Water cooled for use in HVAC and industrial processes
 is:[^water]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Chilled_water`
@@ -379,10 +486,12 @@ doc:Entity outputs chilled water to other entities
 is:[^output]
 lib:^lib:phIoT
 ---
-children:[{chilled water bypass pipe equip},{chilled water delta flow point},{chilled water delta pressure point},{chilled water delta temp point},{chilled water entering pipe equip},{chilled water header pipe equip},{chilled water heatExchanger equip},{chilled water leaving pipe equip},{chiller equip},{condenser water bypass pipe equip},{condenser water delta flow point},{condenser water delta pressure point},{condenser water delta temp point},{coolingTower equip},{equip},{point}]
+children:[{chilled water bypass pipe equip},{chilled water delta flow point},{chilled water delta pressure point},{chilled water delta temp point},{chilled water entering pipe equip},{chilled water header pipe equip},{chilled water heatExchanger equip},{chilled water leaving pipe equip},{chiller equip},{condenser water bypass pipe equip},{condenser water delta flow sensor point},{condenser water delta pressure sensor point},{condenser water delta temp sensor point},{coolingTower equip},{enable cmd point},{equip},{point}]
 condenserLoop:^condenserLoopType
 def:^chilled-water-plant
-doc:Plant used to generate chilled water for cooling
+doc:
+  Plant used to generate chilled water for cooling.
+  See `docHaystack::Plants`.
 is:[^plant,^chilled-water-output]
 lib:^lib:phIoT
 produces:^chilled-water
@@ -416,7 +525,7 @@ lib:^lib:phIoT
 of:^chilled-water-output
 tagOn:[^chilled-water-input]
 ---
-children:[{chilled water delta flow sensor point},{chilled water delta temp sensor point},{chilled water entering pipe equip},{chilled water leaving pipe equip},{chilled water valve isolation cmd point},{condenser refrig pressure sensor point},{condenser refrig temp sensor point},{condenser run state point},{condenser water entering pipe equip},{condenser water leaving pipe equip},{condenser water valve isolation cmd point},{efficiency sensor point},{enable state point},{equip},{evaporator refrig pressure sensor point},{evaporator refrig temp sensor point},{load cmd point},{load sensor point},{point},{run state point}]
+children:[{alarm sensor point},{chilled water delta flow sensor point},{chilled water delta temp sensor point},{chilled water entering pipe equip},{chilled water leaving pipe equip},{chilled water valve isolation cmd point},{condenser refrig pressure sensor point},{condenser refrig temp sensor point},{condenser run cmd point},{condenser run sensor point},{condenser water entering pipe equip},{condenser water leaving pipe equip},{condenser water valve isolation cmd point},{efficiency sensor point},{enable cmd point},{enable sensor point},{equip},{evaporator refrig pressure sensor point},{evaporator refrig temp sensor point},{load cmd point},{load sensor point},{point},{run cmd point},{run sensor point}]
 chillerMechanism:^chillerMechanismType
 cools:^chilled-water
 def:^chiller
@@ -475,31 +584,69 @@ doc:Pipe used to circulate fluid through an equipment or system
 is:[^pipeSectionType]
 lib:^lib:phIoT
 ---
+children:[{equip},{point}]
+def:^circuit
+doc:
+  Electrical circuit and its associated components such as breakers.
+  See `docHaystack::ElecPanels#circuits` chapter.
+is:[^equip,^elec-input,^elec-output]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Electrical_network`
+---
 def:^cloudage
-doc:"Percentage of sky obscurred by clouds. This is also known as cloudiness, or cloud amount."
+doc:"Percentage of sky obscured by clouds. This is also known as cloudiness, or cloud amount."
 is:[^quantity]
 lib:^lib:phScience
 prefUnit:["%"]
 quantityOf:[^weather]
 ---
 def:^cmd
-doc:"Point is a command, actuator, AO/BO"
+doc:
+  Point is a command, actuator, AO/BO.
+  See `docHaystack::Points#function` chapter.
 is:[^pointFunctionType]
 lib:^lib:phIoT
 ---
 def:^co
-doc:Carbon monoxide level
+doc:"Carbon monoxide (CO)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Carbon_monoxide`
+---
+def:^co-concentration
+doc:"Concentration of carbon monoxide (CO) in the air."
 is:[^airQuality]
 lib:^lib:phScience
 prefUnit:["ppm"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^co2
-doc:Carbon dioxide level
+doc:"Carbon dioxide (CO₂)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Carbon_dioxide`
+---
+def:^co2-concentration
+doc:"Concentration of carbon dioxide (CO₂) in the air."
 is:[^airQuality]
 lib:^lib:phScience
-prefUnit:["ppb"]
+prefUnit:["ppm"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
+---
+def:^co2-emission
+doc:"Greenhouse gas emission of carbon dioxide (CO₂) into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
+---
+def:^co2e
+doc:Carbon dioxide equivalent
+is:[^marker]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Global_warming_potential`
 ---
 def:^coap
 doc:Constrained Application Protocol
@@ -516,6 +663,17 @@ is:[^heatExchanger]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Heat_exchanger#HVAC_air_coils`
 ---
+def:^cold
+doc:Having low degree of heat
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^cold-water
+doc:Water supplied to cold taps
+is:[^water]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Water`
+---
 def:^coldDeck
 doc:Duct carries air for cooling
 is:[^ductDeckType]
@@ -527,6 +685,19 @@ doc:
   used as tags themselves.
 is:[^marker]
 lib:^lib:ph
+---
+def:^computer
+doc:"General purpose computer."
+is:[^device]
+lib:^lib:phIct
+wikipedia:`https://en.wikipedia.org/wiki/Computer`
+---
+def:^concentration
+doc:"Abundance of substance in the total volume of a mixture."
+is:[^quantity]
+lib:^lib:phScience
+quantityOf:[^substance]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^condensate
 doc:Liquid phase produced by the condensation of steam or other gas
@@ -663,9 +834,19 @@ lib:^lib:phIoT
 of:^phenomenon
 ---
 def:^cool
-doc:Point used to command equipment cooling
+doc:
+  Associted with low temperature or cooling processes.  When used on a point,
+  this tag is associated with the control of cooling.  When paired with a
+  substance, this tag indicates the substance is relatively cool in comparison
+  to another substance, without being actively cooled by e.g. a chiller.
 is:[^marker]
 lib:^lib:phIoT
+---
+def:^cool-water
+doc:Relatively cool water without active chilling
+is:[^water]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Water`
 ---
 def:^cooling
 doc:Cooling mode or process
@@ -679,7 +860,7 @@ lib:^lib:phIoT
 prefUnit:["tonref","BTU/h","kW"]
 tagOn:[^chiller]
 ---
-children:[{chilled water cool valve cmd point},{equip},{point},{stage:1 cool enable cmd point}]
+children:[{chilled water cool valve cmd point},{equip},{point},{stage:1 cool run cmd point}]
 childrenFlatten:[^ductDeckType,^ductSectionType]
 coolingProcess:^coolingProcessType
 cools:^air
@@ -690,18 +871,9 @@ lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Heat_exchanger#HVAC_air_coils`
 ---
 def:^coolingOnly
-doc:Device without heating
+doc:Equipment without heating
 is:[^marker]
 lib:^lib:phIoT
----
-children:[{discharge duct equip},{ductArea sp point},{equip},{inlet duct equip},{perimeterHeat cmd point},{point},{reheat cmd point},{thermostat equip},{vavMode sp point}]
-def:^coolingOnly-vav
-doc:Cooling only VAV without fan or reheat
-ductConfig:^ductConfigType
-is:[^vav]
-lib:^lib:phIoT
-vavModulation:^vavModulationType
-wikipedia:`https://en.wikipedia.org/wiki/Variable_air_volume`
 ---
 def:^coolingProcess
 doc:Processed used to cool a substance
@@ -731,20 +903,20 @@ of:^substance
 def:^coord
 doc:
   Geographic coordinate in latitude/longitude in decimal degrees.
-  See [Kinds chatper]`docHaystack::Kinds#coord`.
+  See [Kinds chapter]`docHaystack::Kinds#coord`.
 is:[^scalar]
 lib:^lib:ph
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^crac
 dehumidifies:^air
 doc:
   Computer Room Air Conditioner: An FCU designed to condition a computer
-  room.
+  room.  See `docHaystack::AHUs` and `docHaystack::DataCenters` chapters.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -764,11 +936,12 @@ tagOn:[^point]
 def:^cur-point
 doc:
   Point with support to report a "real-time" current value.  By real-time
-  we typically mean freshness within the order of of a few seconds or at
+  we typically mean freshness within the order of a few seconds or at
   most a few minutes.  For systems with direct I/O the current value is
   typically driven by the I/O scan rate. For overlay systems which acquire
   data via a protocol such as BACnet or Modbus then the current value
   is typically refreshed using polling or subscription over a network.
+  Also see `docHaystack::Points#cur` chapter.
 is:[^point]
 lib:^lib:phIoT
 pointFunction:^pointFunctionType
@@ -871,7 +1044,9 @@ wikipedia:`https://en.wikipedia.org/wiki/Damper_(flow)`
 ---
 children:[{crac fcu equip},{equip},{point},{rack equip},{space}]
 def:^dataCenter
-doc:"Space used to house computer and networking gear."
+doc:
+  Space used to house computer and networking gear.
+  See `docHaystack::DataCenters` chapter.
 is:[^space]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Data_center`
@@ -879,14 +1054,14 @@ wikipedia:`https://en.wikipedia.org/wiki/Data_center`
 def:^date
 doc:
   ISO 8601 date as year, month, day: '2011-06-07'.
-  See [Kinds chatper]`docHaystack::Kinds#date`.
+  See [Kinds chapter]`docHaystack::Kinds#date`.
 is:[^scalar]
 lib:^lib:ph
 ---
 def:^dateTime
 doc:
   ISO 8601 timestamp followed by timezone identifier.
-  See [Kinds chatper]`docHaystack::Kinds#dateTime`.
+  See [Kinds chapter]`docHaystack::Kinds#dateTime`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -912,10 +1087,20 @@ wikipedia:`https://en.wikipedia.org/wiki/Direct_current`
 ---
 children:[{equip},{point}]
 def:^dc-elec-meter
-doc:DC Electricity meter
+doc:
+  DC Electricity meter.
+  See `docHaystack::Meters` chapter.
 is:[^elec-meter]
 lib:^lib:phIoT
 meterScope:^meterScopeType
+---
+def:^deadband
+doc:
+  The range in a process where no changes to output are made.
+  May also indicate the difference between a base setpoint and effective
+  setpoint.
+is:[^marker]
+lib:^lib:phIoT
 ---
 def:^def
 doc:
@@ -957,6 +1142,11 @@ lib:^lib:ph
 of:^ref
 tagOn:[^lib]
 ---
+def:^deprecated
+doc:Obsoleted
+is:[^marker]
+lib:^lib:ph
+---
 def:^dessicantDehumidifier
 doc:"Decreases humidity from air using a substance which absorbs moisture."
 is:[^marker]
@@ -966,10 +1156,17 @@ def:^device
 doc:
   Microprocessor based hardware device.  This is the general term for
   all computers, mobile phones, controllers, and I/O modules.
+  See `docHaystack::Devices#networks` chapter.
 docTaxonomy
 is:[^entity]
 lib:^lib:phIct
 mandatory
+---
+def:^deviceRef
+doc:Device which controls a monitors this entity
+is:[^ref]
+lib:^lib:phIct
+of:^device
 ---
 def:^dewPoint
 doc:Dew point temperature at which water vapor will form dew
@@ -981,7 +1178,7 @@ quantityOf:[^air]
 def:^dict
 doc:
   Map of name/value tag pairs.
-  See [Kinds chatper]`docHaystack::Kinds#dict`.
+  See [Kinds chapter]`docHaystack::Kinds#dict`.
 is:[^val]
 lib:^lib:ph
 ---
@@ -997,7 +1194,9 @@ lib:^lib:phScience
 prefUnit:["deg"]
 ---
 def:^dis
-doc:Display name for an entity
+doc:
+  Display name for an entity.
+  See `docHaystack::Ontology#entities` chapter.
 is:[^str]
 lib:^lib:ph
 tagOn:[^entity]
@@ -1014,7 +1213,7 @@ lib:^lib:phIoT
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^doas
@@ -1022,6 +1221,7 @@ dehumidifies:^air
 doc:
   Dedicated Outside Air System: An AHU that brings in 100% outside air and
   no recirculated air in order to provide ventilation to spaces.
+  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -1066,17 +1266,16 @@ is:[^str]
 lib:^lib:ph
 tagOn:[^def]
 ---
-def:^docSection
-doc:"This tag is documented with its own section."
+def:^docAssociations
+doc:"Generate a section in the docs for this association."
 is:[^marker]
 lib:^lib:ph
 ---
 def:^docTaxonomy
 doc:
-  Generate a taxonomy tree for this term in the documentation index.  If
-  applied to an `entity` subtype then the link will be listed under the
-  [entities]`docHaystack::Docs#entities` section, otherwise its listed
-  in [taxonomies]`docHaystack::Docs#taxonomies` section.
+  Generate a taxonomy tree for this term in the documentationindex.
+  When applied to a def, then it will will be listed in the docs
+  under the [taxonomies]`docHaystack::Docs#taxonomies` section.
 is:[^marker]
 lib:^lib:ph
 notInherited
@@ -1087,7 +1286,7 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^domestic-water
-doc:"Tap water for drinking, washing, cooking, and flushing of toliets"
+doc:"Tap water for drinking, washing, cooking, and flushing of toilets"
 is:[^water]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Water`
@@ -1110,31 +1309,12 @@ lib:^lib:phIoT
 of:^domestic-water-output
 tagOn:[^domestic-water-input]
 ---
-def:^drive
-doc:"Related to the drive control of a `motor`"
-is:[^phenomenon]
-lib:^lib:phIoT
----
-def:^drive-freq
-doc:"Motor frequency measured in \"Hz\"."
-is:[^quantity]
-lib:^lib:phIoT
-prefUnit:["Hz"]
-quantityOf:[^drive]
----
-def:^drive-speed
-doc:"Motor speed measured in \"%\"; 0% is off and 100% is the fastest speed."
-is:[^quantity]
-lib:^lib:phIoT
-prefUnit:["%"]
-quantityOf:[^drive]
----
 def:^dualDuct
 doc:"Two ducts: combination of hotDeck, coldDeck, or neutralDeck"
 is:[^ductConfigType]
 lib:^lib:phIoT
 ---
-children:[{air co2 point},{air flow point},{air humidity point},{air pressure point},{air temp point},{coolingCoil equip},{damper actuator equip},{equip},{fan motor equip},{heatingCoil equip},{point}]
+children:[{air co2 concentration sensor point},{air co2 concentration sp point},{air dewPoint sensor point},{air dewPoint sp point},{air enthalpy sensor point},{air enthalpy sp point},{air flow sensor point},{air flow sp point},{air humidity sensor point},{air humidity sp point},{air pressure sensor point},{air pressure sp point},{air temp sensor point},{air temp sp point},{coolingCoil equip},{damper actuator equip},{equip},{fan motor equip},{heatingCoil equip},{point}]
 childrenFlatten:[^ductDeckType,^ductSectionType]
 conveys:^air
 def:^duct
@@ -1268,7 +1448,9 @@ lib:^lib:phIoT
 ---
 children:[{equip},{point}]
 def:^elec-panel
-doc:"Physical housing for electrical circuits, fuses, and breakers"
+doc:
+  Physical housing for electrical circuits, fuses, and breakers.
+  See `docHaystack::ElecPanels#panels` chapter.
 is:[^panel,^elec-input,^elec-output]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Distribution_board`
@@ -1308,16 +1490,20 @@ lib:^lib:phIoT
 moves:^occupants
 wikipedia:`https://en.wikipedia.org/wiki/Elevator`
 ---
+def:^emission
+doc:Amount of a substance discharged into the air
+is:[^quantity]
+lib:^lib:phScience
+quantityOf:[^air]
+---
 def:^enable
 doc:
   Secondary on/off `point` of an `equip` especially used with a `vfd`.
   Enable is used with Bool points where true indicates on and false
   indicates off.  Equip with an enable should always also define a `run`
   point which indicates the primary on/off state of the equipment.
-is:[^stateQuantity]
+is:[^marker]
 lib:^lib:phIoT
-quantityOf:[^state]
-wikipedia:`https://en.wikipedia.org/wiki/State_(computer_science)`
 ---
 def:^energy
 doc:Measure of ability to do work
@@ -1329,8 +1515,17 @@ doc:Pipe conveys fluid into an equipment
 is:[^pipeSectionType]
 lib:^lib:phIoT
 ---
+def:^enthalpy
+doc:"Total heat content of a system. It is defined as internal energy of the system plus the product of pressure and volume."
+is:[^quantity]
+lib:^lib:phScience
+prefUnit:["kJ/kg","BTU/lb"]
+quantityOf:[^air]
+---
 def:^entity
-doc:Top-level dicts with a unique identifier
+doc:
+  Top-level dicts with a unique identifier.
+  See `docHaystack::Ontology#entities` chapter.
 is:[^marker]
 lib:^lib:ph
 ---
@@ -1338,9 +1533,8 @@ def:^enum
 doc:
   Defines an eumeration of string key names.  The range may also be applied
   to format a Bool ordered as "false,true".  The string value of this tag
-  may be formatted in one of five ways:
+  may be formatted in one of four ways:
    - dict of dicts keyed by name and Dict values for meta such as 'doc' tag
-   - list of string names
    - comma separated names on one line
    - names separated by a "\n" newline character
    - markdown unordered list formatted as a series of "- name: description\n"
@@ -1349,13 +1543,15 @@ doc:
   ASCII letter and contain only ASCII letters and numbers).  However in
   cases where mapping directly to external enumerations enum names can
   contain arbitrary characters such as space.
-is:[^str]
+is:[^str,^dict]
 lib:^lib:ph
 tagOn:[^def,^point]
 ---
 children:[{equip},{point}]
 def:^equip
-doc:Equipment asset
+doc:
+  Equipment asset.
+  See `docHaystack::Equips` chapter.
 docTaxonomy
 is:[^entity]
 lib:^lib:phIoT
@@ -1398,6 +1594,11 @@ doc:Supplied out of a system
 is:[^marker]
 lib:^lib:phIoT
 ---
+def:^extraction
+doc:Taking a substance out of another substance
+is:[^marker]
+lib:^lib:phIoT
+---
 def:^faceBypass
 doc:
   Point of an ahu indicating air flow is by-passing the heating/cooling
@@ -1414,10 +1615,12 @@ is:[^marker]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Fan_(machine)`
 ---
-children:[{enable state point},{equip},{point},{run state point}]
+children:[{alarm sensor point},{enable cmd point},{enable sensor point},{equip},{point},{run cmd point},{run sensor point},{vfd freq cmd point},{vfd freq sensor point},{vfd speed cmd point},{vfd speed sensor point}]
 childrenFlatten:[^ductSectionType,^fan]
 def:^fan-motor
-doc:"Motor used with a fan to create air flow."
+doc:
+  Motor used with a fan to create air flow.
+  See `docHaystack::Motors` chapter.
 ductSection:^ductSectionType
 is:[^motor]
 lib:^lib:phIoT
@@ -1429,21 +1632,9 @@ doc:Device with a fan
 is:[^marker]
 lib:^lib:phIoT
 ---
-children:[{discharge duct equip},{ductArea sp point},{equip},{inlet duct equip},{perimeterHeat cmd point},{point},{reheat cmd point},{thermostat equip},{vavMode sp point}]
-def:^fanPowered-vav
-doc:VAV contains a fan with reheat
-ductConfig:^ductConfigType
-heatingProcess:^heatingProcessType
-is:[^vav]
-lib:^lib:phIoT
-reheats:^air
-vavAirCircuit:^vavAirCircuitType
-vavModulation:^vavModulationType
-wikipedia:`https://en.wikipedia.org/wiki/Variable_air_volume`
----
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^fcu
@@ -1453,6 +1644,7 @@ doc:
   that recirculates air in a space and performs one or more of the
   functions of cleaning, heating, cooling, humidifying, dehumidifying,
   or ventilating the air. Unit heaters are examples of FCUs.
+  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -1551,7 +1743,7 @@ lib:^lib:ph
 ---
 children:[{equip},{point},{space}]
 def:^floor
-doc:Storey of a building
+doc:"Storey of a building.  See `docHaystack::Spaces#floors` chapter."
 is:[^space]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Storey`
@@ -1575,13 +1767,22 @@ is:[^quantity]
 lib:^lib:phScience
 prefUnit:["m³/s","gal/min"]
 quantityOf:[^fluid]
+wikipedia:`https://en.wikipedia.org/wiki/Fluid_dynamics`
 ---
 children:[{equip},{point}]
 def:^flow-meter
-doc:Meter to measure flow rate and total volume of fluid
+doc:
+  Meter to measure flow rate and total volume of fluid.
+  See `docHaystack::Meters` chapter.
 is:[^meter]
 lib:^lib:phIoT
 meterScope:^meterScopeType
+---
+children:[{equip},{point}]
+def:^flowInverter
+doc:System to change direction of substance flow 
+is:[^equip]
+lib:^lib:phIoT
 ---
 def:^flue
 doc:Duct for exhausting combustion
@@ -1604,7 +1805,7 @@ def:^freezeStat
 doc:
   A boolean point of an ahu indicating a freezing condition.  This
   might require a control sequence to protect the equipment. If true
-  then a freeze condition is deteted, or false if not.
+  then a freeze condition is detected, or false if not.
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -1649,7 +1850,7 @@ lib:^lib:phIoT
 of:^fuelOil-output
 tagOn:[^fuelOil-input]
 ---
-children:[{equip},{point}]
+children:[{air flow sensor point},{air flow sensor sp point},{air velocity sensor point},{air velocity sp point},{alarm sensor point},{equip},{point}]
 def:^fumeHood
 doc:"Ventilation equipment to limit exposure to hazardous fumes."
 is:[^equip,^elec-input]
@@ -2019,7 +2220,7 @@ tagOn:[^geoPlace]
 def:^geoState
 doc:
   State or province name; for US this is two letter state code. May be
-  used in other countries to model adminstrative area betwen the geoCity
+  used in other countries to model administrative area between the geoCity
   and geoCountry level.
 enum:
   - AL: Alabama
@@ -2095,7 +2296,7 @@ tagOn:[^geoPlace]
 def:^grid
 doc:
   Two dimension table of columns and rows.
-  See [Kinds chatper]`docHaystack::Kinds#grid`.
+  See [Kinds chapter]`docHaystack::Kinds#grid`.
 is:[^val]
 lib:^lib:ph
 ---
@@ -2108,11 +2309,17 @@ children:[{equip},{point},{space}]
 def:^ground-floor
 doc:
   Floor at ground level.  In North America this is typically called
-  the first floor, but in Europe its often labelled as floor zero.
+  the first floor, but in Europe its often labeled as floor zero.
   If `floorNum` is defined, then it must be set to zero.
 is:[^floor]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Storey`
+---
+def:^ground-water
+doc:Water present under the ground or from a well
+is:[^water]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Groundwater`
 ---
 def:^haystack
 doc:Haystack HTTP protocol for exchanging tagged data
@@ -2126,7 +2333,9 @@ is:[^pipeSectionType]
 lib:^lib:phIoT
 ---
 def:^heat
-doc:Point used to command equipment heating
+doc:
+  Associated with a heating process.  When used on a point,
+  this tag is associated with the control of heating.
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -2139,7 +2348,7 @@ wikipedia:`https://en.wikipedia.org/wiki/Heat_exchanger`
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^dxCooling
 cools:^air
 def:^heatPump
@@ -2147,6 +2356,7 @@ dehumidifies:^air
 doc:
   Heat pump: An air handling equipment which employs a vapor compression
   cycle with a reversing valve to provide heating or cooling to a space.
+  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^dxHeating
@@ -2168,7 +2378,7 @@ doc:Heating mode or process
 is:[^marker]
 lib:^lib:phIoT
 ---
-children:[{equip},{hot water heat valve cmd point},{point},{stage:1 heat enable cmd point},{steam heat valve cmd point}]
+children:[{equip},{hot water heat valve cmd point},{point},{stage:1 heat run cmd point},{steam heat valve cmd point}]
 childrenFlatten:[^ductDeckType,^ductSectionType]
 def:^heatingCoil
 doc:"Coil used to heat air."
@@ -2177,6 +2387,11 @@ heats:^air
 is:[^coil]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Heat_exchanger#HVAC_air_coils`
+---
+def:^heatingOnly
+doc:Equipment without cooling
+is:[^marker]
+lib:^lib:phIoT
 ---
 def:^heatingProcess
 doc:Processed used to heat a substance
@@ -2194,6 +2409,19 @@ doc:"Equipment heats a substance."
 is:[^equipFunction]
 lib:^lib:phIoT
 of:^substance
+---
+def:^hfc
+doc:Hydrofluorocarbons
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Hydrofluorocarbon`
+---
+def:^hfc-emission
+doc:"Greenhouse gas emission of hydrofluorocarbons into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
 ---
 def:^his
 doc:Supports historization of data
@@ -2213,6 +2441,8 @@ doc:
     - in overlay systems a downstream device performs the historization
       and the local system synchronizes the history data in batch on
       a periodic basis
+  
+  Also see `docHaystack::Points#his` chapter.
 is:[^point]
 lib:^lib:phIoT
 pointFunction:^pointFunctionType
@@ -2273,12 +2503,12 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^hot-water
-doc:Hot water used for HVAC heating or supply to hot taps
+doc:Hot water used for HVAC heating or supplied to hot taps
 is:[^water]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Water`
 ---
-children:[{circ pipe equip},{equip},{flue duct equip},{hot water entering pipe equip},{hot water leaving pipe equip},{makeup water entering pipe equip},{outside duct equip},{point}]
+children:[{alarm sensor point},{circ pipe equip},{equip},{flue duct equip},{hot water entering pipe equip},{hot water leaving pipe equip},{makeup water entering pipe equip},{outside duct equip},{point}]
 def:^hot-water-boiler
 doc:Boiler which outputs hot water
 heatingProcess:^heatingProcessType
@@ -2298,9 +2528,11 @@ doc:Entity outputs hot water to other entities
 is:[^output]
 lib:^lib:phIoT
 ---
-children:[{equip},{flue duct equip},{hot water boiler equip},{hot water bypass pipe equip},{hot water delta flow sensor point},{hot water delta pressure sensor point},{hot water delta temp sensor point},{hot water entering pipe equip},{hot water header pipe equip},{hot water heatExchanger equip},{hot water leaving pipe equip},{hot water mixing valve cmd point},{makeup water entering pipe equip},{outside duct equip},{point}]
+children:[{enable cmd point},{equip},{flue duct equip},{hot water boiler equip},{hot water bypass pipe equip},{hot water delta flow sensor point},{hot water delta pressure sensor point},{hot water delta temp sensor point},{hot water entering pipe equip},{hot water header pipe equip},{hot water heatExchanger equip},{hot water leaving pipe equip},{hot water mixing valve cmd point},{makeup water entering pipe equip},{outside duct equip},{point}]
 def:^hot-water-plant
-doc:Plant used to generate hot water for heating
+doc:
+  Plant used to generate hot water for heating.
+  See `docHaystack::Plants`.
 is:[^plant,^hot-water-output]
 lib:^lib:phIoT
 produces:^hot-water
@@ -2334,7 +2566,7 @@ doc:Adding moisture to air
 is:[^marker]
 lib:^lib:phIoT
 ---
-children:[{equip},{humidifier enable state point},{humidifier run state point},{point}]
+children:[{equip},{humidifier enable cmd point},{humidifier run cmd point},{point}]
 childrenFlatten:[]
 def:^humidifier-equip
 doc:Equipment which adds moisture to air to increase humidity
@@ -2362,15 +2594,33 @@ is:[^marker]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/HVAC`
 ---
-children:[{equip},{occupancy sensor point},{occupied sensor point},{occupied sp point},{point},{space},{zone air co sensor point},{zone air co2 sensor point},{zone air humidity sensor point},{zone air pm10 sensor point},{zone air pm25 sensor point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp sensor point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point},{zone air tvoc sensor point}]
+children:[{equip},{occupancy sensor point},{occupied sensor point},{occupied sp point},{point},{space},{zone air ch2o concentration sensor point},{zone air co concentration sensor point},{zone air co2 concentration sensor point},{zone air co2 concentration sp point},{zone air dewPoint sensor point},{zone air dewPoint sp point},{zone air enthalpy sensor point},{zone air enthalpy sp point},{zone air humidity sensor point},{zone air humidity sp point},{zone air hvacMode sp point},{zone air nh3 concentration sensor point},{zone air no2 concentration sensor point},{zone air o3 concentration sensor point},{zone air pm01 concentration sensor point},{zone air pm10 concentration sensor point},{zone air pm25 concentration sensor point},{zone air pressure sensor point},{zone air pressure sp point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp sensor point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point},{zone air tvoc concentration sensor point}]
 def:^hvac-zone-space
-doc:"Zone related to conditioning of a space's air temperature and quality."
-is:[^zone-space,^hvacZonePoints,^air-input]
+doc:
+  Zone related to conditioning of a space's air temperature and quality.
+  See `docHaystack::Spaces#zones` and `docHaystack::Zones#hvac` chapters.
+is:[^zone-space,^hvacZonePoints,^airQualityZonePoints,^air-input]
 lib:^lib:phIoT
 ---
-children:[{zone air temp sensor point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air humidity sensor point},{zone air co sensor point},{zone air co2 sensor point},{zone air pm10 sensor point},{zone air pm25 sensor point},{zone air tvoc sensor point}]
+def:^hvacMode
+doc:Operational mode for HVAC equipment
+enum:
+  - cooling:
+  - heating:
+  - reheat:
+  - warmup: morning warmup where AHU is supplying warm air
+  - purge: night purge when AHU is supplying 100% fresh air
+  - pressurize:
+  - depressurize:
+  - manual:
+is:[^marker]
+lib:^lib:phIoT
+---
+children:[{zone air hvacMode sp point},{zone air temp sensor point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air pressure sensor point},{zone air pressure sp point},{zone air humidity sensor point},{zone air humidity sp point},{zone air dewPoint sensor point},{zone air dewPoint sp point},{zone air enthalpy sensor point},{zone air enthalpy sp point}]
 def:^hvacZonePoints
-doc:Entity with logical grouping of zone HVAC air points
+doc:
+  Entity with logical grouping of zone HVAC air points.
+  See `docHaystack::Zones#hvac` chapter.
 is:[^pointGroup]
 lib:^lib:phIoT
 ---
@@ -2382,10 +2632,10 @@ wikipedia:`https://en.wikipedia.org/wiki/Ice`
 ---
 def:^id
 doc:
-  Defines the unique identifier of an entity in system using a Ref value
+  Defines the unique identifier of an entity in system using a `ref` value
   type. The scope of an entity is undefined, but must be unique with a
   given system or project. This identifier may be used by other entities
-  for cross-referencing.
+  for cross-referencing.  See `docHaystack::Ontology#entities` chapter.
 is:[^ref]
 lib:^lib:ph
 tagOn:[^entity]
@@ -2402,7 +2652,7 @@ quantityOf:[^light]
 wikipedia:`https://en.wikipedia.org/wiki/Illuminance`
 ---
 def:^imap
-doc:Internet Message Access Protocol for retreiving email
+doc:Internet Message Access Protocol for retrieving email
 is:[^protocol]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Internet_Message_Access_Protocol`
@@ -2414,6 +2664,11 @@ lib:^lib:phIoT
 ---
 def:^import
 doc:Received into a system
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^infiltration
+doc:Permeation of a substance into another substance
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -2493,6 +2748,12 @@ is:[^protocol]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/KNX_(standard)`
 ---
+def:^laptop
+doc:"Portable laptop computer."
+is:[^computer]
+lib:^lib:phIct
+wikipedia:`https://en.wikipedia.org/wiki/Laptop`
+---
 def:^leaving
 doc:Pipe conveys fluid out of an equipment
 is:[^pipeSectionType]
@@ -2517,7 +2778,7 @@ def:^lib:ph
 doc:Project Haystack core definitions
 is:[^lib]
 lib:^lib:ph
-version:"3.9.7"
+version:"3.9.10"
 ---
 baseUri:`https://project-haystack.org/def/phIct/`
 def:^lib:phIct
@@ -2528,7 +2789,7 @@ doc:
   technologies.
 is:[^lib]
 lib:^lib:phIct
-version:"3.9.7"
+version:"3.9.10"
 wikipedia:`https://en.wikipedia.org/wiki/Information_and_communications_technology`
 ---
 baseUri:`https://project-haystack.org/def/phIoT/`
@@ -2537,7 +2798,7 @@ depends:[^lib:ph,^lib:phScience]
 doc:Project Haystack definitions for Internet of Things
 is:[^lib]
 lib:^lib:phIoT
-version:"3.9.7"
+version:"3.9.10"
 wikipedia:`https://en.wikipedia.org/wiki/Internet_of_things`
 ---
 baseUri:`https://project-haystack.org/def/phScience/`
@@ -2546,10 +2807,10 @@ depends:[^lib:ph]
 doc:Project Haystack scientific definitions
 is:[^lib]
 lib:^lib:phScience
-version:"3.9.7"
+version:"3.9.10"
 ---
 def:^light
-doc:Electromagnetic radiation in the visibile spectrum
+doc:Electromagnetic radiation in the visible spectrum
 is:[^phenomenon]
 lib:^lib:phScience
 wikipedia:`https://en.wikipedia.org/wiki/Light`
@@ -2572,13 +2833,17 @@ wikipedia:`https://en.wikipedia.org/wiki/Lighting`
 ---
 children:[{equip},{light illuminance sensor point},{light level sensor point},{light level sp point},{light luminous flux sensor point},{occupancy sensor point},{occupied sensor point},{occupied sp point},{point},{space}]
 def:^lighting-zone-space
-doc:Zone related to lighting system
+doc:
+  Zone related to lighting system.
+  See `docHaystack::Spaces#zones` and `docHaystack::Zones#lighting` chapters.
 is:[^zone-space,^lightingZonePoints]
 lib:^lib:phIoT
 ---
 children:[{light level sensor point},{light level sp point},{light illuminance sensor point},{light luminous flux sensor point}]
 def:^lightingZonePoints
-doc:Entity with logical grouping of lighting points
+doc:
+  Entity with logical grouping of lighting points.
+  See `docHaystack::Zones#lighting` chapter.
 is:[^pointGroup]
 lib:^lib:phIoT
 ---
@@ -2591,7 +2856,7 @@ wikipedia:`https://en.wikipedia.org/wiki/Liquid`
 def:^list
 doc:
   Ordered list of zero or more values.
-  See [Kinds chatper]`docHaystack::Kinds#list`.
+  See [Kinds chapter]`docHaystack::Kinds#list`.
 is:[^val]
 lib:^lib:ph
 ---
@@ -2655,7 +2920,7 @@ is:[^marker]
 lib:^lib:phScience
 ---
 def:^makeup
-doc:Restore soemthing missed or lost
+doc:Restore something missed or lost
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -2698,13 +2963,13 @@ tagOn:[^def]
 def:^marker
 doc:
   Marker labels a dict with typing information.
-  See [Kinds chatper]`docHaystack::Kinds#marker`.
+  See [Kinds chapter]`docHaystack::Kinds#marker`.
 docTaxonomy
 lib:^lib:ph
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^mau
@@ -2712,6 +2977,7 @@ dehumidifies:^air
 doc:
   Makeup Air Unit: A DOAS that provides make-up air for a separate, dedicated
   exhaust system. That is, this equip does not contain an exhaust air section.
+  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -2722,6 +2988,11 @@ lib:^lib:phIoT
 ventilates:^air
 wikipedia:`https://en.wikipedia.org/wiki/Air_handler`
 ---
+def:^max
+doc:Maximum
+is:[^marker]
+lib:^lib:ph
+---
 def:^maxVal
 doc:"Inclusive maximum for a numeric value."
 is:[^number]
@@ -2730,7 +3001,9 @@ tagOn:[^def,^point]
 ---
 children:[{equip},{point}]
 def:^meter
-doc:Equipment to meter a substance or phenomenon
+doc:
+  Equipment to meter a substance or phenomenon.
+  See `docHaystack::Meters` chapter.
 is:[^equip]
 lib:^lib:phIoT
 meterScope:^meterScopeType
@@ -2752,6 +3025,11 @@ is:[^str]
 lib:^lib:ph
 tagOn:[^filetype]
 ---
+def:^min
+doc:Minimum
+is:[^marker]
+lib:^lib:ph
+---
 def:^minVal
 doc:"Inclusive minimum for a numeric value."
 is:[^number]
@@ -2771,7 +3049,7 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^mobile
-doc:"Relating to mobile phones, handheld computers, and similar technology"
+doc:"Relating to mobile phones, hand-held computers, and similar technology"
 is:[^marker]
 lib:^lib:phIct
 ---
@@ -2787,9 +3065,11 @@ is:[^protocol]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Modbus`
 ---
-children:[{enable state point},{equip},{point},{run state point}]
+children:[{alarm sensor point},{enable cmd point},{enable sensor point},{equip},{point},{run cmd point},{run sensor point},{vfd freq cmd point},{vfd freq sensor point},{vfd speed cmd point},{vfd speed sensor point}]
 def:^motor
-doc:Equipment that converts electrical energy into mechanical energy
+doc:
+  Equipment that converts electrical energy into mechanical energy.
+  See `docHaystack::Motors` chapter.
 is:[^equip,^elec-input]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Electric_motor`
@@ -2819,15 +3099,33 @@ doc:AHU discharge air is split into a duct per zone
 is:[^ahuZoneDeliveryType]
 lib:^lib:phIoT
 ---
+def:^n2o
+doc:"Nitrous oxide (N₂O)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Nitrous_oxide`
+---
+def:^n2o-emission
+doc:"Greenhouse gas emission of nitrous oxide (N₂O) into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
+---
 def:^na
 doc:
   Not available used to indicate invalid or missing data.
-  See [Kinds chatper]`docHaystack::Kinds#na`.
+  See [Kinds chapter]`docHaystack::Kinds#na`.
 is:[^scalar]
 lib:^lib:ph
 ---
 def:^naturalGas
-doc:Fossil fuel energy source consisting largely of methane and other hydrocarbons
+doc:
+  Fossil fuel energy source consisting largely of methane and other hydrocarbons.
+  
+  The energy content of natural gas varies by region within a range determined
+  on impurities in the gas.  You can find a table of these conversions
+  [here]`https://en.wikipedia.org/wiki/Heat_of_combustion#Higher_heating_values_of_natural_gases_from_various_sources`
 is:[^gas]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Natural_gas`
@@ -2861,9 +3159,17 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^network
-doc:"Logical communications network between two or more devices."
+doc:
+  Logical communications network between two or more devices.
+  See `docHaystack::Devices#networks` chapter.
 is:[^entity]
 lib:^lib:phIct
+---
+def:^networkRef
+doc:"Associates a device which communicates on specific a network."
+is:[^ref]
+lib:^lib:phIct
+of:^network
 ---
 def:^networking
 doc:Related to data communication networks
@@ -2874,6 +3180,7 @@ def:^networking-device
 doc:"Microprocessor device used to establish networks."
 is:[^device]
 lib:^lib:phIct
+wikipedia:`https://en.wikipedia.org/wiki/Networking_hardware`
 ---
 def:^networking-router
 doc:"Networking device used to route data between different networks."
@@ -2892,6 +3199,57 @@ doc:Duct carries air which by-passes both heating and cooling coils
 is:[^ductDeckType]
 lib:^lib:phIoT
 ---
+def:^nf3
+doc:"Nitrogen trifluoride (NF₃)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Nitrogen_trifluoride`
+---
+def:^nf3-emission
+doc:"Greenhouse gas emission of nitrogen trifluoride (NF₃) into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
+---
+def:^nh3
+doc:"Ammonia (NH₃)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Ammonia`
+---
+def:^nh3-concentration
+doc:"Concentration of ammonia (NH₃) in the air"
+is:[^airQuality]
+lib:^lib:phScience
+prefUnit:["µg/m³","ppb"]
+quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
+---
+def:^no2
+doc:"Nitrogen dioxide (NO₂)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Nitrogen_dioxide`
+---
+def:^no2-concentration
+doc:"Concentration of nitrogen dioxide (NO₂) in the air"
+is:[^airQuality]
+lib:^lib:phScience
+prefUnit:["µg/m³","ppb"]
+quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
+---
+def:^nodoc
+doc:Undocumented and not officially supported
+is:[^marker]
+lib:^lib:ph
+---
+def:^nosrc
+doc:Do not include source code in documentation
+is:[^marker]
+lib:^lib:ph
+---
 def:^notInherited
 doc:
   Marker applied to a def to indicate that is not inherited into
@@ -2903,9 +3261,29 @@ tagOn:[^def]
 def:^number
 doc:
   Integer or floating point numbers annotated with an optional unit.
-  See [Kinds chatper]`docHaystack::Kinds#number`.
+  See [Kinds chapter]`docHaystack::Kinds#number`.
 is:[^scalar]
 lib:^lib:ph
+---
+def:^o2
+doc:"Oxygen (O₂) - the common dioxygen allotrope in the air"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Oxygen`
+---
+def:^o3
+doc:"Ozone (O₃)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Ozone`
+---
+def:^o3-concentration
+doc:"Concentration of ozone (O₃) in the air"
+is:[^airQuality]
+lib:^lib:phScience
+prefUnit:["ppm"]
+quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^obix
 doc:"XML based Open Building Information eXchange protocol."
@@ -2914,22 +3292,30 @@ lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/OBIX`
 ---
 def:^occ
-doc:Occupied mode of a space
+doc:
+  Occupied mode of a space.
+  See `docHaystack::Zones#occupancy` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
 def:^occupancy
-doc:"Number of occupants in a space."
+doc:
+  Number of occupants in a space.
+  See `docHaystack::Zones#occupancy` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
 def:^occupants
-doc:People who use the built ennvironment
+doc:
+  People who use the built environment.
+  See `docHaystack::Zones#occupancy` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
 def:^occupied
-doc:Setpoint or sensor indicating occupancy of a space
+doc:
+  Setpoint or sensor indicating occupancy of a space.
+  See `docHaystack::Zones#occupancy` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -2994,6 +3380,19 @@ lib:^lib:phIoT
 prefUnit:["pf"]
 quantityOf:[^ac-elec]
 ---
+def:^pfc
+doc:Perfluorocarbons
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Fluorocarbon`
+---
+def:^pfc-emission
+doc:"Greenhouse gas emission of perfluorocarbons into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
+---
 def:^phase
 doc:Phase measurement in a three-phase electrical system
 enum:
@@ -3020,7 +3419,7 @@ is:[^device]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Telephone`
 ---
-children:[{equip},{flow point},{point},{pressure point},{pump motor equip},{temp point},{valve actuator equip}]
+children:[{equip},{flow sensor point},{flow sp point},{point},{pressure sensor point},{pressure sp point},{pump motor equip},{temp sensor point},{temp sp point},{valve actuator equip}]
 childrenFlatten:[^fluid,^pipeSectionType,^plantLoopType]
 conveys:^fluid
 def:^pipe
@@ -3042,9 +3441,11 @@ doc:Equipment section of piping
 is:[^marker]
 lib:^lib:phIoT
 ---
-children:[{equip},{point}]
+children:[{enable cmd point},{equip},{point}]
 def:^plant
-doc:Central plant used to generate a substance for a process
+doc:
+  Central plant used to generate a substance for a process.
+  See `docHaystack::Plants`.
 is:[^equip]
 lib:^lib:phIoT
 ---
@@ -3059,37 +3460,52 @@ doc:"Plant piping loop: primary, secondary, or tertiary"
 is:[^marker]
 lib:^lib:phIoT
 ---
-def:^plantPrimaryLoop
-doc:Pipework which circulates within the central plant
-is:[^plantLoopType]
-lib:^lib:phIoT
+def:^pm01
+doc:"Particulate matter 0.1; atmospheric pollutant of fine particles with an aerodynamic diameter of 0.1 micrometers or less"
+is:[^solid]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Particulates`
 ---
-def:^plantSecondaryLoop
-doc:Pipework which circulates between the central plant and building
-is:[^plantLoopType]
-lib:^lib:phIoT
----
-def:^plantTertiaryLoop
-doc:Pipework which circulates within the building
-is:[^plantLoopType]
-lib:^lib:phIoT
+def:^pm01-concentration
+doc:"Concentration of particulate matter 0.1 in the air."
+is:[^airQuality]
+lib:^lib:phScience
+prefUnit:["µg/m³","ppb"]
+quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^pm10
-doc:"Particulate Matter 10; atmospheric pollutant of fine particles with an aerodynamic diameter of 10 micrometers or less"
+doc:"Particulate matter 10; atmospheric pollutant of fine particles with an aerodynamic diameter of 10 micrometers or less"
+is:[^solid]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Particulates`
+---
+def:^pm10-concentration
+doc:Concentration of particulate matter 10 in the air
 is:[^airQuality]
 lib:^lib:phScience
 prefUnit:["µg/m³","ppb"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^pm25
-doc:"Particulate Matter 2.5; atmospheric pollutant of fine particles with/ an aerodynamic diameter of 2.5 micrometers or less"
+doc:"Particulate matter 2.5; atmospheric pollutant of fine particles with an aerodynamic diameter of 2.5 micrometers or less"
+is:[^solid]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Particulates`
+---
+def:^pm25-concentration
+doc:"Concentration of particulate matter 2.5 in the air."
 is:[^airQuality]
 lib:^lib:phScience
 prefUnit:["µg/m³","ppb"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^point
-doc:Data point such as a sensor or actuator
+doc:
+  Data point such as a sensor or actuator.
+  See `docHaystack::Points` chapter.
 docTaxonomy
 is:[^entity]
 lib:^lib:phIoT
@@ -3099,13 +3515,17 @@ pointQuantity:^quantity
 pointSubject:^phenomenon
 ---
 def:^pointFunction
-doc:"Classifies the point as a sensor, command, or setpoint"
+doc:
+  Classifies the point as a sensor, command, or setpoint.
+  See `docHaystack::Points#function` chapter.
 is:[^choice]
 lib:^lib:phIoT
 of:^pointFunctionType
 ---
 def:^pointFunctionType
-doc:"Classifies the point as a sensor, command, or setpoint"
+doc:
+  Classifies the point as a sensor, command, or setpoint.
+  See `docHaystack::Points#function` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
@@ -3127,7 +3547,7 @@ lib:^lib:phIoT
 of:^phenomenon
 ---
 def:^pop3
-doc:Post Office Protocol version 3 for retreiving email
+doc:Post Office Protocol version 3 for retrieving email
 is:[^protocol]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Post_Office_Protocol`
@@ -3156,6 +3576,7 @@ is:[^quantity]
 lib:^lib:phScience
 prefUnit:["kPa","psi"]
 quantityOf:[^fluid]
+wikipedia:`https://en.wikipedia.org/wiki/Pressure`
 ---
 def:^pressureDependent
 doc:
@@ -3264,6 +3685,15 @@ is:[^str]
 lib:^lib:phIoT
 tagOn:[^site]
 ---
+def:^primaryLoop
+doc:
+  Pipework which circulates closest to the energy source.  In a central
+  plant, the primary loop indicates the pipes and equipment within the
+  central plant.  In context of heat exchangers between the primary
+  and secondary loops, this tag indicates the side closest to the plant.
+is:[^plantLoopType]
+lib:^lib:phIoT
+---
 def:^process
 doc:Industrial or HVAC process
 docTaxonomy
@@ -3279,7 +3709,7 @@ of:^phenomenon
 def:^protocol
 doc:"Communication protocol used for devices on a network."
 docTaxonomy
-is:[^entity]
+is:[^marker]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Communication_protocol`
 ---
@@ -3289,15 +3719,31 @@ is:[^marker]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Pump`
 ---
-children:[{enable state point},{equip},{point},{run state point}]
+children:[{alarm sensor point},{enable cmd point},{enable sensor point},{equip},{point},{run cmd point},{run sensor point},{vfd freq cmd point},{vfd freq sensor point},{vfd speed cmd point},{vfd speed sensor point}]
 childrenFlatten:[^fluid,^pipeSectionType,^pump]
 def:^pump-motor
-doc:"Motor used with a pump to move fluid."
+doc:
+  Motor used with a pump to move fluid.
+  See `docHaystack::Motors` chapter.
 is:[^motor]
 lib:^lib:phIoT
 moves:^fluid
 pipeSection:^pipeSectionType
 wikipedia:`https://en.wikipedia.org/wiki/Pump`
+---
+def:^purge
+doc:
+  Associated with a cleaning process to remove contaminants.
+  Most commonly it indicates purging water or air by using a filter or by
+  letting out a certain amount of the substance at a high flow rate.
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^purge-water
+doc:"Water expelled from a system to remove contaminants."
+is:[^water]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Water`
 ---
 def:^quality
 doc:Quantity measured against standard metric
@@ -3307,7 +3753,7 @@ lib:^lib:phScience
 computed
 def:^quantities
 doc:Quantities used to measure this phenomenon
-docSection
+docAssociations
 is:[^association]
 lib:^lib:phScience
 of:^symbol
@@ -3333,6 +3779,7 @@ doc:
   Devices are mounted to rails of a standard width, typically 19 or 23
   inches.  Height is measured in *rack units* where one 1U is 1.75 inches.
   A full rack has a height of 42U.
+  See `docHaystack::DataCenters#racks` chapter.
 is:[^equip]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/19-inch_rack`
@@ -3401,7 +3848,7 @@ def:^ref
 doc:
   Reference to an entity. Ref values are ASCII strings limited to the
   following chars: a-z, A-Z, 0-9, underbar, colon, dash, dot, or tilde.
-  See [Kinds chatper]`docHaystack::Kinds#ref`.
+  See [Kinds chapter]`docHaystack::Kinds#ref`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -3459,7 +3906,7 @@ lib:^lib:ph
 def:^remove
 doc:
   Singleton for remove operation.
-  See [Kinds chatper]`docHaystack::Kinds#remove`.
+  See [Kinds chapter]`docHaystack::Kinds#remove`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -3502,12 +3949,14 @@ lib:^lib:phIct
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^rtu
 dehumidifies:^air
-doc:"Roof Top Unit: A unitary AHU that is weatherized for outdoor use."
+doc:
+  Roof Top Unit: A unitary AHU that is weatherized for outdoor use.
+  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -3526,18 +3975,28 @@ doc:
   When paired with `sensor` this is the actual status of the equip.  If
   the equipment also defines an `enable` point then both must be commanded
   on in order to run the equipment.
-is:[^stateQuantity]
+is:[^marker]
 lib:^lib:phIoT
-quantityOf:[^state]
-wikipedia:`https://en.wikipedia.org/wiki/State_(computer_science)`
 ---
 def:^scalar
 doc:Scalar is an atomic value kind
 is:[^val]
 lib:^lib:ph
 ---
+def:^secondaryLoop
+doc:
+  Pipework which circulates closest to the building or end use. In a
+  central plant, the secondary loop indicates the pipes and equipment between
+  the central plant and the building.  In context of heat exchangers between
+  the primary and secondary loops, this tag indicates the side closest to
+  the building.
+is:[^plantLoopType]
+lib:^lib:phIoT
+---
 def:^sensor
-doc:"Point is a sensor, input, AI/BI"
+doc:
+  Point is a sensor, input, AI/BI.
+  See `docHaystack::Points#function` chapter.
 is:[^pointFunctionType]
 lib:^lib:phIoT
 ---
@@ -3547,10 +4006,29 @@ is:[^marker]
 lib:^lib:phIoT
 ---
 def:^server
-doc:"General purpose computer."
-is:[^device]
+doc:"Hardware or software which provides services for other programs or devices."
+is:[^marker]
 lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Server_(computing)`
+---
+def:^server-computer
+doc:"General purpose computer used as a server.  Typically servers are rack mounted."
+is:[^computer]
+lib:^lib:phIct
+wikipedia:`https://en.wikipedia.org/wiki/Server_(computing)`
+---
+def:^sf6
+doc:"Sulphur hexafluoride (SF₆)"
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Sulfur_hexafluoride`
+---
+def:^sf6-emission
+doc:"Greenhouse gas emission of sulphur hexafluoride (SF₆) into the air."
+is:[^emission]
+lib:^lib:phScience
+prefUnit:["kg","ton","lb"]
+quantityOf:[^air]
 ---
 def:^singleDuct
 doc:One single duct
@@ -3562,7 +4040,7 @@ def:^site
 doc:
   Site is a geographic location of the built environment.
   Typically site maps to one building with its own unique
-  street address.
+  street address.  See `docHaystack::Sites` chapter.
 docTaxonomy
 is:[^entity,^geoPlace]
 lib:^lib:phIoT
@@ -3618,13 +4096,17 @@ lib:^lib:phIct
 wikipedia:`https://en.wikipedia.org/wiki/Communication_protocol`
 ---
 def:^sp
-doc:"Point is a setpoint, soft point, internal control variable, schedule"
+doc:
+  Point is a setpoint, soft point, internal control variable, schedule.
+  See `docHaystack::Points#function` chapter.
 is:[^pointFunctionType]
 lib:^lib:phIoT
 ---
 children:[{space},{equip},{point}]
 def:^space
-doc:Space is a three-dimensional volume in the built environment
+doc:
+  Space is a three-dimensional volume in the built environment.
+  See `docHaystack::Spaces` chapter.
 docTaxonomy
 is:[^entity]
 lib:^lib:phIoT
@@ -3657,28 +4139,13 @@ doc:Readiness mode of a space
 is:[^marker]
 lib:^lib:phIoT
 ---
-def:^state
-doc:
-  Software, hardware, or process control status.  This phenomenon
-  is used as a catch-all for points which don't directly sense or
-  control physical phenomenon.
-is:[^phenomenon]
-lib:^lib:phIoT
-wikipedia:`https://en.wikipedia.org/wiki/State_(computer_science)`
----
-def:^stateQuantity
-doc:"What is sensed or controlled of software, hardware, or process state."
-is:[^quantity]
-lib:^lib:phIoT
-wikipedia:`https://en.wikipedia.org/wiki/State_(computer_science)`
----
 def:^steam
 doc:Water in its gas form
 is:[^gas]
 lib:^lib:phScience
 wikipedia:`https://en.wikipedia.org/wiki/Steam`
 ---
-children:[{circ pipe equip},{condensate entering pipe equip},{equip},{flue duct equip},{makeup water entering pipe equip},{outside duct equip},{point},{steam leaving pipe equip}]
+children:[{alarm sensor point},{circ pipe equip},{condensate entering pipe equip},{equip},{flue duct equip},{makeup water entering pipe equip},{outside duct equip},{point},{steam leaving pipe equip}]
 def:^steam-boiler
 doc:Boiler which outputs steam
 heatingProcess:^heatingProcessType
@@ -3698,9 +4165,11 @@ doc:Entity outputs steam to other entities
 is:[^output]
 lib:^lib:phIoT
 ---
-children:[{condensate entering pipe equip},{equip},{flue duct equip},{makeup water entering pipe equip},{outside duct equip},{point},{steam boiler equip},{steam bypass pipe equip},{steam delta flow sensor point},{steam delta pressure sensor point},{steam delta temp sensor point},{steam header pipe equip},{steam heatExchanger equip},{steam leaving pipe equip},{steam mixing valve cmd point}]
+children:[{condensate entering pipe equip},{enable cmd point},{equip},{flue duct equip},{makeup water entering pipe equip},{outside duct equip},{point},{steam boiler equip},{steam bypass pipe equip},{steam delta flow sensor point},{steam delta pressure sensor point},{steam delta temp sensor point},{steam header pipe equip},{steam heatExchanger equip},{steam leaving pipe equip},{steam mixing valve cmd point}]
 def:^steam-plant
-doc:Plant used to generate steam for heating
+doc:
+  Plant used to generate steam for heating.
+  See `docHaystack::Plants`.
 is:[^plant,^steam-output]
 lib:^lib:phIoT
 produces:^steam
@@ -3727,7 +4196,7 @@ of:^phenomenon
 def:^str
 doc:
   Unicode string of characters.
-  See [Kinds chatper]`docHaystack::Kinds#str`.
+  See [Kinds chapter]`docHaystack::Kinds#str`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -3772,7 +4241,7 @@ def:^symbol
 doc:
   Symbol to a def. Symbol values are ASCII strings limited to the
   following chars: a-z, A-Z, 0-9, underbar, colon, dash, dot.
-  See [Kinds chatper]`docHaystack::Kinds#symbol`.
+  See [Kinds chapter]`docHaystack::Kinds#symbol`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -3795,7 +4264,7 @@ tagOn:[^def]
 computed
 def:^tags
 doc:Tags used with this entity
-docSection
+docAssociations
 is:[^association]
 lib:^lib:ph
 of:^symbol
@@ -3816,6 +4285,12 @@ is:[^quantity]
 lib:^lib:phScience
 prefUnit:["°C","°F"]
 quantityOf:[^substance]
+wikipedia:`https://en.wikipedia.org/wiki/Temperature`
+---
+def:^tertiaryLoop
+doc:"Pipework which circulates within the building."
+is:[^plantLoopType]
+lib:^lib:phIoT
 ---
 def:^thd
 doc:Total harmonic distortion
@@ -3827,14 +4302,7 @@ doc:Related to energy of heat
 is:[^marker]
 lib:^lib:phIoT
 ---
-children:[{equip},{point}]
-def:^thermal-meter
-doc:Meter to measure energy transfer via fluid
-is:[^meter]
-lib:^lib:phIoT
-meterScope:^meterScopeType
----
-children:[{equip},{point},{zone air co sensor point},{zone air co2 sensor point},{zone air humidity sensor point},{zone air pm10 sensor point},{zone air pm25 sensor point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp sensor point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point},{zone air tvoc sensor point}]
+children:[{equip},{point},{zone air dewPoint sensor point},{zone air dewPoint sp point},{zone air enthalpy sensor point},{zone air enthalpy sp point},{zone air humidity sensor point},{zone air humidity sp point},{zone air hvacMode sp point},{zone air pressure sensor point},{zone air pressure sp point},{zone air temp effective sp point},{zone air temp occ cooling sp point},{zone air temp occ heating sp point},{zone air temp sensor point},{zone air temp standby cooling sp point},{zone air temp standby heating sp point},{zone air temp unocc cooling sp point},{zone air temp unocc heating sp point}]
 def:^thermostat
 doc:
   Senses and controls temperature of space in HVAC system.  Thermostats
@@ -3843,16 +4311,10 @@ is:[^equip,^hvacZonePoints]
 lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Thermostat`
 ---
-def:^thread
-doc:Low power wireless IoT protocol
-is:[^protocol]
-lib:^lib:phIct
-wikipedia:`https://en.wikipedia.org/wiki/Thread_(network_protocol)`
----
 def:^time
 doc:
   ISO 8601 time as hour, minute, seconds: '09:51:27.354'.
-  See [Kinds chatper]`docHaystack::Kinds#time`.
+  See [Kinds chapter]`docHaystack::Kinds#time`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -3885,14 +4347,21 @@ is:[^ductConfigType]
 lib:^lib:phIoT
 ---
 def:^tvoc
-doc:"Total volatile organic compound (TVOC).  This is a general term applied to the overall total volatile organic compouns (VOCs) detected."
+doc:"Total volatile organic compound (TVOC)."
+is:[^gas]
+lib:^lib:phScience
+wikipedia:`https://en.wikipedia.org/wiki/Volatile_organic_compound`
+---
+def:^tvoc-concentration
+doc:"Concentration of total volatile organic compounds (TVOC) in the air"
 is:[^airQuality]
 lib:^lib:phScience
 prefUnit:["µg/m³","ppb"]
 quantityOf:[^air]
+wikipedia:`https://en.wikipedia.org/wiki/Concentration`
 ---
 def:^tz
-doc:Timezone identifier from standard timezone database
+doc:"Timezone identifier from standard [timezone database]`docHaystack::TimeZones`"
 enum:
   Abidjan
   Accra
@@ -4738,14 +5207,14 @@ tagOn:[^point]
 ---
 ahuZoneDelivery:^ahuZoneDeliveryType
 airVolumeAdjustability:^airVolumeAdjustabilityType
-children:[{bypass damper cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heatWheel cmd point},{humidifier equip},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
+children:[{bypass damper cmd point},{cool cmd point},{dessicantDehumidifier cmd point},{discharge duct equip},{economizer duct equip},{economizing cmd point},{equip},{exhaust duct equip},{faceBypass cmd point},{filter sensor point},{freezeStat sensor point},{heat cmd point},{heatWheel cmd point},{humidifier equip},{hvacMode sp point},{mixed duct equip},{outside duct equip},{point},{return duct equip},{thermostat equip},{ventilation duct equip}]
 coolingProcess:^coolingProcessType
 cools:^air
 def:^unitVent
 dehumidifies:^air
 doc:
   Unit Ventilator: An FCU that has direct access to outside air to provide
-  the space with ventilation.
+  the space with ventilation.  See `docHaystack::AHUs` chapter.
 ductConfig:^ductConfigType
 ductDeck:^ductDeckType
 heatingProcess:^heatingProcessType
@@ -4757,14 +5226,23 @@ ventilates:^air
 wikipedia:`https://en.wikipedia.org/wiki/Fan_coil_unit`
 ---
 def:^unocc
-doc:Unoccupied mode of a space
+doc:
+  Unoccupied mode of a space.
+  See `docHaystack::Zones#occupancy` chapter.
 is:[^marker]
 lib:^lib:phIoT
 ---
+children:[{equip},{point}]
+def:^ups
+doc:Uninterruptible power supply
+is:[^equip]
+lib:^lib:phIct
+wikipedia:`https://en.wikipedia.org/wiki/Uninterruptible_power_supply`
+---
 def:^uri
 doc:
-  Unverisal resource identifier.
-  See [Kinds chatper]`docHaystack::Kinds#uri`.
+  Universal resource identifier.
+  See [Kinds chapter]`docHaystack::Kinds#uri`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -4797,14 +5275,16 @@ doc:
 is:[^airVolumeAdjustabilityType]
 lib:^lib:phIoT
 ---
-children:[{discharge duct equip},{ductArea sp point},{equip},{inlet duct equip},{perimeterHeat cmd point},{point},{reheat cmd point},{thermostat equip},{vavMode sp point}]
+children:[{discharge duct equip},{ductArea sp point},{equip},{hvacMode sp point},{inlet duct equip},{perimeterHeat cmd point},{point},{reheat cmd point},{thermostat equip}]
 def:^vav
 doc:
-  Variable air volume terminal unit.  VAV systems use a constant
-  air temperature with a variable air flow rate.
+  Variable air volume terminal unit.  VAV systems use a constant air
+  temperature with a variable air flow rate.  See `docHaystack::VAVs` chapter.
 ductConfig:^ductConfigType
+heatingProcess:^heatingProcessType
 is:[^airTerminalUnit]
 lib:^lib:phIoT
+vavAirCircuit:^vavAirCircuitType
 vavModulation:^vavModulationType
 wikipedia:`https://en.wikipedia.org/wiki/Variable_air_volume`
 ---
@@ -4829,20 +5309,6 @@ doc:How does the VAV pull in air
 is:[^marker]
 lib:^lib:phIoT
 ---
-def:^vavMode
-doc:"Standardized `vav` operational mode enumeration"
-enum:
-  - cooling:
-  - heating:
-  - reheat:
-  - warmup: morning warmup where AHU is supplying warm air
-  - purge: night purge when AHU is supplying 100% fresh air
-  - pressurize:
-  - depressurize:
-  - manual:
-is:[^str]
-lib:^lib:phIoT
----
 def:^vavModulation
 doc:How does VAV modulate the temp based on duct pressure
 is:[^choice]
@@ -4858,6 +5324,11 @@ def:^vavZone
 doc:AHU supplies air to VAV terminal units
 is:[^ahuZoneDeliveryType]
 lib:^lib:phIoT
+---
+def:^velocity
+doc:Speed in a given direction
+is:[^marker]
+lib:^lib:phScience
 ---
 def:^ventilates
 doc:"Equipment brings fresh outside air into a space."
@@ -4883,13 +5354,26 @@ doc:Equipment to move humans and materials
 is:[^equip]
 lib:^lib:phIoT
 ---
-children:[{drive freq point},{drive speed point},{enable state point},{equip},{point},{run state point}]
 def:^vfd
-doc:"Motor with variable frequency drive."
-is:[^motor]
+doc:
+  Variable-frequency drive.
+  See `docHaystack::Motors` chapter.
+is:[^marker]
 lib:^lib:phIoT
-tagOn:[^motor]
+tagOn:[^point,^motor]
 wikipedia:`https://en.wikipedia.org/wiki/Variable-frequency_drive`
+---
+def:^vfd-freq
+doc:"VFD frequency measured in \"Hz\"."
+is:[^quantity]
+lib:^lib:phIoT
+prefUnit:["Hz"]
+---
+def:^vfd-speed
+doc:"VFD speed measured in \"%\"; 0% is off and 100% is the fastest speed."
+is:[^quantity]
+lib:^lib:phIoT
+prefUnit:["%"]
 ---
 def:^visibility
 doc:Distance at which light can be clearly discerned
@@ -4930,6 +5414,21 @@ is:[^quantity]
 lib:^lib:phScience
 prefUnit:["m³","ft³","L","gal"]
 quantityOf:[^substance]
+wikipedia:`https://en.wikipedia.org/wiki/Volume`
+---
+def:^warm
+doc:
+  Relatively warm in comparison to another substance, without being
+  actively heated. The substance can be used as a source of energy for
+  a heating process, for example a warm water well in an `ates` system.
+is:[^marker]
+lib:^lib:phIoT
+---
+def:^warm-water
+doc:Relatively warm water without active heating
+is:[^water]
+lib:^lib:phIoT
+wikipedia:`https://en.wikipedia.org/wiki/Water`
 ---
 def:^water
 doc:Water in its liquid form
@@ -4944,13 +5443,17 @@ lib:^lib:phIoT
 wikipedia:`https://en.wikipedia.org/wiki/Water_cooling`
 ---
 def:^weather
-doc:Associated with atmospheric air or phenomenon
+doc:
+  Associated with atmospheric air or phenomenon.
+  See `docHaystack::Weather` chapter.
 is:[^phenomenon]
 lib:^lib:phScience
 wikipedia:`https://en.wikipedia.org/wiki/Weather`
 ---
 def:^weather-point
-doc:Weather station sensor point
+doc:
+  Weather station observation point.
+  See `docHaystack::Weather#points` chapter.
 is:[^point]
 lib:^lib:phIoT
 pointFunction:^pointFunctionType
@@ -4974,10 +5477,11 @@ is:[^quantity]
 lib:^lib:phScience
 quantityOf:[^weather]
 ---
-children:[{weather air temp sensor point},{weather air wetBulb sensor point},{weather air feelsLike sensor point},{weather air dewPoint sensor point},{weather air humidity sensor point},{weather atmospheric pressure sensor point},{weather cloudage sensor point},{weather daytime sensor point},{weather precipitation sensor point},{weather solar irradiance sensor point},{weather weatherCond sensor point},{weather wind speed sensor point},{weather wind direction sensor point},{weather visibility sensor point}]
+children:[{weather air temp sensor point},{weather air wetBulb sensor point},{weather air feelsLike sensor point},{weather air dewPoint sensor point},{weather air humidity sensor point},{weather air enthalpy sensor point},{weather atmospheric pressure sensor point},{weather cloudage sensor point},{weather daytime sensor point},{weather precipitation sensor point},{weather solar irradiance sensor point},{weather weatherCond sensor point},{weather wind speed sensor point},{weather wind direction sensor point},{weather visibility sensor point}]
 def:^weatherStation
-doc:Logical weather station and its measurement points
-docTaxonomy
+doc:
+  Logical weather station and its measurement points.
+  See `docHaystack::Weather#stations` chapter.
 is:[^entity,^geoPlace]
 lib:^lib:phIoT
 mandatory
@@ -4989,6 +5493,17 @@ is:[^ref]
 lib:^lib:phIoT
 of:^weatherStation
 tagOn:[^site,^weather-point]
+---
+children:[{equip},{point},{water flow sensor point},{water level sensor point},{water pressure sensor point},{water pump motor equip},{water temp sensor point},{water volume sensor point}]
+def:^well
+doc:
+  A well is a source of groundwater and potentially thermal energy.  When
+  used within an [ATES]`docHaystack::ATES` system, the well facilitates thermal
+  energy exchange with the ground warm and cool water sources. In this case, a
+  well can be either a closed system that transports water through pipes in the
+  ground, or an open system that pumps up and returns ground water.
+is:[^equip]
+lib:^lib:phIoT
 ---
 def:^wetBulb
 doc:"Wet bulb air temperature.  Temperature which the air would have if cooled to saturation by the evaporation of water into it."
@@ -5039,7 +5554,7 @@ tagOn:[^point]
 def:^writable-point
 doc:
   Point with writable output using 16-level priority array.  Writable
-  points typically are a setpont or actuator command.  Haystack writable
+  points typically are a setpoint or actuator command.  Haystack writable
   points are modeled on the BACnet 16-level priority array with a
   relinquish default which effectively acts as level 17.
   
@@ -5061,6 +5576,8 @@ doc:
   in turn may be auto/null to another system). Anytime a null value is written
   to a priority level, we say that level has been set to auto or released (this
   allows the next highest level to take command of the output).
+  
+  Also see `docHaystack::Points#writable` chapter.
 is:[^point]
 lib:^lib:phIoT
 pointFunction:^pointFunctionType
@@ -5112,7 +5629,7 @@ transient
 def:^xstr
 doc:
   Extended string - type name and string value encoding.
-  See [Kinds chatper]`docHaystack::Kinds#xstr`.
+  See [Kinds chapter]`docHaystack::Kinds#xstr`.
 is:[^scalar]
 lib:^lib:ph
 ---
@@ -5135,7 +5652,9 @@ lib:^lib:phIoT
 ---
 children:[{equip},{occupancy sensor point},{occupied sensor point},{occupied sp point},{point},{space}]
 def:^zone-space
-doc:Space associated with a specific system
+doc:
+  Space associated with a specific system.
+  See `docHaystack::Spaces#zones` and `docHaystack::Zones` chapters.
 is:[^space]
 lib:^lib:phIoT
 ---

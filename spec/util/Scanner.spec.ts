@@ -115,17 +115,57 @@ describe('Scanner', function (): void {
 		})
 	}) // #isEof()
 
-	describe('#consumeSpace()', function (): void {
-		it('consumes space', function (): void {
+	describe('#consumeSpacesAndTabs()', function (): void {
+		it('consumes spaces', function (): void {
 			scanner = new Scanner('  a')
-			scanner.consumeSpace()
+			scanner.consumeSpacesAndTabs()
 			expect(scanner.current).toBe('a')
 		})
-	}) // #consumeSpace()
+
+		it('consumes tabs', function (): void {
+			scanner = new Scanner('		a')
+			scanner.consumeSpacesAndTabs()
+			expect(scanner.current).toBe('a')
+		})
+
+		it('consumes spaces and tabs', function (): void {
+			scanner = new Scanner('	 a')
+			scanner.consumeSpacesAndTabs()
+			expect(scanner.current).toBe('a')
+		})
+	}) // #consumeSpacesAndTabs()
+
+	describe('#isSpaceOrTab()', function (): void {
+		it('returns true for a space', function (): void {
+			expect(new Scanner(' ').isSpaceOrTab()).toBe(true)
+		})
+
+		it('returns true for a tab', function (): void {
+			expect(new Scanner('	').isSpaceOrTab()).toBe(true)
+		})
+
+		it('returns false for a', function (): void {
+			expect(new Scanner('a').isSpaceOrTab()).toBe(false)
+		})
+	}) // #isSpaceOrTab()
+
+	describe('.isSpaceOrTab()', function (): void {
+		it('returns true for a space', function (): void {
+			expect(Scanner.isSpaceOrTab(' ')).toBe(true)
+		})
+
+		it('returns true for a tab', function (): void {
+			expect(Scanner.isSpaceOrTab('	')).toBe(true)
+		})
+
+		it('returns false for a', function (): void {
+			expect(Scanner.isSpaceOrTab('a')).toBe(false)
+		})
+	}) // .isSpaceOrTab()
 
 	describe('#consumeWhiteSpace()', function (): void {
 		it('consumes white space', function (): void {
-			scanner = new Scanner(' \t\r\na')
+			scanner = new Scanner('	 \t\r\na')
 			scanner.consumeWhiteSpace()
 			expect(scanner.current).toBe('a')
 		})
@@ -192,6 +232,11 @@ describe('Scanner', function (): void {
 	describe('#isWhiteSpace()', function (): void {
 		it('returns true for a white space', function (): void {
 			scanner = new Scanner(' ')
+			expect(scanner.isWhiteSpace()).toBe(true)
+		})
+
+		it('returns true for a tab', function (): void {
+			scanner = new Scanner('	')
 			expect(scanner.isWhiteSpace()).toBe(true)
 		})
 

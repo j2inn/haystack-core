@@ -237,6 +237,13 @@ describe('ZincReader', function (): void {
 				expect(ref.value).toBe('test')
 				expect(ref.dis).toBe('Test')
 			})
+
+			it('parse ref with display string that uses a tab', function (): void {
+				const ref = makeReader('@test	"Test"').readValue() as HRef
+
+				expect(ref.value).toBe('test')
+				expect(ref.dis).toBe('Test')
+			})
 		}) // ref
 
 		describe('number', function (): void {

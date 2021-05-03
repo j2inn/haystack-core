@@ -746,7 +746,7 @@ describe('HNormalizer', function (): void {
 
 		describe('generate', function (): void {
 			describe('integration test', function (): void {
-				it('generates a namespace and matches it against a namespace generated from SkySpark 3.0.26', async function (): Promise<void> {
+				it('generates a namespace and matches it against a namespace generated from SkySpark', async function (): Promise<void> {
 					libs.splice(3)
 					libs.push(await readLib('phIct'))
 

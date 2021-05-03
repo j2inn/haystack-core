@@ -8,6 +8,14 @@
 //
 
 --------------------------------------------------------------------------
+def: ^deprecated
+is: ^marker
+doc: "Obsoleted"
+--------------------------------------------------------------------------
+def: ^filterStr
+is: ^str
+doc: "Haystack filter string.  See `docHaystack::Filters`"
+--------------------------------------------------------------------------
 def: ^kind
 is: ^str
 doc:
@@ -29,13 +37,25 @@ enum:
   - Dict: key/value map
   - Grid: two dimensional tabular data collection
 --------------------------------------------------------------------------
-def: ^filterStr
-is: ^str
-doc: "Haystack filter string.  See `docHaystack::Filters`"
+def: ^max
+is: ^marker
+doc: "Maximum"
+--------------------------------------------------------------------------
+def: ^min
+is: ^marker
+doc: "Minimum"
+--------------------------------------------------------------------------
+def: ^nodoc
+is: ^marker
+doc: "Undocumented and not officially supported"
+--------------------------------------------------------------------------
+def: ^nosrc
+is: ^marker
+doc: "Do not include source code in documentation"
 --------------------------------------------------------------------------
 def: ^tz
 is: ^str
-doc: "Timezone identifier from standard timezone database"
+doc: "Timezone identifier from standard [timezone database]`docHaystack::TimeZones`"
 --------------------------------------------------------------------------
 def: ^unit
 is: ^str

@@ -114,10 +114,38 @@ describe('TrioReader', function (): void {
 					)
 				})
 
-				it('parses a multi-line string', function (): void {
+				it('parses a multi-line string with double spaces', function (): void {
 					expect(
 						new TrioReader(
 							'str:\n  first line\n  second line\n  third line'
+						).readDict()
+					).toValEqual(
+						HDict.make({
+							str: HStr.make(
+								'first line\nsecond line\nthird line'
+							),
+						})
+					)
+				})
+
+				it('parses a multi-line string with tabs', function (): void {
+					expect(
+						new TrioReader(
+							'str:\n	first line\n	second line\n	third line'
+						).readDict()
+					).toValEqual(
+						HDict.make({
+							str: HStr.make(
+								'first line\nsecond line\nthird line'
+							),
+						})
+					)
+				})
+
+				it('parses a multi-line string with multiple new lines', function (): void {
+					expect(
+						new TrioReader(
+							'str:\n	first line\n\n \n	second line\n	third line'
 						).readDict()
 					).toValEqual(
 						HDict.make({
@@ -331,7 +359,7 @@ describe('TrioReader', function (): void {
 		it('reads `defs.trio`', function (): void {
 			const dicts = new TrioReader(readFile('defs.trio')).readAllDicts()
 
-			expect(dicts.length).toBe(546)
+			expect(dicts.length).toBe(610)
 		})
 	})
 

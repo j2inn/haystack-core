@@ -17,6 +17,10 @@ def: ^active
 is: ^marker
 doc: "Working, operative, effective"
 --------------------------------------------------------------------------
+def: ^alarm
+is: ^marker
+doc: "Notification of a condition which requires attention"
+--------------------------------------------------------------------------
 def: ^barometric
 is: ^marker
 doc: "Relating atmospheric pressure"
@@ -30,6 +34,10 @@ is: ^marker
 wikipedia: `https://en.wikipedia.org/wiki/Centrifugal_compressor`
 doc: "Compression via a continuous flow of fluid through an impeller"
 --------------------------------------------------------------------------
+def: ^cold
+is: ^marker
+doc: "Having low degree of heat"
+--------------------------------------------------------------------------
 def: ^condenser
 is: ^marker
 doc: "Device or related to process of condensation"
@@ -39,9 +47,17 @@ is: ^marker
 wikipedia: `https://en.wikipedia.org/wiki/Control_system`
 doc: "Associated with the control system for an industrial process"
 --------------------------------------------------------------------------
+def: ^cool
+is: ^marker
+doc:
+  Associted with low temperature or cooling processes.  When used on a point,
+  this tag is associated with the control of cooling.  When paired with a
+  substance, this tag indicates the substance is relatively cool in comparison
+  to another substance, without being actively cooled by e.g. a chiller.
+--------------------------------------------------------------------------
 def: ^coolingOnly
 is: ^marker
-doc: "Device without heating"
+doc: "Equipment without heating"
 --------------------------------------------------------------------------
 def: ^chilled
 is: ^marker
@@ -51,6 +67,13 @@ def: ^cur
 is: ^marker
 tagOn: ^point
 doc: "Supports current value"
+--------------------------------------------------------------------------
+def: ^deadband
+is: ^marker
+doc:
+  The range in a process where no changes to output are made.
+  May also indicate the difference between a base setpoint and effective
+  setpoint.
 --------------------------------------------------------------------------
 def: ^delta
 is: ^marker
@@ -80,9 +103,21 @@ def: ^effective
 is: ^marker
 doc: "Current control setpoint in effect taking into account other factors"
 --------------------------------------------------------------------------
+def: ^enable
+is: ^marker
+doc:
+  Secondary on/off `point` of an `equip` especially used with a `vfd`.
+  Enable is used with Bool points where true indicates on and false
+  indicates off.  Equip with an enable should always also define a `run`
+  point which indicates the primary on/off state of the equipment.
+--------------------------------------------------------------------------
 def: ^evaporator
 is: ^marker
 doc: "Mechanism used to convert a refrigerant from its liquid to gaseous state."
+--------------------------------------------------------------------------
+def: ^extraction
+is: ^marker
+doc: "Taking a substance out of another substance"
 --------------------------------------------------------------------------
 def: ^export
 is: ^marker
@@ -110,11 +145,21 @@ is: ^marker
 doc:
   A boolean point of an ahu indicating a freezing condition.  This
   might require a control sequence to protect the equipment. If true
-  then a freeze condition is deteted, or false if not.
+  then a freeze condition is detected, or false if not.
 --------------------------------------------------------------------------
 def: ^ground
 is: ^marker
 doc: "Related to the surface of the earth"
+--------------------------------------------------------------------------
+def: ^heat
+is: ^marker
+doc:
+  Associated with a heating process.  When used on a point,
+  this tag is associated with the control of heating.
+--------------------------------------------------------------------------
+def: ^heatingOnly
+is: ^marker
+doc: "Equipment without cooling"
 --------------------------------------------------------------------------
 def: ^heatWheel
 is: ^marker
@@ -147,6 +192,10 @@ def: ^import
 is: ^marker
 doc: "Received into a system"
 --------------------------------------------------------------------------
+def: ^infiltration
+is: ^marker
+doc: "Permeation of a substance into another substance"
+--------------------------------------------------------------------------
 def: ^isolation
 is: ^marker
 doc: "Actuator used to isolate an equipment from a pipe or ductwork system"
@@ -158,19 +207,25 @@ doc: "Systems associated with illumination in the built environment"
 --------------------------------------------------------------------------
 def: ^occupancy
 is: ^marker
-doc: "Number of occupants in a space."
+doc:
+  Number of occupants in a space.
+  See `docHaystack::Zones#occupancy` chapter.
 --------------------------------------------------------------------------
 def: ^occupants
 is: ^marker
-doc: "People who use the built ennvironment"
+doc:
+  People who use the built environment.
+  See `docHaystack::Zones#occupancy` chapter.
 --------------------------------------------------------------------------
 def: ^occupied
 is: ^marker
-doc: "Setpoint or sensor indicating occupancy of a space"
+doc:
+  Setpoint or sensor indicating occupancy of a space.
+  See `docHaystack::Zones#occupancy` chapter.
 --------------------------------------------------------------------------
 def: ^makeup
 is: ^marker
-doc: "Restore soemthing missed or lost"
+doc: "Restore something missed or lost"
 --------------------------------------------------------------------------
 def: ^mixing
 is: ^marker
@@ -184,11 +239,20 @@ doc: "Difference between import and export"
 --------------------------------------------------------------------------
 def: ^occ
 is: ^marker
-doc: "Occupied mode of a space"
+doc:
+  Occupied mode of a space.
+  See `docHaystack::Zones#occupancy` chapter.
 --------------------------------------------------------------------------
 def: ^parallel
 is: ^marker
 doc: "Circuit with multiple paths of flow"
+--------------------------------------------------------------------------
+def: ^purge
+is: ^marker
+doc:
+  Associated with a cleaning process to remove contaminants.
+  Most commonly it indicates purging water or air by using a filter or by
+  letting out a certain amount of the substance at a high flow rate.
 --------------------------------------------------------------------------
 def: ^reactive
 is: ^marker
@@ -211,6 +275,16 @@ def: ^rotaryScrew
 is: ^marker
 wikipedia: `https://en.wikipedia.org/wiki/Rotary-screw_compressor`
 doc: "Rotary screw compression"
+--------------------------------------------------------------------------
+def: ^run
+is: ^marker
+doc:
+  Primary on/off `point` of an `equip` especially used with a `vfd`.
+  Run is used with Bool points where true indicates on and false indicates
+  off. When paired with `cmd` this is the commanded state of the equipment.
+  When paired with `sensor` this is the actual status of the equip.  If
+  the equipment also defines an `enable` point then both must be commanded
+  on in order to run the equipment.
 --------------------------------------------------------------------------
 def: ^series
 is: ^marker
@@ -245,7 +319,16 @@ doc: "Total harmonic distortion"
 --------------------------------------------------------------------------
 def: ^unocc
 is: ^marker
-doc: "Unoccupied mode of a space"
+doc:
+  Unoccupied mode of a space.
+  See `docHaystack::Zones#occupancy` chapter.
+--------------------------------------------------------------------------
+def: ^warm
+is: ^marker
+doc:
+  Relatively warm in comparison to another substance, without being
+  actively heated. The substance can be used as a source of energy for
+  a heating process, for example a warm water well in an `ates` system.
 --------------------------------------------------------------------------
 def: ^writable
 is: ^marker
@@ -256,3 +339,4 @@ def: ^zone
 is: ^marker
 doc: "Related to spaces from a system perspective"
 --------------------------------------------------------------------------
+
