@@ -85,41 +85,41 @@ function makeTestLib(): HLib {
 }
 
 describe('HNormalizer', function (): void {
-	describe('#normalize()', function (): void {
-		let scanner: LibScanner
-		let normalizer: HNormalizer
-		let libs: HLib[]
-		let lib: HLib
-		let logger: NormalizationLogger
+	let scanner: LibScanner
+	let normalizer: HNormalizer
+	let libs: HLib[]
+	let lib: HLib
+	let logger: NormalizationLogger
 
-		beforeEach(async function (): Promise<void> {
-			lib = makeTestLib()
+	beforeEach(async function (): Promise<void> {
+		lib = makeTestLib()
 
-			libs = [
-				await readLib('ph'),
-				await readLib('phScience'),
-				await readLib('phIoT'),
-				lib,
-			]
+		libs = [
+			await readLib('ph'),
+			await readLib('phScience'),
+			await readLib('phIoT'),
+			lib,
+		]
 
-			scanner = (): Iterable<Promise<HLib>> =>
-				libs.map(async (lib): Promise<HLib> => lib)
+		scanner = (): Iterable<Promise<HLib>> =>
+			libs.map(async (lib): Promise<HLib> => lib)
 
-			logger = {
-				warning: jest.fn(),
-				error: jest.fn(),
-				fatal: jest.fn().mockReturnValue(new Error()),
-			}
-
-			normalizer = new HNormalizer(scanner, logger)
-		})
-
-		function addDefs(...dicts: HDict[]): void {
-			for (const dict of dicts) {
-				lib.dicts.push(dict as HDefDict)
-			}
+		logger = {
+			warning: jest.fn(),
+			error: jest.fn(),
+			fatal: jest.fn().mockReturnValue(new Error()),
 		}
 
+		normalizer = new HNormalizer(scanner, logger)
+	})
+
+	function addDefs(...dicts: HDict[]): void {
+		for (const dict of dicts) {
+			lib.dicts.push(dict as HDefDict)
+		}
+	}
+
+	describe('#normalize()', function (): void {
 		describe('scan', function (): void {
 			it('logs a warning if an invalid lib is found', async function (): Promise<void> {
 				libs.push({} as HLib)
@@ -820,4 +820,42 @@ describe('HNormalizer', function (): void {
 			}) // integration test
 		}) // generate
 	}) // #normalize()
+
+	describe('#toImplied()', function (): void {
+		beforeEach(function (): void {
+			const impliedBy = new HDict({
+				def: HSymbol.make('impliedBy'),
+				is: new HList([HSymbol.make('association')]),
+				tagOn: new HList([HSymbol.make('def')]),
+			})
+
+			const impliedTag = new HDict({
+				def: HSymbol.make('impliedTag'),
+				is: new HList([HSymbol.make('entity')]),
+				impliedBy: new HList(HSymbol.make('site')),
+			})
+
+			addDefs(impliedBy, impliedTag)
+		})
+
+		it('returns no implied tags for a point', async function (): Promise<void> {
+			const namespace = await normalizer.normalize()
+
+			expect(
+				namespace
+					.toImplied(new HDict({ point: HMarker.make() }))
+					.isEmpty()
+			).toBe(true)
+		})
+
+		it('returns an implied tag for a site', async function (): Promise<void> {
+			const namespace = await normalizer.normalize()
+
+			expect(
+				namespace
+					.toImplied(new HDict({ site: HMarker.make() }))
+					.toJSON()
+			).toEqual({ impliedTag: { _kind: 'marker' } })
+		})
+	}) // #toImplied()
 })
