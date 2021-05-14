@@ -244,3 +244,8 @@ export function toTagName(name: string): string {
 export function isValidTagName(name: string): boolean {
 	return /^[a-z][a-zA-Z0-9_]+$/.test(String(name))
 }
+
+/**
+ * The implied by tag name.
+ */
+export const IMPLIED_BY = 'impliedBy'

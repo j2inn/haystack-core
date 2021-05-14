@@ -11,6 +11,7 @@
 // Filter
 export * from './filter/HFilter'
 export * from './filter/GenerateHaystackFilterVisitor'
+export * from './filter/GenerateHaystackFilterImpliedVisitor'
 export * from './filter/GenerateHaystackFilterV3Visitor'
 export * from './filter/EvalContext'
 export * from './filter/Node'
