@@ -177,9 +177,9 @@ describe('HNamespace', function (): void {
 		})
 
 		it('split a conjunct into its names for a symbol', function (): void {
-			expect(
-				HNamespace.splitConjunct(HSymbol.make('hot-water'))
-			).toEqual(['hot', 'water'])
+			expect(HNamespace.splitConjunct(HSymbol.make('hot-water'))).toEqual(
+				['hot', 'water']
+			)
 		})
 	}) // .splitConjunct()
 

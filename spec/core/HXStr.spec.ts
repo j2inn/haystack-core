@@ -76,14 +76,14 @@ describe('HXStr', function (): void {
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
 			expect(
-				HXStr.make('Type', 'value').equals((null as unknown) as HXStr)
+				HXStr.make('Type', 'value').equals(null as unknown as HXStr)
 			).toBe(false)
 		})
 
 		it('undefined returns false', function (): void {
 			expect(
 				HXStr.make('Type', 'value').equals(
-					(undefined as unknown) as HXStr
+					undefined as unknown as HXStr
 				)
 			).toBe(false)
 		})
@@ -91,7 +91,7 @@ describe('HXStr', function (): void {
 		it('string returns false', function (): void {
 			expect(
 				HXStr.make('Type', 'value').equals(
-					('2020-01-01' as unknown) as HXStr
+					'2020-01-01' as unknown as HXStr
 				)
 			).toBe(false)
 		})

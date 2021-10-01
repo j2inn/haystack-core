@@ -91,7 +91,7 @@ describe('HDateTime', function (): void {
 		it('null returns false', function (): void {
 			expect(
 				HDateTime.make('2009-11-09T15:39:00Z').equals(
-					(null as unknown) as HDateTime
+					null as unknown as HDateTime
 				)
 			).toBe(false)
 		})
@@ -99,7 +99,7 @@ describe('HDateTime', function (): void {
 		it('undefined returns false', function (): void {
 			expect(
 				HDateTime.make('2009-11-09T15:39:00Z').equals(
-					(undefined as unknown) as HDateTime
+					undefined as unknown as HDateTime
 				)
 			).toBe(false)
 		})
@@ -107,7 +107,7 @@ describe('HDateTime', function (): void {
 		it('string returns false', function (): void {
 			expect(
 				HDateTime.make('2009-11-09T15:39:00Z').equals(
-					('2009-11-09T15:39:00Z' as unknown) as HDateTime
+					'2009-11-09T15:39:00Z' as unknown as HDateTime
 				)
 			).toBe(false)
 		})

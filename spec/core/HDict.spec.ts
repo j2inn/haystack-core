@@ -56,12 +56,12 @@ describe('HDict', function (): void {
 		})
 
 		it('creates a dict from a hayson dict with a null value', function (): void {
-			const haysonDict = ({
+			const haysonDict = {
 				foo: 'foovalue',
 				goo: 99,
 				soo: { _kind: Kind.Marker },
 				zoo: null,
-			} as unknown) as HaysonDict
+			} as unknown as HaysonDict
 
 			dict.set('zoo', null)
 
@@ -560,7 +560,7 @@ describe('HDict', function (): void {
 
 	describe('#validate()', function (): void {
 		it('validates the dict to ensure we have a valid set of haystack values', function (): void {
-			const obj = (dict.toObj() as unknown) as { [prop: string]: number }
+			const obj = dict.toObj() as unknown as { [prop: string]: number }
 
 			obj.goo = 100
 

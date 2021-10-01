@@ -95,20 +95,20 @@ describe('HCoord', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(makeCoord(2, 4).equals((null as unknown) as HCoord)).toBe(
+			expect(makeCoord(2, 4).equals(null as unknown as HCoord)).toBe(
 				false
 			)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(
-				makeCoord(2, 4).equals((undefined as unknown) as HCoord)
-			).toBe(false)
+			expect(makeCoord(2, 4).equals(undefined as unknown as HCoord)).toBe(
+				false
+			)
 		})
 
 		it('string returns false', function (): void {
 			expect(
-				makeCoord(2, 4).equals(('2020-01-01' as unknown) as HCoord)
+				makeCoord(2, 4).equals('2020-01-01' as unknown as HCoord)
 			).toBe(false)
 		})
 

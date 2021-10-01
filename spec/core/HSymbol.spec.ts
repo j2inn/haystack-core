@@ -51,20 +51,20 @@ describe('HSymbol', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(
-				HSymbol.make('foo').equals((null as unknown) as HSymbol)
-			).toBe(false)
+			expect(HSymbol.make('foo').equals(null as unknown as HSymbol)).toBe(
+				false
+			)
 		})
 
 		it('undefined returns false', function (): void {
 			expect(
-				HSymbol.make('foo').equals((undefined as unknown) as HSymbol)
+				HSymbol.make('foo').equals(undefined as unknown as HSymbol)
 			).toBe(false)
 		})
 
 		it('string returns false', function (): void {
 			expect(
-				HSymbol.make('foo').equals(('foo' as unknown) as HSymbol)
+				HSymbol.make('foo').equals('foo' as unknown as HSymbol)
 			).toBe(false)
 		})
 

@@ -110,20 +110,20 @@ describe('HDate', function (): void {
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
 			expect(
-				HDate.make('2020-01-01').equals((null as unknown) as HDate)
+				HDate.make('2020-01-01').equals(null as unknown as HDate)
 			).toBe(false)
 		})
 
 		it('undefined returns false', function (): void {
 			expect(
-				HDate.make('2020-01-01').equals((undefined as unknown) as HDate)
+				HDate.make('2020-01-01').equals(undefined as unknown as HDate)
 			).toBe(false)
 		})
 
 		it('string returns false', function (): void {
 			expect(
 				HDate.make('2020-01-01').equals(
-					('2020-01-01' as unknown) as HDate
+					'2020-01-01' as unknown as HDate
 				)
 			).toBe(false)
 		})

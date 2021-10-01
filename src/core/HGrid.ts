@@ -193,7 +193,8 @@ class GridRowDictStore<DictVal extends HDict> implements DictStore {
  * An iterator for dicts.
  */
 export class GridDictIterator<DictVal extends HDict>
-	implements Iterator<DictVal> {
+	implements Iterator<DictVal>
+{
 	private readonly $grid: HGrid
 	private $index = 0
 
@@ -438,7 +439,8 @@ export interface GridObj<DictVal extends HDict = HDict> {
  * ```
  */
 export class HGrid<DictVal extends HDict = HDict>
-	implements HVal, Iterable<DictVal> {
+	implements HVal, Iterable<DictVal>
+{
 	/**
 	 * The grid's version number.
 	 */
@@ -563,15 +565,19 @@ export class HGrid<DictVal extends HDict = HDict>
 				const obj = value as HaysonGrid
 
 				if (obj.cols) {
-					columns = obj.cols.map((col): {
-						name: string
-						meta?: HDict
-					} => ({
-						name: col.name,
-						meta: col.meta
-							? (makeValue(col.meta) as HDict)
-							: undefined,
-					}))
+					columns = obj.cols.map(
+						(
+							col
+						): {
+							name: string
+							meta?: HDict
+						} => ({
+							name: col.name,
+							meta: col.meta
+								? (makeValue(col.meta) as HDict)
+								: undefined,
+						})
+					)
 				}
 			}
 
@@ -685,12 +691,10 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns A JSON reprentation of the object.
 	 */
 	public toJSON(): HaysonGrid {
-		const rows = this.getRows().map(
-			(row: DictVal): HaysonDict => {
-				this.addMissingColumns(row)
-				return row.toJSON()
-			}
-		)
+		const rows = this.getRows().map((row: DictVal): HaysonDict => {
+			this.addMissingColumns(row)
+			return row.toJSON()
+		})
 
 		return {
 			_kind: this.getKind(),
@@ -698,13 +702,17 @@ export class HGrid<DictVal extends HDict = HDict>
 				ver: this.version,
 				...(this.meta ? this.meta.toJSON() : {}),
 			},
-			cols: this.$store.columns.map((column: GridColumn): {
-				name: string
-				meta: HaysonDict
-			} => ({
-				name: column.name,
-				meta: column.meta.toJSON(),
-			})),
+			cols: this.$store.columns.map(
+				(
+					column: GridColumn
+				): {
+					name: string
+					meta: HaysonDict
+				} => ({
+					name: column.name,
+					meta: column.meta.toJSON(),
+				})
+			),
 			rows,
 		}
 	}
@@ -2029,25 +2037,27 @@ export class HGrid<DictVal extends HDict = HDict>
 		return HGrid.make<LimitDictVal>({
 			version: this.version,
 			meta: this.meta.newCopy() as HDict,
-			rows: this.getRows().map(
-				(dict: DictVal): LimitDictVal => {
-					const newDict = new HDict()
+			rows: this.getRows().map((dict: DictVal): LimitDictVal => {
+				const newDict = new HDict()
 
-					for (const name of names) {
-						if (dict.has(name)) {
-							newDict.set(name, dict.get(name) as HVal)
-						}
+				for (const name of names) {
+					if (dict.has(name)) {
+						newDict.set(name, dict.get(name) as HVal)
 					}
-
-					return newDict as LimitDictVal
 				}
-			),
+
+				return newDict as LimitDictVal
+			}),
 			columns: this.getColumns()
 				.filter((col: GridColumn) => names.includes(col.name))
-				.map((col: GridColumn): {
-					name: string
-					meta?: HDict
-				} => ({ name: col.name, meta: col.meta.newCopy() as HDict })),
+				.map(
+					(
+						col: GridColumn
+					): {
+						name: string
+						meta?: HDict
+					} => ({ name: col.name, meta: col.meta.newCopy() as HDict })
+				),
 		})
 	}
 
@@ -2262,7 +2272,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The grid as an array like object.
 	 */
 	public asArrayLike(): ArrayLike<DictVal> {
-		return (this as unknown) as ArrayLike<DictVal>
+		return this as unknown as ArrayLike<DictVal>
 	}
 
 	/**
@@ -2286,17 +2296,21 @@ export class HGrid<DictVal extends HDict = HDict>
 		}
 
 		console.table(
-			this.getRows().map((row: DictVal): {
-				[prop: string]: string | number
-			} => {
-				const obj: { [prop: string]: string } = {}
+			this.getRows().map(
+				(
+					row: DictVal
+				): {
+					[prop: string]: string | number
+				} => {
+					const obj: { [prop: string]: string } = {}
 
-				for (const val of row) {
-					obj[val.name] = String(val.value)
+					for (const val of row) {
+						obj[val.name] = String(val.value)
+					}
+
+					return obj
 				}
-
-				return obj
-			})
+			)
 		)
 
 		return this
@@ -2324,10 +2338,14 @@ export class HGrid<DictVal extends HDict = HDict>
 			rows: this.getRows().map(
 				(dict: DictVal): DictVal => dict.newCopy() as DictVal
 			),
-			columns: this.getColumns().map((col: GridColumn): {
-				name: string
-				meta?: HDict
-			} => ({ name: col.name, meta: col.meta.newCopy() as HDict })),
+			columns: this.getColumns().map(
+				(
+					col: GridColumn
+				): {
+					name: string
+					meta?: HDict
+				} => ({ name: col.name, meta: col.meta.newCopy() as HDict })
+			),
 		})
 	}
 

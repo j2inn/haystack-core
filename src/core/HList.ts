@@ -29,7 +29,8 @@ import { EvalContext } from '../filter/EvalContext'
  * An iterator for a list.
  */
 export class ListValueIterator<Value extends OptionalHVal>
-	implements Iterator<Value> {
+	implements Iterator<Value>
+{
 	private readonly $values: Value[]
 
 	private $index = 0
@@ -102,7 +103,8 @@ type ReduceCallback<PreviousValue, CurrentValue> = (
  * ```
  */
 export class HList<Value extends OptionalHVal = OptionalHVal>
-	implements HVal, Iterable<Value> {
+	implements HVal, Iterable<Value>
+{
 	/**
 	 * The list values.
 	 */
@@ -759,7 +761,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 					newValues.push(innerVal as NewValue)
 				}
 			} else {
-				newValues.push((val as unknown) as NewValue)
+				newValues.push(val as unknown as NewValue)
 			}
 		}
 
@@ -960,7 +962,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @returns The list as an array like object.
 	 */
 	public asArrayLike(): ArrayLike<HaysonVal | Value> {
-		return (this as unknown) as ArrayLike<HaysonVal | Value>
+		return this as unknown as ArrayLike<HaysonVal | Value>
 	}
 
 	/**
@@ -971,7 +973,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	private toNumbers(): number[] {
 		return this.values
 			.filter((val): boolean => valueIsKind<HNum>(val, Kind.Number))
-			.map((val): number => ((val as unknown) as HNum).value)
+			.map((val): number => (val as unknown as HNum).value)
 	}
 
 	/**

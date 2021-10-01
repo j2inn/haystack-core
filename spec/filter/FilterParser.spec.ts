@@ -664,28 +664,21 @@ describe('FilterParser', function (): void {
 																type: 'condOr',
 																nodes: [
 																	{
-																		type:
-																			'condAnd',
+																		type: 'condAnd',
 																		nodes: [
 																			{
-																				type:
-																					'cmp',
+																				type: 'cmp',
 																				tokens: [
 																					{
-																						type:
-																							'text',
-																						text:
-																							'test',
+																						type: 'text',
+																						text: 'test',
 																					},
 																					{
-																						type:
-																							'equals',
-																						text:
-																							'==',
+																						type: 'equals',
+																						text: '==',
 																					},
 																					{
-																						type:
-																							'boolean',
+																						type: 'boolean',
 																						val: true,
 																					},
 																				],

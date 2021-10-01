@@ -23,7 +23,7 @@ describe('TokenPaths', function (): void {
 		})
 
 		it('returns false if the token is not a token path', function (): void {
-			expect(token.equals((null as unknown) as TokenPaths)).toBe(false)
+			expect(token.equals(null as unknown as TokenPaths)).toBe(false)
 		})
 
 		it('returns false when the paths are a different length', function (): void {

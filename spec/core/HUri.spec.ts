@@ -51,19 +51,19 @@ describe('HUri', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HUri.make('/foo').equals((null as unknown) as HUri)).toBe(
+			expect(HUri.make('/foo').equals(null as unknown as HUri)).toBe(
 				false
 			)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(
-				HUri.make('/foo').equals((undefined as unknown) as HUri)
-			).toBe(false)
+			expect(HUri.make('/foo').equals(undefined as unknown as HUri)).toBe(
+				false
+			)
 		})
 
 		it('string returns false', function (): void {
-			expect(HUri.make('/foo').equals(('/foo' as unknown) as HUri)).toBe(
+			expect(HUri.make('/foo').equals('/foo' as unknown as HUri)).toBe(
 				false
 			)
 		})

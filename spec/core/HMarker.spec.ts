@@ -31,15 +31,15 @@ describe('HMarker', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HMarker.make().equals((null as unknown) as HMarker)).toBe(
+			expect(HMarker.make().equals(null as unknown as HMarker)).toBe(
 				false
 			)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(
-				HMarker.make().equals((undefined as unknown) as HMarker)
-			).toBe(false)
+			expect(HMarker.make().equals(undefined as unknown as HMarker)).toBe(
+				false
+			)
 		})
 
 		it('returns true for haystack marker value', function (): void {

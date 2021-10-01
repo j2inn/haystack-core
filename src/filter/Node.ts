@@ -272,10 +272,14 @@ export abstract class LeafNode implements Node {
 		const tokens = this.tokens
 
 		if (tokens && tokens.length) {
-			data.tokens = tokens.map((token: Token): {
-				type: string
-				[prop: string]: string | string[] | HaysonVal
-			} => token.toJSON())
+			data.tokens = tokens.map(
+				(
+					token: Token
+				): {
+					type: string
+					[prop: string]: string | string[] | HaysonVal
+				} => token.toJSON()
+			)
 		}
 
 		return data

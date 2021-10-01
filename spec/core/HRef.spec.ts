@@ -69,19 +69,17 @@ describe('HRef', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HRef.make('foo').equals((null as unknown) as HRef)).toBe(
+			expect(HRef.make('foo').equals(null as unknown as HRef)).toBe(false)
+		})
+
+		it('undefined returns false', function (): void {
+			expect(HRef.make('foo').equals(undefined as unknown as HRef)).toBe(
 				false
 			)
 		})
 
-		it('undefined returns false', function (): void {
-			expect(
-				HRef.make('foo').equals((undefined as unknown) as HRef)
-			).toBe(false)
-		})
-
 		it('string returns false', function (): void {
-			expect(HRef.make('foo').equals(('foo' as unknown) as HRef)).toBe(
+			expect(HRef.make('foo').equals('foo' as unknown as HRef)).toBe(
 				false
 			)
 		})

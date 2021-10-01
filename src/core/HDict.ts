@@ -319,9 +319,9 @@ export class HDict implements HVal, Iterable<HValRow> {
 			| OptionalHVal
 			| DictStore
 	): T {
-		return (valueIsKind<HDict>(values, Kind.Dict)
-			? values
-			: new HDict(values)) as T
+		return (
+			valueIsKind<HDict>(values, Kind.Dict) ? values : new HDict(values)
+		) as T
 	}
 
 	/**
@@ -770,7 +770,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns The dict as an array like object.
 	 */
 	public asArrayLike(): ArrayLike<HValRow> {
-		return (this as unknown) as ArrayLike<HValRow>
+		return this as unknown as ArrayLike<HValRow>
 	}
 
 	/**

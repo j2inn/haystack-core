@@ -605,9 +605,10 @@ export class ZincReader {
 		try {
 			return HCoord.make({ latitude, longitude })
 		} catch (err) {
+			const error = err as Error
 			throw new LocalizedError({
-				message: err.message,
-				lex: err.message,
+				message: error.message,
+				lex: error.message,
 				index: this.scanner.index,
 			})
 		}
@@ -678,9 +679,10 @@ export class ZincReader {
 			const value = hvalue.valueOf() as string
 			return HXStr.make(type, value)
 		} catch (err) {
+			const error = err as Error
 			throw new LocalizedError({
-				message: err.message,
-				lex: err.message,
+				message: error.message,
+				lex: error.message,
 				index: this.scanner.index,
 			})
 		}

@@ -106,18 +106,18 @@ describe('HGrid', function (): void {
 			})
 
 			it('returns false when null is passed in', function (): void {
-				expect(col.equals((null as unknown) as GridColumn)).toBe(false)
+				expect(col.equals(null as unknown as GridColumn)).toBe(false)
 			})
 
 			it('returns false when undefined is passed in', function (): void {
-				expect(col.equals((undefined as unknown) as GridColumn)).toBe(
+				expect(col.equals(undefined as unknown as GridColumn)).toBe(
 					false
 				)
 			})
 
 			it('returns false when a string is passed in', function (): void {
 				expect(
-					col.equals((HStr.make('foo') as unknown) as GridColumn)
+					col.equals(HStr.make('foo') as unknown as GridColumn)
 				).toBe(false)
 			})
 
@@ -479,17 +479,17 @@ describe('HGrid', function (): void {
 
 		describe('#equals()', function (): void {
 			it('returns false when null is passed in', function (): void {
-				expect(grid.equals((null as unknown) as HGrid)).toBe(false)
+				expect(grid.equals(null as unknown as HGrid)).toBe(false)
 			})
 
 			it('returns false when undefined is passed in', function (): void {
-				expect(grid.equals((undefined as unknown) as HGrid)).toBe(false)
+				expect(grid.equals(undefined as unknown as HGrid)).toBe(false)
 			})
 
 			it('returns false when a string is passed in', function (): void {
-				expect(
-					grid.equals((HStr.make('foo') as unknown) as HGrid)
-				).toBe(false)
+				expect(grid.equals(HStr.make('foo') as unknown as HGrid)).toBe(
+					false
+				)
 			})
 
 			it('returns true when the grids match', function (): void {
@@ -730,7 +730,7 @@ describe('HGrid', function (): void {
 
 			it('throws an error if the value being passed in is not a dict', function (): void {
 				expect((): void => {
-					grid.set(0, ('foo' as unknown) as HaysonDict)
+					grid.set(0, 'foo' as unknown as HaysonDict)
 				}).toThrow()
 			})
 
@@ -780,7 +780,7 @@ describe('HGrid', function (): void {
 
 			it('throws an error if a non-dict value is added', function (): void {
 				expect((): void => {
-					grid.add(([] as unknown) as HDict)
+					grid.add([] as unknown as HDict)
 				}).toThrow()
 			})
 
@@ -984,9 +984,7 @@ describe('HGrid', function (): void {
 			function getRow(index: number): NameAge {
 				const json = grid.toJSON()
 				const row = (json.rows || [])[index]
-				return row
-					? ((row as unknown) as NameAge)
-					: { name: '', age: -1 }
+				return row ? (row as unknown as NameAge) : { name: '', age: -1 }
 			}
 
 			it('sort by name', function (): void {

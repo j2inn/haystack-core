@@ -233,10 +233,9 @@ export class HNamespace {
 				// Flatten the name list.
 				ns.concat(
 					Array.isArray(name)
-						? (name as (
-								| string
-								| HSymbol
-						  )[]).map((nm: string | HSymbol): string => String(nm))
+						? (name as (string | HSymbol)[]).map(
+								(nm: string | HSymbol): string => String(nm)
+						  )
 						: [String(name)]
 				),
 			[]

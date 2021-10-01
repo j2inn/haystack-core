@@ -24,7 +24,7 @@ describe('Visitor', function (): void {
 	let visitor: Visitor
 
 	beforeEach(function (): void {
-		visitor = ({
+		visitor = {
 			visitCondOr: jest.fn(),
 			visitCondAnd: jest.fn(),
 			visitTerm: jest.fn(),
@@ -33,7 +33,7 @@ describe('Visitor', function (): void {
 			visitParens: jest.fn(),
 			visitCmp: jest.fn(),
 			visitIsA: jest.fn(),
-		} as unknown) as Visitor
+		} as unknown as Visitor
 	})
 
 	it('visits a condition or node', function (): void {

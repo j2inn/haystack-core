@@ -31,15 +31,15 @@ describe('HRemove', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HRemove.make().equals((null as unknown) as HRemove)).toBe(
+			expect(HRemove.make().equals(null as unknown as HRemove)).toBe(
 				false
 			)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(
-				HRemove.make().equals((undefined as unknown) as HRemove)
-			).toBe(false)
+			expect(HRemove.make().equals(undefined as unknown as HRemove)).toBe(
+				false
+			)
 		})
 
 		it('returns true for haystack remove value', function (): void {

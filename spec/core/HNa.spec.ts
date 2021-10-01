@@ -31,11 +31,11 @@ describe('HNa', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HNa.make().equals((null as unknown) as HNa)).toBe(false)
+			expect(HNa.make().equals(null as unknown as HNa)).toBe(false)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(HNa.make().equals((undefined as unknown) as HNa)).toBe(false)
+			expect(HNa.make().equals(undefined as unknown as HNa)).toBe(false)
 		})
 
 		it('returns true for haystack NA value', function (): void {

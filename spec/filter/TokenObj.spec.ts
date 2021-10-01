@@ -50,7 +50,7 @@ describe('TokenObj', function (): void {
 		it('returns false when the object is null', function (): void {
 			expect(
 				new TokenObj(TokenType.text, 'foo').equals(
-					(null as unknown) as TokenObj
+					null as unknown as TokenObj
 				)
 			).toBe(false)
 		})
@@ -58,7 +58,7 @@ describe('TokenObj', function (): void {
 		it('returns false when the object is undefined', function (): void {
 			expect(
 				new TokenObj(TokenType.text, 'foo').equals(
-					(undefined as unknown) as TokenObj
+					undefined as unknown as TokenObj
 				)
 			).toBe(false)
 		})

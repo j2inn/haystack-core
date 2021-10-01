@@ -25,7 +25,7 @@ describe('TokenValue', function (): void {
 		})
 
 		it('returns false if the token is not a token value', function (): void {
-			expect(token.equals((null as unknown) as TokenValue)).toBe(false)
+			expect(token.equals(null as unknown as TokenValue)).toBe(false)
 		})
 
 		it('returns false when the token is different', function (): void {

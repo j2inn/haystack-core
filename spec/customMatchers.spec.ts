@@ -23,7 +23,7 @@ describe('customMatchers', function (): void {
 
 		it('returns false when first value is not a haystack value', function (): void {
 			const res = matchers.toValEqual(
-				({} as unknown) as HVal,
+				{} as unknown as HVal,
 				HBool.make(false)
 			)
 
@@ -34,7 +34,7 @@ describe('customMatchers', function (): void {
 		it('returns false when second value is not a haystack value', function (): void {
 			const res = matchers.toValEqual(
 				HBool.make(false),
-				({} as unknown) as HVal
+				{} as unknown as HVal
 			)
 			expect(res.pass).toBe(false)
 			expect(typeof res.message()).toBe('string')

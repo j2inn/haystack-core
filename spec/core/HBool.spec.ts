@@ -62,15 +62,15 @@ describe('HBool', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HBool.make(true).equals((null as unknown) as HBool)).toBe(
+			expect(HBool.make(true).equals(null as unknown as HBool)).toBe(
 				false
 			)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(
-				HBool.make(true).equals((undefined as unknown) as HBool)
-			).toBe(false)
+			expect(HBool.make(true).equals(undefined as unknown as HBool)).toBe(
+				false
+			)
 		})
 
 		it('returns false when booleans do not match', function (): void {

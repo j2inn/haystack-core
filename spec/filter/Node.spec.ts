@@ -126,7 +126,7 @@ describe('Node', function (): void {
 
 		describe('#acceptChildNodes()', function (): void {
 			it('invokes accept on all child nodes', function (): void {
-				const childNode = ({ accept: jest.fn() } as unknown) as Node
+				const childNode = { accept: jest.fn() } as unknown as Node
 				node.childNodes = [childNode]
 
 				const visitor = new GenerateHaystackFilterVisitor()
@@ -184,13 +184,11 @@ describe('Node', function (): void {
 
 		describe('#eval()', function (): void {
 			function setCondAnds(results: boolean[]): void {
-				condOr.condAnds = results.map(
-					(res: boolean): CondAndNode => {
-						const condAnd = { eval: jest.fn() }
-						condAnd.eval.mockReturnValue(res)
-						return (condAnd as unknown) as CondAndNode
-					}
-				)
+				condOr.condAnds = results.map((res: boolean): CondAndNode => {
+					const condAnd = { eval: jest.fn() }
+					condAnd.eval.mockReturnValue(res)
+					return condAnd as unknown as CondAndNode
+				})
 			}
 
 			it('returns false if there are no child nodes', function (): void {
@@ -228,13 +226,11 @@ describe('Node', function (): void {
 
 		describe('#eval()', function (): void {
 			function setTerms(results: boolean[]): void {
-				condAnd.terms = results.map(
-					(res: boolean): HasNode => {
-						const has = { eval: jest.fn() }
-						has.eval.mockReturnValue(res)
-						return (has as unknown) as HasNode
-					}
-				)
+				condAnd.terms = results.map((res: boolean): HasNode => {
+					const has = { eval: jest.fn() }
+					has.eval.mockReturnValue(res)
+					return has as unknown as HasNode
+				})
 			}
 
 			it('returns false if there are no child nodes', function (): void {
@@ -269,7 +265,7 @@ describe('Node', function (): void {
 
 		beforeEach(function (): void {
 			condOr = new CondOrNode([])
-			spyOn(condOr, 'eval').and.callThrough()
+			jest.spyOn(condOr, 'eval')
 			parens = new ParensNode(condOr)
 		})
 

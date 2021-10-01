@@ -91,19 +91,19 @@ describe('HTime', function (): void {
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
 			expect(
-				HTime.make('12:00:00').equals((null as unknown) as HTime)
+				HTime.make('12:00:00').equals(null as unknown as HTime)
 			).toBe(false)
 		})
 
 		it('undefined returns false', function (): void {
 			expect(
-				HTime.make('12:00:00').equals((undefined as unknown) as HTime)
+				HTime.make('12:00:00').equals(undefined as unknown as HTime)
 			).toBe(false)
 		})
 
 		it('string returns false', function (): void {
 			expect(
-				HTime.make('12:00:00').equals(('12:00:00' as unknown) as HTime)
+				HTime.make('12:00:00').equals('12:00:00' as unknown as HTime)
 			).toBe(false)
 		})
 	}) // #equals()

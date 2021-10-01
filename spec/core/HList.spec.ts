@@ -41,12 +41,12 @@ describe('HList', function (): void {
 		})
 
 		it('filters out undefined arguments', function (): void {
-			const array = ([
+			const array = [
 				HStr.make('foovalue'),
 				HNum.make(99),
 				HMarker.make(),
 				undefined,
-			] as unknown) as HaysonList
+			] as unknown as HaysonList
 
 			expect(new HList(array)).toEqual(list)
 		})
@@ -646,7 +646,7 @@ describe('HList', function (): void {
 		})
 
 		it('returns false when the other list is null', function (): void {
-			expect(list.equals((null as unknown) as HList<HVal>)).toBe(false)
+			expect(list.equals(null as unknown as HList<HVal>)).toBe(false)
 		})
 	}) //#equals()
 
@@ -889,7 +889,7 @@ describe('HList', function (): void {
 		it('makes sure the internal array items are real haystack values', function (): void {
 			const numList = HList.make<HNum>(1, 2, 3)
 
-			const numArray = (numList.values as unknown) as number[]
+			const numArray = numList.values as unknown as number[]
 
 			numArray[2] = 4
 

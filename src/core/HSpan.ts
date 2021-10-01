@@ -124,10 +124,9 @@ export class HSpan {
 		if (isRelativeSpan(args)) {
 			this.mode = args.mode
 		} else {
-			this.start = (args as
-				| SingleDateSpan
-				| DoubleDateSpan
-				| DoubleDateTimeSpan).start
+			this.start = (
+				args as SingleDateSpan | DoubleDateSpan | DoubleDateTimeSpan
+			).start
 			this.end = (args as DoubleDateSpan | DoubleDateTimeSpan).end
 		}
 	}

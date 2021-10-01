@@ -178,21 +178,17 @@ describe('HNum', function (): void {
 
 	describe('#equals()', function (): void {
 		it('null returns false', function (): void {
-			expect(HNum.make(34.4).equals((null as unknown) as HNum)).toBe(
-				false
-			)
+			expect(HNum.make(34.4).equals(null as unknown as HNum)).toBe(false)
 		})
 
 		it('undefined returns false', function (): void {
-			expect(HNum.make(34.4).equals((undefined as unknown) as HNum)).toBe(
+			expect(HNum.make(34.4).equals(undefined as unknown as HNum)).toBe(
 				false
 			)
 		})
 
 		it('string returns false', function (): void {
-			expect(HNum.make(34.4).equals(('foo' as unknown) as HNum)).toBe(
-				false
-			)
+			expect(HNum.make(34.4).equals('foo' as unknown as HNum)).toBe(false)
 		})
 
 		it('same number with no units returns true', function (): void {
