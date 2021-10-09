@@ -2,7 +2,15 @@
  * Copyright (c) 2019, J2 Innovations. All Rights Reserved
  */
 
-import { makeValue, toTagName, isValidTagName } from '../../src/core/util'
+import {
+	makeValue,
+	toTagName,
+	isValidTagName,
+	dictToDis,
+	LocalizedCallback,
+	macro,
+	disKey,
+} from '../../src/core/util'
 import { Kind } from '../../src/core/Kind'
 import { HBool } from '../../src/core/HBool'
 import { HStr } from '../../src/core/HStr'
@@ -18,6 +26,8 @@ import { HCoord } from '../../src/core/HCoord'
 import { HXStr } from '../../src/core/HXStr'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HList } from '../../src/core/HList'
+import { HDict } from '../../src/core/HDict'
+import { HVal } from '../../src/core/HVal'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
@@ -307,4 +317,138 @@ describe('util', function (): void {
 			expect(isValidTagName('aTa£$%g')).toBe(false)
 		})
 	}) // isValidTagName()
+
+	describe('dictToDis()', function (): void {
+		it('returns dis', function (): void {
+			expect(dictToDis(new HDict({ dis: 'dis' }))).toBe('dis')
+		})
+
+		it('returns name', function (): void {
+			expect(dictToDis(new HDict({ name: 'name' }))).toBe('name')
+		})
+
+		it('returns disMacro', function (): void {
+			expect(dictToDis(new HDict({ disMacro: '$tag', tag: 'tag' }))).toBe(
+				'tag'
+			)
+		})
+
+		it('returns disKey', function (): void {
+			expect(dictToDis(new HDict({ disKey: 'disKey' }))).toBe('disKey')
+		})
+
+		it('returns disKey from i18n', function (): void {
+			const i18n = () => 'test'
+			expect(
+				dictToDis(new HDict({ disKey: 'pod::key' }), undefined, i18n)
+			).toBe('test')
+		})
+
+		it('returns def', function (): void {
+			expect(dictToDis(new HDict({ def: 'def' }))).toBe('def')
+		})
+
+		it('returns tag', function (): void {
+			expect(dictToDis(new HDict({ tag: 'tag' }))).toBe('tag')
+		})
+
+		it('returns id display name', function (): void {
+			expect(dictToDis(new HDict({ id: HRef.make('ref', 'dis') }))).toBe(
+				'dis'
+			)
+		})
+	}) // dictToDis()
+
+	describe('macro()', function (): void {
+		function makeGetValue(dict: HDict): (key: string) => HVal | undefined {
+			return (key: string) => dict.get(key)
+		}
+
+		it('replaces tags', function (): void {
+			const scope = new HDict({ tag: 'tag' })
+			expect(macro('$tag$tag $tag something', makeGetValue(scope))).toBe(
+				'tagtag tag something'
+			)
+		})
+
+		it('does not replace tags when not found', function (): void {
+			const scope = new HDict({ tag: 'tag' })
+			expect(macro('$foo$foo $foo something', makeGetValue(scope))).toBe(
+				'$foo$foo $foo something'
+			)
+		})
+
+		it('skips non-tag names', function (): void {
+			const scope = new HDict({ Tag: 'foo' })
+			expect(macro('$Tag', makeGetValue(scope))).toBe('$Tag')
+		})
+
+		it('replaces tags in braces', function (): void {
+			const scope = new HDict({ tag: 'tag' })
+			expect(
+				macro('${tag}${tag} ${tag} something', makeGetValue(scope))
+			).toBe('tagtag tag something')
+		})
+
+		it('does not replace tags in braces when not found', function (): void {
+			const scope = new HDict({ tag: 'tag' })
+			expect(
+				macro('${foo}${foo} ${foo} something', makeGetValue(scope))
+			).toBe('${foo}${foo} ${foo} something')
+		})
+
+		it('replaces with localized values', function (): void {
+			const i18n = jest.fn().mockReturnValue('tag')
+
+			expect(
+				macro(
+					'$<pod::key>$<pod::key> $<pod::key> something',
+					makeGetValue(new HDict()),
+					i18n
+				)
+			).toBe('tagtag tag something')
+
+			expect(i18n).toHaveBeenCalledWith('pod', 'key')
+		})
+
+		it('does not replace localized values when not found', function (): void {
+			const i18n = jest.fn().mockReturnValue(undefined)
+
+			expect(
+				macro(
+					'$<pod::key>$<pod::key> $<pod::key> something',
+					makeGetValue(new HDict()),
+					i18n
+				)
+			).toBe('$<pod::key>$<pod::key> $<pod::key> something')
+		})
+
+		it('replaces ref with ref dis', function (): void {
+			const scope = new HDict({ ref: HRef.make('id', 'Id') })
+			expect(macro('$ref$ref $ref something', makeGetValue(scope))).toBe(
+				'IdId Id something'
+			)
+		})
+	}) // macro()
+
+	describe('disKey()', function (): void {
+		let i18n: LocalizedCallback
+
+		beforeEach(function (): void {
+			i18n = jest.fn().mockReturnValue('test')
+		})
+
+		it('returns a localized string', function (): void {
+			expect(disKey('pod::key', i18n)).toBe('test')
+		})
+
+		it('calls the internal localization function', function (): void {
+			disKey('pod::key', i18n)
+			expect(i18n).toHaveBeenCalledWith('pod', 'key')
+		})
+
+		it('returns undefiend if not formatted properly', function (): void {
+			expect(disKey('pod:key', i18n)).toBeUndefined()
+		})
+	}) // disKey()
 })

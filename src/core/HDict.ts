@@ -23,7 +23,7 @@ import {
 	ZINC_NULL,
 } from './HVal'
 import { Kind } from './Kind'
-import { makeValue } from './util'
+import { makeValue, dictToDis, LocalizedCallback } from './util'
 
 /**
  * An object composed of haystack values.
@@ -793,6 +793,46 @@ export class HDict implements HVal, Iterable<HValRow> {
 
 		str += '}'
 		return str
+	}
+
+	/**
+	 * Get the display string for the dict or the given tag. If 'name'
+	 * is undefined, then return display text for the entire dict. If 'name'
+	 * is non-null then format the tag value. If 'name' is not defined
+	 * by this dict then return 'def'.
+	 *
+	 * ```typescript
+	 * // Returns the record's dis tag string value...
+	 * myDict.toDis()
+	 *
+	 * // Returns the record's tag value string value for foo...
+	 * myDict.toDis({ name: 'foo' })
+	 *
+	 * // Returns a localized string based on `disKey`...
+	 * myDict.toDis({
+	 *   i18n: (pod: string, key: string): string | undefined => pods.get(pod)?.key(key)
+	 * })
+	 * ```
+	 *
+	 * @see {@link dictToDis}
+	 *
+	 * @param options.name Optional tag name.
+	 * @param options.def Optional default value.
+	 * @param options.i18n Optional function to get localized strings.
+	 * @returns The display string
+	 */
+	public toDis({
+		name,
+		def,
+		i18n,
+	}: {
+		name?: string
+		def?: string
+		i18n?: LocalizedCallback
+	} = {}): string {
+		return name
+			? this.get(name)?.toString() ?? def ?? ''
+			: dictToDis(this, def, i18n)
 	}
 
 	/**
