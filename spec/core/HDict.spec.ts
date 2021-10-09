@@ -763,4 +763,40 @@ describe('HDict', function (): void {
 			expect(dict0.update(dict1, dict2)).toValEqual(result)
 		})
 	}) // #update()
+
+	describe('#toDis()', function (): void {
+		it('returns the dis from a dict', function (): void {
+			expect(new HDict({ dis: 'dis' }).toDis()).toBe('dis')
+		})
+
+		it("returns a tag's string value", function (): void {
+			expect(new HDict({ tag: 'tag' }).toDis({ name: 'tag' })).toBe('tag')
+		})
+
+		it('returns the default value if the tag value cannot be found', function (): void {
+			expect(
+				new HDict({ tag: 'tag' }).toDis({ name: 'foo', def: 'def' })
+			).toBe('def')
+		})
+
+		it('returns the default value if a dict display string cannot be found', function (): void {
+			expect(new HDict().toDis({ name: 'foo', def: 'def' })).toBe('def')
+		})
+
+		it('returns a localized string', function (): void {
+			const i18n = jest.fn().mockReturnValue('test')
+			expect(new HDict({ disKey: 'pod::key' }).toDis({ i18n })).toBe(
+				'test'
+			)
+			expect(i18n).toHaveBeenCalledWith('pod', 'key')
+		})
+
+		it('returns a localized string from a macro', function (): void {
+			const i18n = jest.fn().mockReturnValue('test')
+			expect(new HDict({ disMacro: '$<pod::key>' }).toDis({ i18n })).toBe(
+				'test'
+			)
+			expect(i18n).toHaveBeenCalledWith('pod', 'key')
+		})
+	}) // #toDis()
 })

@@ -9,7 +9,7 @@
  */
 
 import { Kind } from './Kind'
-import { HVal, isHVal, OptionalHVal } from './HVal'
+import { HVal, isHVal, OptionalHVal, valueIsKind } from './HVal'
 import { HBool } from './HBool'
 import { HDate } from './HDate'
 import { HNum } from './HNum'
@@ -249,3 +249,149 @@ export function isValidTagName(name: string): boolean {
  * The implied by tag name.
  */
 export const IMPLIED_BY = 'impliedBy'
+
+/**
+ * A function used for accessing localized display strings.
+ *
+ * Return undefined if the translated value can't be found.
+ *
+ * @param pod The pod/library name.
+ * @param key The key.
+ * @returns The translated value or undefined if it can't be found.
+ */
+export interface LocalizedCallback {
+	(pod: string, key: string): string | undefined
+}
+
+/**
+ * Return a display string from the dict...
+ *
+ * 1. 'dis' tag.
+ * 2. 'disMacro' tag returns macro using dict as scope.
+ * 3. 'disKey' maps to qname locale key.
+ * 4. 'name' tag.
+ * 5. 'tag' tag.
+ * 6. 'id' tag.
+ * 7. default
+ *
+ * @see {@link HDict.toDis}
+ * @see {@link macro}
+ * @see {@link disKey}
+ *
+ * @param dict The dict to use.
+ * @param def The default fallback value.
+ * @param i18n The localization callback.
+ * @return The display string value.
+ */
+export function dictToDis(
+	dict: HDict,
+	def?: string,
+	i18n?: LocalizedCallback
+): string {
+	let val = dict.get('dis')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	val = dict.get('disMacro')
+	if (isHVal(val)) {
+		return macro(val.toString(), (key: string) => dict.get(key), i18n)
+	}
+
+	val = dict.get('disKey')
+	if (isHVal(val)) {
+		return i18n
+			? disKey(val.toString(), i18n) ?? val.toString()
+			: val.toString()
+	}
+
+	val = dict.get('name')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	val = dict.get('def')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	val = dict.get('tag')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	val = dict.get('id')
+	if (valueIsKind<HRef>(val, Kind.Ref)) {
+		return val.dis
+	}
+
+	return def ?? ''
+}
+
+/**
+ * Process a macro pattern with the given scope of variable name/value pairs.
+ * The pattern is a unicode string with embedded expressions:
+ * * '$tag': resolve tag name from scope, variable name ends with first non-tag character.
+ * * '${tag}': resolve tag name from scope.
+ * * '$<pod::key> localization key.
+ *
+ * Any variables which cannot be resolved in the scope are returned as-is (i.e. $name) in
+ * the result string.
+ *
+ * If a tag resolves to Ref, then we use Ref.dis for the string.
+ *
+ * @see {@link dictToDis}
+ *
+ * @param pattern The pattern to process.
+ * @param getValue Gets a value based on a name (returns undefined if not found).
+ * @param i18n Optional localization callback.
+ * @returns The processed output string.
+ */
+export function macro(
+	pattern: string,
+	getValue: (key: string) => HVal | undefined,
+	i18n?: LocalizedCallback
+): string {
+	const replacer = (match: string, key: string): string => {
+		const val = getValue(key)
+
+		if (valueIsKind<HRef>(val, Kind.Ref)) {
+			return val.dis
+		}
+
+		return val?.toString() ?? match
+	}
+
+	// Replace $tag
+	let result = pattern.replace(/\$([a-z][a-zA-Z0-9_]+)/g, replacer)
+
+	// Replace ${tag}
+	result = result.replace(/\${([a-z][a-zA-Z0-9_]+)}/g, replacer)
+
+	if (i18n) {
+		// Replace $<pod::key>
+		result = result.replace(
+			/\$<([^>]+)>/g,
+			(match: string, key: string): string => disKey(key, i18n) ?? match
+		)
+	}
+
+	return result
+}
+
+/**
+ * Map a display key to a localized string.
+ *
+ * @see {@link dictToDis}
+ *
+ * @param key The display key.
+ * @param i18n Localization callback.
+ * @returns The value or undefined if the value can't be found.
+ */
+export function disKey(
+	key: string,
+	i18n: LocalizedCallback
+): string | undefined {
+	const [, pod, disKey] = /^([^:]+)::([^:]+)$/.exec(key.trim()) ?? []
+	return pod && disKey ? i18n(pod, disKey) : undefined
+}
