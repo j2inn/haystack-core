@@ -1658,4 +1658,112 @@ describe('HNamespace', function (): void {
 			})
 		}) // reciprocal relationships
 	}) // #hasRelationship()
+
+	describe('validation', function (): void {
+		let dict: HDict
+
+		beforeEach(function (): void {
+			dict = new HDict({ ahu: HMarker.make(), equip: HMarker.make() })
+		})
+
+		describe('#validateAll()', function (): void {
+			it("throws an error for a value that's not a dict", function (): void {
+				expect(() => defs.validateAll({})).toThrow()
+			})
+
+			it('does not throw an error for a valid ahu record', function (): void {
+				expect(() => defs.validateAll(dict)).not.toThrow()
+			})
+
+			it('does not throw an error for a record that has a tag that does not exist in the namespace', function (): void {
+				dict.set('foobar', HMarker.make())
+				expect(() => defs.validateAll(dict)).not.toThrow()
+			})
+
+			it('throws an error for an invalid dict', function (): void {
+				dict.remove('equip')
+				expect(() => defs.validateAll(dict)).toThrow(
+					"Cannot find mandatory tag 'equip'"
+				)
+			})
+		}) // #validateAll()
+
+		describe('#validate()', function (): void {
+			it("throws an error for a value that's not a dict", function (): void {
+				expect(() => defs.validate('ahu', {})).toThrow()
+			})
+
+			it('does not throw an error for a valid ahu record', function (): void {
+				expect(() => defs.validate('ahu', dict)).not.toThrow()
+			})
+
+			it('does not throw an error for a valid record with a marker tag', function (): void {
+				expect(() => defs.validate('marker', dict)).not.toThrow()
+			})
+
+			it('does not throw an error for a valid record with an entity tag', function (): void {
+				expect(() => defs.validate('entity', dict)).not.toThrow()
+			})
+
+			it('does not throw an error for a valid ahu record using a symbol', function (): void {
+				expect(() =>
+					defs.validate(HSymbol.make('ahu'), dict)
+				).not.toThrow()
+			})
+
+			it('does not throw an error for an ahu record that has a null tag', function (): void {
+				dict.set('equip', null)
+				expect(() => defs.validate('ahu', dict)).not.toThrow()
+			})
+
+			it('throws an error for a tag does not exist in the namespace', function (): void {
+				expect(() => defs.validate('foobar', dict)).toThrow(
+					"'foobar' does not fit dict"
+				)
+			})
+
+			it('throws an error for a tag that does not exist in the dict', function (): void {
+				dict.remove('ahu')
+				expect(() => defs.validate('ahu', dict)).toThrow(
+					"'ahu' does not fit dict"
+				)
+			})
+
+			it('throws an an error when the kind cannot be found for a def', function (): void {
+				jest.spyOn(defs, 'defToKind').mockReturnValue(undefined)
+				expect(() => defs.validate('ahu', dict)).toThrow(
+					"Cannot find kind for 'ahu'"
+				)
+			})
+
+			it('throws an an error when a tag has the wrong kind', function (): void {
+				dict.set('equip', 'a string')
+				expect(() => defs.validate('ahu', dict)).toThrow(
+					"Kind mismatch. 'equip' is str not marker"
+				)
+			})
+
+			it('throws an error for a invalid ahu record with a missing mandatory tag', function (): void {
+				dict.remove('equip')
+				expect(() => defs.validate('ahu', dict)).toThrow(
+					"Cannot find mandatory tag 'equip'"
+				)
+			})
+		}) // #validate()
+
+		describe('#isValid()', function (): void {
+			it('returns true for a valid dict', function (): void {
+				expect(defs.isValid('ahu', dict)).toBe(true)
+			})
+
+			it('returns true for a valid dict using a symbol', function (): void {
+				expect(defs.isValid(HSymbol.make('ahu'), dict)).toBe(true)
+			})
+
+			it('returns false for an invalid dict', function (): void {
+				dict.remove('equip')
+				expect(defs.isValid('ahu', dict)).toBe(false)
+			})
+		}) // #isValid()
+	}) // validation
 })
