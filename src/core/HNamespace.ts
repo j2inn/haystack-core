@@ -14,6 +14,7 @@ import { valueIsKind, OptionalHVal } from './HVal'
 import { HMarker } from './HMarker'
 import { HRef } from './HRef'
 import { IMPLIED_BY } from './util'
+import { LocalizedError } from '../util/LocalizedError'
 
 export interface Defs {
 	[prop: string]: HDict
@@ -1379,5 +1380,132 @@ export class HNamespace {
 		}
 
 		return impliedDefs
+	}
+
+	/**
+	 * Validates a dict for a tag.
+	 *
+	 * ```
+	 * try {
+	 *   namespace.validate('site', new HDict({ site: HMarker.make() }))
+	 * }
+	 * catch(err) {
+	 *   console.error(err)
+	 * }
+	 * ```
+	 *
+	 * @param name The name of the tag to validate.
+	 * @param dict The dict to validate against.
+	 * @throws An error if the tags on the dict are not valid.
+	 */
+	public validate(name: string | HSymbol, dict: unknown): void {
+		// 1. Make sure the dict is a real HDict.
+		if (!valueIsKind<HDict>(dict, Kind.Dict)) {
+			throw new LocalizedError({
+				message: 'Invalid dict',
+				lex: 'invalidDict',
+			})
+		}
+
+		const tagName = String(name)
+
+		// 2. Check to see if the name fits a tag in the dict.
+		// This reflected check will take care of matching sub-types.
+		if (!this.reflect(dict)?.fits(tagName)) {
+			throw new LocalizedError({
+				message: `'${tagName}' does not fit dict`,
+				lex: 'doesNotFitDict',
+				args: { name: tagName },
+			})
+		}
+
+		// Find all the mandatory tags. Check all of these
+		// tags are correctly implemented.
+		const mandatoryTags = [
+			this.byName(tagName) as HDict,
+			...this.allSuperTypesOf(tagName),
+		].filter((superDef) =>
+			superDef.get('mandatory')?.equals(HMarker.make())
+		)
+
+		for (const { defName } of mandatoryTags) {
+			// 3. Is the mandatory tag present?
+			if (!dict.has(defName)) {
+				throw new LocalizedError({
+					message: `Cannot find mandatory tag '${defName}'`,
+					lex: 'cannotFindMandatory',
+					args: { name: defName },
+				})
+			}
+
+			// 4. Does the def have a kind?
+			const kind = this.defToKind(defName)
+			if (!kind) {
+				throw new LocalizedError({
+					message: `Cannot find kind for '${defName}'`,
+					lex: 'cannotFindKind',
+					args: { name: defName },
+				})
+			}
+
+			// 5. Does the kind match the value's kind?
+			// This check is skipped if the value is null.
+			const value = dict.get(defName)
+			if (value && !value.isKind(kind)) {
+				throw new LocalizedError({
+					message: `Kind mismatch. '${defName}' is ${value.getKind()} not ${kind}`,
+					lex: 'kindMismatch',
+					args: { name: defName, kind, valueKind: value.getKind() },
+				})
+			}
+		}
+	}
+
+	/**
+	 * Validates all of the tags on the dict. Any tags that don't exist in the namespcae
+	 * will be skipped.
+	 *
+	 * ```
+	 * try {
+	 *   namespace.validateAll(new HDict({ site: HMarker.make() }))
+	 * }
+	 * catch(err) {
+	 *   console.error(err)
+	 * }
+	 * ```
+	 *
+	 * @param dict The dict to validate.
+	 * @throws An error if the tags on the dict are not valid.
+	 */
+	public validateAll(dict: unknown): void {
+		if (!valueIsKind<HDict>(dict, Kind.Dict)) {
+			throw new LocalizedError({
+				message: 'Invalid dict',
+				lex: 'invalidDict',
+			})
+		}
+
+		for (const { name } of dict) {
+			// Skip tags that don't exist in the namespace.
+			if (this.has(name)) {
+				this.validate(name, dict)
+			}
+		}
+	}
+
+	/**
+	 * Return true if the dict is valid for the specified tag.
+	 *
+	 * @param name The tag name.
+	 * @param dict The dict to validate against.
+	 * @returns true if the dict is valid.
+	 */
+	public isValid(name: string | HSymbol, dict: unknown): boolean {
+		try {
+			this.validate(name, dict)
+			return true
+		} catch {
+			return false
+		}
 	}
 }
