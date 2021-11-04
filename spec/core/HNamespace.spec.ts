@@ -1686,6 +1686,13 @@ describe('HNamespace', function (): void {
 					"Cannot find mandatory tag 'equip'"
 				)
 			})
+
+			it('throws an error for a tag that has the wrong kind', function (): void {
+				dict.set('site', HStr.make('wrong kind'))
+				expect(() => defs.validateAll(dict)).toThrow(
+					"Kind mismatch. 'site' is str not marker"
+				)
+			})
 		}) // #validateAll()
 
 		describe('#validate()', function (): void {

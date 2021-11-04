@@ -1419,8 +1419,7 @@ export class HNamespace {
 			})
 		}
 
-		// Find all the mandatory tags. Check all of these
-		// tags are correctly implemented.
+		// Find all the mandatory tags.
 		const mandatoryTags = [
 			this.byName(tagName) as HDict,
 			...this.allSuperTypesOf(tagName),
@@ -1429,7 +1428,7 @@ export class HNamespace {
 		)
 
 		for (const { defName } of mandatoryTags) {
-			// 3. Is the mandatory tag present?
+			// 3. Check all of the mandatory tags are present.
 			if (!dict.has(defName)) {
 				throw new LocalizedError({
 					message: `Cannot find mandatory tag '${defName}'`,
@@ -1438,26 +1437,35 @@ export class HNamespace {
 				})
 			}
 
-			// 4. Does the def have a kind?
-			const kind = this.defToKind(defName)
-			if (!kind) {
-				throw new LocalizedError({
-					message: `Cannot find kind for '${defName}'`,
-					lex: 'cannotFindKind',
-					args: { name: defName },
-				})
-			}
+			// 4. Validate the mandatory tag's kind.
+			this.validateKind(defName, dict)
+		}
+	}
 
-			// 5. Does the kind match the value's kind?
-			// This check is skipped if the value is null.
-			const value = dict.get(defName)
-			if (value && !value.isKind(kind)) {
-				throw new LocalizedError({
-					message: `Kind mismatch. '${defName}' is ${value.getKind()} not ${kind}`,
-					lex: 'kindMismatch',
-					args: { name: defName, kind, valueKind: value.getKind() },
-				})
-			}
+	/**
+	 * Validates kind for a tag. Tag values that are null are skipped.
+	 *
+	 * @param name The name of the tag.
+	 * @param dict The dict used for validation.
+	 * @throws An error if the kind is invalid.
+	 */
+	private validateKind(name: string, dict: HDict): void {
+		const kind = this.defToKind(name)
+		if (!kind) {
+			throw new LocalizedError({
+				message: `Cannot find kind for '${name}'`,
+				lex: 'cannotFindKind',
+				args: { name },
+			})
+		}
+
+		const value = dict.get(name)
+		if (value && !value.isKind(kind)) {
+			throw new LocalizedError({
+				message: `Kind mismatch. '${name}' is ${value.getKind()} not ${kind}`,
+				lex: 'kindMismatch',
+				args: { name, kind, valueKind: value.getKind() },
+			})
 		}
 	}
 
@@ -1489,6 +1497,7 @@ export class HNamespace {
 			// Skip tags that don't exist in the namespace.
 			if (this.has(name)) {
 				this.validate(name, dict)
+				this.validateKind(name, dict)
 			}
 		}
 	}
