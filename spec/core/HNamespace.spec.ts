@@ -624,6 +624,7 @@ describe('HNamespace', function (): void {
 				'is',
 				'kind',
 				'mandatory',
+				'compulsory',
 				'maxVal',
 				'mime',
 				'minVal',
@@ -1078,6 +1079,14 @@ describe('HNamespace', function (): void {
 		it('returns the implementation for a `tank`', function (): void {
 			expect(defs.implementation('tank')).toEqual(
 				defs.byAllNames('tank', 'equip')
+			)
+		})
+
+		it('returns the implementation for a `tank` with extra compulsory tag', function (): void {
+			defs.byName('dis')?.set('compulsory', HMarker.make())
+
+			expect(defs.implementation('tank')).toEqual(
+				defs.byAllNames('tank', 'equip', 'dis')
 			)
 		})
 
@@ -1756,6 +1765,30 @@ describe('HNamespace', function (): void {
 					"Cannot find mandatory tag 'equip'"
 				)
 			})
+
+			describe('compulsory', function (): void {
+				beforeEach(function (): void {
+					defs.byName('dis')?.set('compulsory', HMarker.make())
+				})
+
+				it('throws an error for a invalid ahu record with missing compulsory tag', function (): void {
+					expect(() => defs.validate('ahu', dict)).toThrow(
+						"Cannot find compulsory tag 'dis'"
+					)
+				})
+
+				it('throws an error for a invalid ahu record with a compulsory tag that has the wrong kind', function (): void {
+					dict.set('dis', 42)
+					expect(() => defs.validate('ahu', dict)).toThrow(
+						"Kind mismatch. 'dis' is number not str"
+					)
+				})
+
+				it('does not throw an error when a compulsory tag is present', function (): void {
+					dict.set('dis', 'a display name')
+					expect(() => defs.validate('ahu', dict)).not.toThrow()
+				})
+			}) // compulsory
 		}) // #validate()
 
 		describe('#isValid()', function (): void {

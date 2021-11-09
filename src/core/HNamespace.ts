@@ -915,6 +915,15 @@ export class HNamespace {
 			}
 		}
 
+		// 3. Walk the tags and find any compulsory tags that need to be applied.
+		// Please note, `compulsory` is not part of the project haystack standard and
+		// should be considered an extra application level tag.
+		for (const tag of this.tags(name)) {
+			if (tag.get('compulsory')?.equals(HMarker.make())) {
+				dicts.push(tag)
+			}
+		}
+
 		return dicts
 	}
 
@@ -1438,6 +1447,27 @@ export class HNamespace {
 			}
 
 			// 4. Validate the mandatory tag's kind.
+			this.validateKind(defName, dict)
+		}
+
+		// Find all the compulsory tags.
+		// Please note, `compulsory` is not part of the project haystack standard and
+		// should be considered an extra application level tag.
+		const compulsoryTags = this.tags(tagName).filter((def) =>
+			def.get('compulsory')?.equals(HMarker.make())
+		)
+
+		for (const { defName } of compulsoryTags) {
+			// 5. Check all of the compulsory tags are present.
+			if (!dict.has(defName)) {
+				throw new LocalizedError({
+					message: `Cannot find compulsory tag '${defName}'`,
+					lex: 'cannotFindCompulsory',
+					args: { name: defName },
+				})
+			}
+
+			// 6. Validate the compulsory tag's kind.
 			this.validateKind(defName, dict)
 		}
 	}
