@@ -1199,6 +1199,20 @@ describe('ZincReader', function (): void {
 				expect(value && value.equals(grid)).toBe(true)
 			})
 
+			it('parse an empty inner grid', function (): void {
+				const zinc =
+					'ver:"3.0"\n' +
+					'type,val\n' +
+					'"grid",<<ver:"3.0"\n' +
+					'a,b\n' +
+					'>>\n' +
+					'"scalar","simple string"\n\n'
+
+				expect((): void => {
+					makeReader(zinc).readValue()
+				}).not.toThrow()
+			})
+
 			it("throws an error when two rows don't have a separator", function (): void {
 				const zinc =
 					'<<ver:"3.0" database:"test" dis:"Site Energy Summary"\n' +
@@ -1245,6 +1259,30 @@ describe('ZincReader', function (): void {
 						watchId: HStr.make('w-25d422d1-c99c7abd'),
 					}),
 					columns: [],
+					rows: [],
+				})
+
+				const value = ZincReader.readValue(zinc)
+				expect(value && value.equals(grid)).toBe(true)
+			})
+
+			it('parses empty grid with columns', function (): void {
+				const zinc = 'ver:"3.0"\na,b\n'
+
+				const grid = HGrid.make({
+					columns: [{ name: 'a' }, { name: 'b' }],
+					rows: [],
+				})
+
+				const value = ZincReader.readValue(zinc)
+				expect(value && value.equals(grid)).toBe(true)
+			})
+
+			it('parses empty grid with columns with chevrons', function (): void {
+				const zinc = '<<ver:"3.0"\na,b\n>>'
+
+				const grid = HGrid.make({
+					columns: [{ name: 'a' }, { name: 'b' }],
 					rows: [],
 				})
 

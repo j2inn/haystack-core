@@ -904,6 +904,11 @@ export class ZincReader {
 		const rows: HDict[] = []
 
 		while (!this.scanner.isEof()) {
+			// End of grid?
+			if (nested && this.scanner.consumeSpacesAndTabs().is('>')) {
+				break
+			}
+
 			// If we immediately have a newline then break from parsing rows.
 			if (this.scanner.isNewLine()) {
 				this.scanner.consume()
@@ -957,11 +962,6 @@ export class ZincReader {
 			}
 
 			rows.push(cells)
-
-			// End of grid?
-			if (nested && this.scanner.consumeSpacesAndTabs().is('>')) {
-				break
-			}
 		}
 
 		if (nested) {
