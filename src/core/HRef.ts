@@ -19,7 +19,7 @@ import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 
 /** Accepted types for making a `HRef` from */
-type RefBaseType = string | HaysonRef | HRef
+type RefBaseType = string | HaysonRef | HRef | HStr
 
 /**
  * Haystack ref.
@@ -40,7 +40,14 @@ export class HRef implements HVal {
 	 * @param value The value.
 	 * @param displayName The optional display name.
 	 */
-	private constructor(value: string | HaysonRef, displayName?: string) {
+	private constructor(
+		value: string | HaysonRef | HStr,
+		displayName?: string
+	) {
+		if (valueIsKind<HStr>(value, Kind.Str)) {
+			value = value.value
+		}
+
 		if (typeof value === 'string') {
 			if (value.startsWith('@')) {
 				value = value.substring(1, value.length)
