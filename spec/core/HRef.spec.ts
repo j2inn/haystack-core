@@ -42,7 +42,7 @@ describe('HRef', function (): void {
 
 		it('makes a haystack ref from a haystack string', function (): void {
 			const ref = HRef.make(HStr.make('foo'))
-			expect(HRef.make(ref).value).toBe('foo')
+			expect(ref.value).toBe('foo')
 		})
 	}) // .make()
 
