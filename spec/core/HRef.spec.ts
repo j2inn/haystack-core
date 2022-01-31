@@ -7,6 +7,7 @@ import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/HDict'
+import { HStr } from '../../src/core/HStr'
 import '../matchers'
 import '../customMatchers'
 
@@ -37,6 +38,11 @@ describe('HRef', function (): void {
 
 			expect(HRef.make(obj).value).toBe('foo')
 			expect(HRef.make(obj).dis).toBe('Foo')
+		})
+
+		it('makes a haystack ref from a haystack string', function (): void {
+			const ref = HRef.make(HStr.make('foo'))
+			expect(ref.value).toBe('foo')
 		})
 	}) // .make()
 
