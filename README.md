@@ -25,6 +25,8 @@ This library is designed to be used in conjunction with these other haystack lib
 -   [Haystack nclient](https://github.com/j2inn/haystack-nclient): a client network library used for working with a haystack server.
 -   [Haystack react](https://github.com/j2inn/haystack-react): a set of high level [React](https://reactjs.org/) hooks and utilities for working with haystack data.
 
+If you're after a high performance haystack library for running on constrained devices, please see [libhaystack](https://github.com/j2inn/libhaystack).
+
 ## Installation
 
 ```
