@@ -244,6 +244,42 @@ describe('ZincReader', function (): void {
 				expect(ref.value).toBe('test')
 				expect(ref.dis).toBe('Test')
 			})
+
+			it('parse ref hello "world"', function (): void {
+				expect(makeReader('@hello "world"').readValue()).toEqual(
+					HRef.make('hello', 'world')
+				)
+			})
+
+			it('parse ref hello_world', function (): void {
+				expect(makeReader('@hello_world').readValue()).toEqual(
+					HRef.make('hello_world')
+				)
+			})
+
+			it('parse ref hello "world\\""', function (): void {
+				expect(makeReader('@hello "world\\""').readValue()).toEqual(
+					HRef.make('hello', 'world\\"')
+				)
+			})
+
+			it('parse ref hello "world\n"', function (): void {
+				expect(makeReader('@hello "world\n"').readValue()).toEqual(
+					HRef.make('hello', 'world\n')
+				)
+			})
+
+			it('parse ref hello "world\n again"', function (): void {
+				expect(
+					makeReader('@hello "world\n again"').readValue()
+				).toEqual(HRef.make('hello', 'world\n again'))
+			})
+
+			it('parse ref hello ""', function (): void {
+				expect(makeReader('@hello ""').readValue()).toEqual(
+					HRef.make('hello', '')
+				)
+			})
 		}) // ref
 
 		describe('number', function (): void {
