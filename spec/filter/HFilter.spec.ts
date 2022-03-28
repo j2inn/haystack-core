@@ -61,4 +61,14 @@ describe('HFilter', function (): void {
 			expect(haystackFilter.toFilter()).toBe(input)
 		})
 	}) // #toFilter()
+
+	describe('.isHFilter()', function (): void {
+		it('returns true if the value is an HFilter', function (): void {
+			expect(HFilter.isHFilter(haystackFilter)).toBe(true)
+		})
+
+		it('returns false if the value is not an HFilter', function (): void {
+			expect(HFilter.isHFilter('notAnHFilter')).toBe(false)
+		})
+	}) // .isHFilter()
 }) // HFilter

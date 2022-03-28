@@ -3,6 +3,7 @@
  */
 
 import { HFilterBuilder } from '../../src/filter/HFilterBuilder'
+import { HFilter } from '../../src/filter/HFilter'
 import { HNum } from '../../src/core/HNum'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HRef } from '../../src/core/HRef'
@@ -171,4 +172,52 @@ describe('HFilterBuilder', function (): void {
 			}).toThrow()
 		})
 	}) // #build()
+
+	describe('.isHFilterBuilder()', function (): void {
+		it('returns true if the value is an instance of a filter builder', function (): void {
+			expect(HFilterBuilder.isHFilterBuilder(builder)).toBe(true)
+		})
+
+		it('returns false if the value is not an instance of a filter builder', function (): void {
+			expect(HFilterBuilder.isHFilterBuilder('notAnHFilterBuilder')).toBe(
+				false
+			)
+		})
+	}) // .isHFilterBuilder()
+
+	describe('#isEmpty()', function (): void {
+		it('returns true if the builder is empty', function (): void {
+			expect(builder.isEmpty()).toBe(true)
+		})
+
+		it('returns false if the builder is not empty', function (): void {
+			expect(builder.has('site').isEmpty()).toBe(false)
+		})
+	}) // #isEmpty()
+
+	describe('#internalBuffer', function (): void {
+		it('returns the internal buffer', function (): void {
+			expect(builder.has('site').internalBuffer).toBe('site')
+		})
+	}) // #internalBuffer
+
+	describe('#filter()', function (): void {
+		it('adds a filter string', function (): void {
+			expect(builder.filter('site').build()).toBe('site')
+		})
+
+		it('adds a filter node', function (): void {
+			expect(builder.filter(HFilter.parse('site')).build()).toBe('site')
+		})
+
+		it('adds an HFilter', function (): void {
+			expect(builder.filter(new HFilter('site')).build()).toBe('site')
+		})
+
+		it('adds an HFilterBuilder', function (): void {
+			expect(
+				builder.filter(new HFilterBuilder().has('site')).build()
+			).toBe('site')
+		})
+	}) // #filter()
 })

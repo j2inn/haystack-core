@@ -12,6 +12,7 @@ import { HStr } from '../core/HStr'
 import { HSymbol } from '../core/HSymbol'
 import { makeValue } from '../core/util'
 import { HFilter } from './HFilter'
+import { Node } from './Node'
 
 type Path = string | string[]
 
@@ -45,6 +46,21 @@ export class HFilterBuilder {
 	 * The internal string buffer used to build the filter.
 	 */
 	private buf = ''
+
+	/**
+	 * Used for a type guard check.
+	 */
+	public readonly _isHFilterBuilder = true
+
+	/**
+	 * Return true if the value is a haystack filter builder object.
+	 *
+	 * @param value The value to test.
+	 * @returns True if the value is a haystack filter builder.
+	 */
+	public static isHFilterBuilder(value: unknown): value is HFilterBuilder {
+		return !!(value as HFilterBuilder)?._isHFilterBuilder
+	}
 
 	/**
 	 * Adds a does the tag exist condition.
@@ -213,6 +229,57 @@ export class HFilterBuilder {
 	 */
 	public greaterThanEquals(path: Path, value: Value): this {
 		return this.op('>=', path, value)
+	}
+
+	/**
+	 * Write the filter into this filter.
+	 *
+	 * @param filter The filter value to write.
+	 * @returns The builder instance.
+	 */
+	public filter(filter: string | Node | HFilter | HFilterBuilder): this {
+		let buf = ''
+
+		if (typeof filter === 'string') {
+			buf = filter
+		} else if (HFilter.isHFilter(filter)) {
+			buf = filter.toFilter()
+		} else if (HFilterBuilder.isHFilterBuilder(filter)) {
+			buf = filter.build()
+		} else {
+			buf = new HFilter(filter).toFilter()
+		}
+
+		this.buf += buf
+		return this
+	}
+
+	/**
+	 * Return true if nothing has been written to the builder.
+	 *
+	 * @returns True if the internal buffer is empty.
+	 */
+	public isEmpty(): boolean {
+		return this.buf.length === 0
+	}
+
+	/**
+	 * Dump the current state of the filter builder to the console output.
+	 *
+	 * @returns The builder instance.
+	 */
+	public inspect(): this {
+		console.log(this.buf)
+		return this
+	}
+
+	/**
+	 * The internal buffer used to build the haystack filter.
+	 *
+	 * Please note, this method is only intended for debugging/testing purposes.
+	 */
+	public get internalBuffer(): string {
+		return this.buf
 	}
 
 	/**

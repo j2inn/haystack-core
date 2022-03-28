@@ -26,6 +26,11 @@ export class HFilter {
 	public readonly node: Node
 
 	/**
+	 * Used for a type guard check.
+	 */
+	public readonly _isHFilter = true
+
+	/**
 	 * Constructs a new haystack filter from the string.
 	 *
 	 * This will parse the filter string to a node.
@@ -37,6 +42,16 @@ export class HFilter {
 		this.node = isNode(filter)
 			? (filter as Node)
 			: HFilter.parse(filter as string)
+	}
+
+	/**
+	 * Return true if the value is a haystack filter object.
+	 *
+	 * @param value The value to test.
+	 * @returns True if the value is a haystack filter.
+	 */
+	public static isHFilter(value: unknown): value is HFilter {
+		return !!(value as HFilter)?._isHFilter
 	}
 
 	/**
