@@ -250,8 +250,7 @@ export class HFilterBuilder {
 			buf = new HFilter(filter).toFilter()
 		}
 
-		this.buf += buf
-		return this
+		return this.add(buf)
 	}
 
 	/**
