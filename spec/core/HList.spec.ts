@@ -8,7 +8,7 @@ import { HList } from '../../src/core/HList'
 import { HNum } from '../../src/core/HNum'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
-import { HVal } from '../../src/core/HVal'
+import { HVal, valueIsKind } from '../../src/core/HVal'
 import { Kind } from '../../src/core/Kind'
 import { HRemove } from '../../src/core/HRemove'
 import { HFilter } from '../../src/filter/HFilter'
@@ -875,6 +875,27 @@ describe('HList', function (): void {
 			expect(counter).toBe(3)
 		})
 	}) // #forEach()
+
+	describe('#find()', function (): void {
+		it('returns an item found in the list', function (): void {
+			const value = list.find(
+				(val) =>
+					valueIsKind<HStr>(val, Kind.Str) && val.value === 'foovalue'
+			)
+
+			expect(value).toBe(list[0])
+		})
+
+		it('returns undefined when a value cannot be found in the list', function (): void {
+			const value = list.find(
+				(val) =>
+					valueIsKind<HStr>(val, Kind.Str) &&
+					val.value === 'doesNotExist'
+			)
+
+			expect(value).toBeUndefined()
+		})
+	}) // #find()
 
 	describe('#newCopy()', function (): void {
 		it('returns a new instance', function (): void {

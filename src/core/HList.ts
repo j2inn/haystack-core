@@ -56,24 +56,26 @@ export class ListValueIterator<Value extends OptionalHVal>
 	}
 }
 
-type FilterCallback<Value> = (
-	row: Value,
-	index: number,
-	rows: Value[]
-) => boolean
+interface FilterCallback<Value> {
+	(row: Value, index: number, rows: Value[]): boolean
+}
 
-type MapCallback<Value, NewValue> = (
-	value: Value,
-	index: number,
-	array: Value[]
-) => NewValue
+interface MapCallback<Value, NewValue> {
+	(value: Value, index: number, array: Value[]): NewValue
+}
 
-type ReduceCallback<PreviousValue, CurrentValue> = (
-	previousValue: PreviousValue,
-	currentValue: CurrentValue,
-	currentIndex: number,
-	array: CurrentValue[]
-) => PreviousValue
+interface ReduceCallback<PreviousValue, CurrentValue> {
+	(
+		previousValue: PreviousValue,
+		currentValue: CurrentValue,
+		currentIndex: number,
+		array: CurrentValue[]
+	): PreviousValue
+}
+
+interface FindCallback<Value> {
+	(this: void, value: Value, index: number, obj: Value[]): boolean
+}
 
 /**
  * A mutable haystack list that uses generics and the JavaScript proxy pattern.
@@ -822,14 +824,32 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * Loop through a list's values.
 	 *
-	 * @param callbackfn The function to execute on each haystack value.
+	 * @param callback The function to execute on each haystack value.
 	 * @param thisArg Optional value to use as this when executing callback.
 	 */
 	public forEach(
-		callbackfn: (value: Value, index: number, array: Value[]) => void,
+		callback: (value: Value, index: number, array: Value[]) => void,
 		thisArg?: any
 	): void {
-		this.values.forEach(callbackfn, thisArg || this)
+		this.values.forEach(callback, thisArg || this)
+	}
+
+	/**
+	 * Find an item in the list and return it or undefiend if not found.
+	 *
+	 * ```typescript
+	 * const foundItem = list.find((val) => val.someItem.equals(foo))
+	 * ```
+	 *
+	 * @param callback The find callback.
+	 * @param thisArg Optional this argument.
+	 * @returns The item or undefined.
+	 */
+	public find(
+		callback: FindCallback<Value>,
+		thisArg?: any
+	): Value | undefined {
+		return this.values.find(callback, thisArg)
 	}
 
 	/**
