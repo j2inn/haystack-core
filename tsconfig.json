@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "ES6",
+		"target": "ES2017",
 		"module": "ESNext",
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
@@ -21,17 +21,9 @@
 		"baseUrl": ".",
 		"experimentalDecorators": true,
 		"paths": {
-			"*": [
-				"node_modules/*",
-				"src/types/*"
-			]
+			"*": ["node_modules/*", "src/types/*"]
 		}
 	},
-	"files": [
-		"src/index.ts"
-	],
-	"include": [
-		"spec/**/*",
-		"examples/**/*"
-	]
+	"files": ["src/index.ts"],
+	"include": ["spec/**/*", "examples/**/*"]
 }
