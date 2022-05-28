@@ -2,7 +2,7 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
-import { memoize } from '../../src/util/memoize'
+import { memoize, MemoizedObject } from '../../src/util/memoize'
 
 describe('memoize', function (): void {
 	describe('getters', function (): void {
@@ -35,6 +35,39 @@ describe('memoize', function (): void {
 			expect(util.decrement).toBe(0)
 			expect(util.decrement).toBe(0)
 			expect(util.increment).toBe(1)
+			expect(util.index).toBe(0)
+		})
+
+		it('expires memoization', () => {
+			// increment memoized
+			expect(util.increment).toBe(1)
+			expect(util.increment).toBe(1)
+
+			// decrement memoized
+			expect(util.decrement).toBe(0)
+			expect(util.decrement).toBe(0)
+
+			// Expire All
+			;(util as MemoizedObject).$memoizeCache?.expire()
+
+			// increment - expire - increment again
+			expect(util.increment).toBe(1)
+			;(util as MemoizedObject).$memoizeCache?.expire('increment')
+			expect(util.increment).toBe(2)
+
+			// decrement memoized
+			expect(util.decrement).toBe(1)
+			expect(util.decrement).toBe(1)
+
+			// Expire Decrement only
+			;(util as MemoizedObject).$memoizeCache?.expire('decrement')
+
+			// decrement memoized
+			expect(util.decrement).toBe(0)
+			expect(util.decrement).toBe(0)
+
+			// increment memoized at 2, index is 0
+			expect(util.increment).toBe(2)
 			expect(util.index).toBe(0)
 		})
 	}) // getters

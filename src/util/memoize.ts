@@ -4,18 +4,51 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off", @typescript-eslint/explicit-module-boundary-types: "off" */
 
-interface Cache {
+/**
+ * Memoization Cache
+ */
+class Cache {
 	[prop: string]: any
+
+	/**
+	 * Expire cache
+	 *
+	 * Expires memoized cache by name, if the name is omitted, it will expire all
+	 *
+	 * Example:
+	 * ```typescript
+	 *
+	 * // Expire by name
+	 * (instance as MemoizedObject).$memoizeCache.expire('memoizedElementName')
+	 *
+	 * // Expire All
+	 * (instance as MemoizedObject).$memoizeCache.expire()
+	 * ```
+	 *
+	 * @param name cached item name to expire
+	 */
+	public expire(name?: string): void {
+		if (name) {
+			delete this[name]
+		} else {
+			Object.getOwnPropertyNames(this).forEach(
+				(name) => delete this[name]
+			)
+		}
+	}
 }
 
+export interface MemoizedObject {
+	$memoizeCache?: Cache
+}
 /**
  * Return the memoize cache.
  *
  * @param obj The object to return the cache from.
  * @returns The memorize cache.
  */
-function getCache(obj: any): Cache {
-	return obj.$memoizeCache ?? (obj.$memoizeCache = {})
+function getCache(obj: MemoizedObject): Cache {
+	return obj.$memoizeCache ?? (obj.$memoizeCache = new Cache())
 }
 
 /**
@@ -38,7 +71,7 @@ export function memoize(): (
 		if (typeof get === 'function') {
 			return {
 				get(): any {
-					const cache = getCache(this)
+					const cache = getCache(this as MemoizedObject)
 
 					return Object.prototype.hasOwnProperty.call(
 						cache,
@@ -51,7 +84,7 @@ export function memoize(): (
 		} else if (typeof value === 'function') {
 			return {
 				value(...args: any[]): any {
-					const cache = getCache(this)
+					const cache = getCache(this as MemoizedObject)
 
 					const key = JSON.stringify({ propertyKey, args })
 
