@@ -90,7 +90,7 @@ class Cache {
 	 * (instance as MemoizedObject).getMemoizeCache().remove('memoizedElementName')
 	 * ```
 	 *
-	 * @param name cached item name to expire
+	 * @param name cached item name to remove
 	 */
 	public remove(name: string): boolean {
 		return this.#cache.delete(name)
