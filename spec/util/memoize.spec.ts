@@ -48,11 +48,13 @@ describe('memoize', function (): void {
 			expect(util.decrement).toBe(0)
 
 			// Expire All
-			;(util as MemoizedObject).$memoizeCache?.expire()
+			;(util as unknown as MemoizedObject).getMemoizeCache()?.clear()
 
 			// increment - expire - increment again
 			expect(util.increment).toBe(1)
-			;(util as MemoizedObject).$memoizeCache?.expire('increment')
+			;(util as unknown as MemoizedObject)
+				.getMemoizeCache()
+				?.remove('increment')
 			expect(util.increment).toBe(2)
 
 			// decrement memoized
@@ -60,7 +62,9 @@ describe('memoize', function (): void {
 			expect(util.decrement).toBe(1)
 
 			// Expire Decrement only
-			;(util as MemoizedObject).$memoizeCache?.expire('decrement')
+			;(util as unknown as MemoizedObject)
+				.getMemoizeCache()
+				?.remove('decrement')
 
 			// decrement memoized
 			expect(util.decrement).toBe(0)
