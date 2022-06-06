@@ -2,20 +2,20 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
-import { memoize, MemoizedObject } from '../../src/util/memoize'
+import { memoize, getMemoizeCache, MemoizeCache } from '../../src/util/memoize'
 
-describe('memoize', function (): void {
-	describe('getters', function (): void {
+describe('memoize', () => {
+	describe('memoize class getter methods', () => {
 		class MathUtil {
-			public index = 0
+			index = 0
 
 			@memoize()
-			public get increment(): number {
+			get increment(): number {
 				return ++this.index
 			}
 
 			@memoize()
-			public get decrement(): number {
+			get decrement(): number {
 				return --this.index
 			}
 		}
@@ -26,7 +26,7 @@ describe('memoize', function (): void {
 			util = new MathUtil()
 		})
 
-		it('memoizes returns the same value', function (): void {
+		it('returns the same value', () => {
 			expect(util.index).toBe(0)
 			expect(util.increment).toBe(1)
 			expect(util.increment).toBe(1)
@@ -38,50 +38,22 @@ describe('memoize', function (): void {
 			expect(util.index).toBe(0)
 		})
 
-		it('clear memoization', () => {
-			// increment memoized
+		it('clears memoization', () => {
 			expect(util.increment).toBe(1)
 			expect(util.increment).toBe(1)
 
-			// decrement memoized
-			expect(util.decrement).toBe(0)
-			expect(util.decrement).toBe(0)
+			getMemoizeCache(util)?.clear()
 
-			// Clear All
-			;(util as unknown as MemoizedObject).getMemoizeCache()?.clear()
-
-			// increment - remove - increment again
-			expect(util.increment).toBe(1)
-			;(util as unknown as MemoizedObject)
-				.getMemoizeCache()
-				?.remove('increment')
 			expect(util.increment).toBe(2)
-
-			// decrement memoized
-			expect(util.decrement).toBe(1)
-			expect(util.decrement).toBe(1)
-
-			// Remove Decrement only
-			;(util as unknown as MemoizedObject)
-				.getMemoizeCache()
-				?.remove('decrement')
-
-			// decrement memoized
-			expect(util.decrement).toBe(0)
-			expect(util.decrement).toBe(0)
-
-			// increment memoized at 2, index is 0
-			expect(util.increment).toBe(2)
-			expect(util.index).toBe(0)
 		})
 	}) // getters
 
-	describe('methods', function (): void {
+	describe('memoize class methods', () => {
 		class StrUtil {
-			public counter = 0
+			counter = 0
 
 			@memoize()
-			public add(a: number, b: number): number {
+			add(a: number, b: number): number {
 				this.counter++
 				return a + b
 			}
@@ -89,16 +61,16 @@ describe('memoize', function (): void {
 
 		let util: StrUtil
 
-		beforeEach(function (): void {
+		beforeEach(() => {
 			util = new StrUtil()
 		})
 
-		it('adds two numbers together and increments the counter', function (): void {
+		it('adds two numbers together and increments the counter', () => {
 			expect(util.add(1, 2)).toBe(3)
 			expect(util.counter).toBe(1)
 		})
 
-		it('adds two numbers together twice and memoizes the result', function (): void {
+		it('adds two numbers together twice and memoizes the result', () => {
 			expect(util.add(1, 2)).toBe(3)
 			expect(util.add(1, 2)).toBe(3)
 			expect(util.counter).toBe(1)
@@ -112,14 +84,14 @@ describe('memoize', function (): void {
 		})
 	}) // methods
 
-	describe('setters', function (): void {
+	describe('memoize class setter methods', () => {
 		it('throws an error when a setter is memoized', function (): void {
 			expect((): void => {
 				class MathUtil {
-					public index = 0
+					index = 0
 
 					@memoize()
-					public set increment(num: number) {
+					set increment(num: number) {
 						this.index = this.index + num
 					}
 				}
@@ -129,4 +101,158 @@ describe('memoize', function (): void {
 			}).toThrow()
 		})
 	}) // setters
+
+	describe('getMemoizeCache()', () => {
+		class MathUtil {
+			index = 0
+
+			@memoize()
+			increment(): void {
+				++this.index
+			}
+
+			getCache(): MemoizeCache | undefined {
+				return getMemoizeCache(this)
+			}
+		}
+
+		let util: MathUtil
+
+		beforeEach(() => {
+			util = new MathUtil()
+		})
+
+		it('returns undefined when there is no cache created yet', () => {
+			expect(getMemoizeCache(util)).toBeUndefined()
+		})
+
+		it('returns a cache via a function argument', () => {
+			util.increment()
+			expect(getMemoizeCache(util)).not.toBeUndefined()
+		})
+
+		it('returns a cache via the this context', () => {
+			util.increment()
+			expect(util.getCache()).not.toBeUndefined()
+		})
+	}) // getMemoizeCache()
+
+	describe('MemoizeCache', () => {
+		let cache: MemoizeCache
+
+		beforeEach(() => {
+			cache = new MemoizeCache()
+		})
+
+		describe('#get()', () => {
+			it('returns a value from the cache', () => {
+				cache.set('test', 1)
+				expect(cache.get('test')).toBe(1)
+			})
+
+			it('returns undefined when a value from the cache cannot be found', () => {
+				expect(cache.get('test')).toBeUndefined()
+			})
+		}) // #get()
+
+		describe('#set()', () => {
+			it('sets a value and returns it', () => {
+				expect(cache.set('test', 1)).toBe(1)
+				expect(cache.get('test')).toBe(1)
+			})
+		}) // #set()
+
+		describe('#has()', () => {
+			it('returns false when there is no value cached', () => {
+				expect(cache.has('test')).toBe(false)
+			})
+
+			it('returns true when there is a value cached', () => {
+				cache.set('test', 1)
+				expect(cache.has('test')).toBe(true)
+			})
+		}) // #has()
+
+		describe('#clear()', () => {
+			it('clears all the value from the cache', () => {
+				cache.set('test', 1)
+				cache.set('test1', 2)
+
+				expect(cache.isEmpty()).toBe(false)
+				cache.clear()
+				expect(cache.isEmpty()).toBe(true)
+			})
+		}) // #clear()
+
+		describe('#remove()', () => {
+			it('removes an item from the cache', () => {
+				cache.set('test', 1)
+
+				expect(cache.isEmpty()).toBe(false)
+				cache.remove('test')
+				expect(cache.isEmpty()).toBe(true)
+			})
+		}) // #remove()
+
+		describe('#size', () => {
+			it('returns the size of the cache', () => {
+				expect(cache.size).toBe(0)
+
+				cache.set('test', 1)
+				expect(cache.size).toBe(1)
+
+				cache.set('test2', 2)
+				expect(cache.size).toBe(2)
+			})
+		}) // #size
+
+		describe('#isEmpty()', () => {
+			it('returns true if the cache is empty', () => {
+				expect(cache.isEmpty()).toBe(true)
+			})
+
+			it('returns false if the cache is not empty', () => {
+				cache.set('test', 1)
+				expect(cache.isEmpty()).toBe(false)
+			})
+		}) // #isEmpty()
+
+		describe('#keys()', () => {
+			it('returns all the keys from the cache', () => {
+				cache.set('test1', 1)
+				cache.set('test2', 2)
+				expect(cache.keys).toEqual(['test1', 'test2'])
+			})
+		}) // #keys()
+
+		describe('#toObj()', () => {
+			it('return an object', () => {
+				cache.set('test1', 1)
+				cache.set('test2', 2)
+
+				expect(cache.toObj()).toEqual({
+					test1: 1,
+					test2: 2,
+				})
+			})
+		}) // #toObj()
+
+		describe('#inspect()', () => {
+			it('outputs a table', () => {
+				cache.set('test1', 1)
+
+				jest.spyOn(console, 'table')
+				cache.inspect()
+				expect(console.table).toHaveBeenCalled()
+			})
+
+			it('outputs a table with a title', () => {
+				cache.set('test1', 1)
+
+				jest.spyOn(console, 'log')
+				cache.inspect('A message')
+				expect(console.log).toHaveBeenCalledWith('A message')
+			})
+		}) // #inspect()
+	}) // MemoizeCache
 })
