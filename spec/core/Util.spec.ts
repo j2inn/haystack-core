@@ -297,6 +297,10 @@ describe('util', function (): void {
 			expect(isValidTagName('')).toBe(false)
 		})
 
+		it('returns true a single character tag name', function (): void {
+			expect(isValidTagName('a')).toBe(true)
+		})
+
 		it('returns true for a valid tag', function (): void {
 			expect(isValidTagName('aValidTag123')).toBe(true)
 		})

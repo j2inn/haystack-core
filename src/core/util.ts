@@ -242,7 +242,7 @@ export function toTagName(name: string): string {
  * @returns True if the tag name is valid.
  */
 export function isValidTagName(name: string): boolean {
-	return /^[a-z][a-zA-Z0-9_]+$/.test(String(name))
+	return /^[a-z][a-zA-Z0-9_]*$/.test(String(name))
 }
 
 /**
