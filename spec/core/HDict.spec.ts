@@ -799,4 +799,19 @@ describe('HDict', function (): void {
 			expect(i18n).toHaveBeenCalledWith('pod', 'key')
 		})
 	}) // #toDis()
+
+	describe('#diff()', function (): void {
+		it('returns a dict with removed values', function (): void {
+			const dict = new HDict({ a: 'a', b: 'b' })
+			const newDict = new HDict({ a: 'a' })
+			const diff = dict.diff(newDict)
+
+			expect(diff.toJSON()).toEqual({
+				a: 'a',
+				b: {
+					_kind: 'remove',
+				},
+			})
+		})
+	}) // #diff()
 })

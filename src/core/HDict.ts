@@ -12,6 +12,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HMarker } from './HMarker'
 import { HNamespace, Reflection } from './HNamespace'
+import { HRemove } from './HRemove'
 import {
 	AXON_NULL,
 	HVal,
@@ -911,6 +912,26 @@ export class HDict implements HVal, Iterable<HValRow> {
 				return acc
 			}, HDict.make({})) ?? HDict.make({})
 		)
+	}
+
+	/**
+	 * Create a diff dict that can be used in an update.
+	 *
+	 * This will return a new dict with any removed tags having an `HRemove` value.
+	 *
+	 * @param dict The newly updated dict that will be checked for removed values.
+	 * @returns A diff dict that has `HRemove` values for any tags that have been removed.
+	 */
+	public diff(dict: HDict): HDict {
+		const diff = dict.newCopy()
+
+		for (const key of this.keys) {
+			if (!diff.has(key)) {
+				diff.set(key, HRemove.make())
+			}
+		}
+
+		return diff
 	}
 
 	/**
