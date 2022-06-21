@@ -10,6 +10,7 @@ import {
 	LocalizedCallback,
 	macro,
 	disKey,
+	makeDefaultValue,
 } from '../../src/core/util'
 import { Kind } from '../../src/core/Kind'
 import { HBool } from '../../src/core/HBool'
@@ -28,6 +29,8 @@ import { HSymbol } from '../../src/core/HSymbol'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/HDict'
 import { HVal } from '../../src/core/HVal'
+import { HNa } from '../../src/core/HNa'
+import { HGrid } from '../../src/core/HGrid'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
@@ -291,6 +294,106 @@ describe('util', function (): void {
 			})
 		})
 	}) // toTagName()
+
+	describe('makeDefaultValue()', function (): void {
+		it('returns a string', function (): void {
+			expect(makeDefaultValue(Kind.Str)?.equals(HStr.make(''))).toBe(true)
+		})
+
+		it('returns a number zero with no units', function (): void {
+			expect(makeDefaultValue(Kind.Number)?.equals(HNum.make(0))).toBe(
+				true
+			)
+		})
+
+		it('returns a date', function (): void {
+			expect(makeDefaultValue(Kind.Date)?.getKind()).toBe(Kind.Date)
+		})
+
+		it('returns a time object', function (): void {
+			expect(makeDefaultValue(Kind.Time)?.getKind()).toBe(Kind.Time)
+		})
+
+		it('returns an empty URI', function (): void {
+			expect(makeDefaultValue(Kind.Uri)?.equals(HUri.make(''))).toBe(true)
+		})
+
+		it('returns an empty ref', function (): void {
+			expect(makeDefaultValue(Kind.Ref)?.equals(HRef.make(''))).toBe(true)
+		})
+
+		it('returns a true boolean', function (): void {
+			expect(makeDefaultValue(Kind.Bool)?.equals(HBool.make(true))).toBe(
+				true
+			)
+		})
+
+		it('returns an empty dict', function (): void {
+			expect(makeDefaultValue(Kind.Dict)?.equals(HDict.make())).toBe(true)
+		})
+
+		it('returns a date time object', function (): void {
+			expect(makeDefaultValue(Kind.DateTime)?.getKind()).toBe(
+				Kind.DateTime
+			)
+		})
+
+		it('returns a marker', function (): void {
+			expect(makeDefaultValue(Kind.Marker)?.equals(HMarker.make())).toBe(
+				true
+			)
+		})
+
+		it('returns a remove', function (): void {
+			expect(makeDefaultValue(Kind.Remove)?.equals(HRemove.make())).toBe(
+				true
+			)
+		})
+
+		it('returns an NA', function (): void {
+			expect(makeDefaultValue(Kind.NA)?.equals(HNa.make())).toBe(true)
+		})
+
+		it('returns an empty co-ordinate', function (): void {
+			expect(
+				makeDefaultValue(Kind.Coord)?.equals(
+					HCoord.make({ latitude: 0, longitude: 0 })
+				)
+			).toBe(true)
+		})
+
+		it('returns an XStr value from a XStr', function (): void {
+			expect(makeDefaultValue(Kind.XStr)?.equals(HXStr.make(''))).toBe(
+				true
+			)
+		})
+
+		it('returns an XStr value from a Bin', function (): void {
+			expect(makeDefaultValue(Kind.Bin)?.equals(HXStr.make(''))).toBe(
+				true
+			)
+		})
+
+		it('returns an empty symbol', function (): void {
+			expect(
+				makeDefaultValue(Kind.Symbol)?.equals(HSymbol.make(''))
+			).toBe(true)
+		})
+
+		it('returns an empty list', function (): void {
+			expect(makeDefaultValue(Kind.List)?.equals(HList.make())).toBe(true)
+		})
+
+		it('returns an empty grid', function (): void {
+			expect(makeDefaultValue(Kind.Grid)?.equals(HGrid.make())).toBe(true)
+		})
+
+		it('returns undefined for an unknown kind', function (): void {
+			expect(
+				makeDefaultValue('foobar' as unknown as Kind)
+			).toBeUndefined()
+		})
+	}) // makeDefaultValue()
 
 	describe('isValidTagName()', function (): void {
 		it('returns false for an empty string', function (): void {

@@ -1352,6 +1352,17 @@ describe('HNamespace', function (): void {
 			it('returns an empty array for an empty dict', function (): void {
 				expect(defs.protos(HDict.make({}))).toEqual([])
 			})
+
+			it('removes duplicates dicts', function (): void {
+				const parent = new HDict({
+					space: HMarker.make(),
+					site: HMarker.make(),
+				})
+
+				expect(
+					defs.protos(parent).map((dict) => dict.toZinc())
+				).toEqual(['{space}', '{equip}', '{point}'])
+			})
 		}) // #protos()
 	}) // protos
 
@@ -1806,4 +1817,11 @@ describe('HNamespace', function (): void {
 			})
 		}) // #isValid()
 	}) // validation
+
+	describe('#newDict()', function (): void {
+		it('returns a dict with all of the implementation dicts added', function (): void {
+			const tags = defs.newDict(['vav']).keys
+			expect(tags).toEqual(['vav', 'equip'])
+		})
+	}) // #newDict()
 })

@@ -13,7 +13,7 @@ import { ZincReader } from './ZincReader'
 import { valueIsKind, OptionalHVal } from './HVal'
 import { HMarker } from './HMarker'
 import { HRef } from './HRef'
-import { IMPLIED_BY } from './util'
+import { IMPLIED_BY, makeDefaultValue } from './util'
 import { LocalizedError } from '../util/LocalizedError'
 
 export interface Defs {
@@ -1043,7 +1043,14 @@ export class HNamespace {
 		return parent.keys
 			.map((name: string): HDict[] => this.protosForDef(parent, name))
 			.reduce((dicts: HDict[], children: HDict[]): HDict[] => {
-				return dicts.concat(children)
+				// Don't add duplicate records.
+				for (const child of children) {
+					if (!dicts.find((d) => d.equals(child))) {
+						dicts.push(child)
+					}
+				}
+
+				return dicts
 			}, [])
 	}
 
@@ -1546,5 +1553,32 @@ export class HNamespace {
 		} catch {
 			return false
 		}
+	}
+
+	/**
+	 * Create a new dict with all the default required tags.
+	 *
+	 * @param names The names of the tags to add.
+	 * @returns The new dict with all the default requirement tags.
+	 */
+	public newDict(names: (string | HSymbol)[]): HDict {
+		const dict = new HDict()
+
+		for (const name of names) {
+			const defs = this.implementation(name)
+			for (const def of [this.byName(name), ...defs]) {
+				if (def) {
+					const kind = this.defToKind(def.defName)
+					if (kind) {
+						const value = makeDefaultValue(kind)
+						if (value) {
+							dict.set(def.defName, value)
+						}
+					}
+				}
+			}
+		}
+
+		return dict
 	}
 }

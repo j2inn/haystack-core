@@ -176,6 +176,73 @@ function convertDigitToName(digit: string): string {
 }
 
 /**
+ * Returns a default haystack value for the kind.
+ *
+ * @param kind The haystack data type's kind.
+ * @returns The default haystack value or undefined if one cannot be created.
+ */
+export function makeDefaultValue(kind: Kind): HVal | undefined {
+	let value: HVal | undefined
+
+	switch (kind) {
+		case Kind.Str:
+			value = HStr.make('')
+			break
+		case Kind.Number:
+			value = HNum.make(0)
+			break
+		case Kind.Date:
+			value = HDate.now()
+			break
+		case Kind.Time:
+			value = HTime.now()
+			break
+		case Kind.Uri:
+			value = HUri.make('')
+			break
+		case Kind.Ref:
+			value = HRef.make('')
+			break
+		case Kind.Bool:
+			value = HBool.make(true)
+			break
+		case Kind.Dict:
+			value = HDict.make()
+			break
+		case Kind.DateTime:
+			value = HDateTime.now()
+			break
+		case Kind.Marker:
+			value = HMarker.make()
+			break
+		case Kind.Remove:
+			value = HRemove.make()
+			break
+		case Kind.NA:
+			value = HNa.make()
+			break
+		case Kind.Coord:
+			value = HCoord.make({ latitude: 0, longitude: 0 })
+			break
+		case Kind.XStr:
+		case Kind.Bin:
+			value = HXStr.make('')
+			break
+		case Kind.Symbol:
+			value = HSymbol.make('')
+			break
+		case Kind.List:
+			value = HList.make()
+			break
+		case Kind.Grid:
+			value = HGrid.make()
+			break
+	}
+
+	return value
+}
+
+/**
  * Return a valid tag name from the input string.
  *
  * A valid tag name has to match...
