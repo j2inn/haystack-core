@@ -923,8 +923,30 @@ describe('HNamespace', function (): void {
 			}) // #toGrid()
 
 			describe('#type', function (): void {
-				it('returns the site marker type', function (): void {
-					expect(result.type).toBe(defs.byName('plant'))
+				it('returns the plant marker type', function (): void {
+					expect(result.type.defName).toBe('hot-water-plant')
+				})
+
+				it('returns the ahu tag when there is an equip and ahu tag', function (): void {
+					result = defs.reflect(
+						HDict.make({
+							equip: HMarker.make(),
+							ahu: HMarker.make(),
+						})
+					)
+
+					expect(result.type.defName).toBe('ahu')
+				})
+
+				it('returns the ahu tag when there is an ahu and equip tag', function (): void {
+					result = defs.reflect(
+						HDict.make({
+							ahu: HMarker.make(),
+							equip: HMarker.make(),
+						})
+					)
+
+					expect(result.type.defName).toBe('ahu')
 				})
 			}) // #type
 		}) // Reflection
@@ -938,7 +960,7 @@ describe('HNamespace', function (): void {
 				id: HMarker.make(),
 			})
 
-			expect(defs.defOfDict(subject)).toBe(defs.byName('site'))
+			expect(defs.defOfDict(subject).defName).toBe('site')
 		})
 
 		it('falls back to `dict` if an entity marker type cannot be found', function (): void {
