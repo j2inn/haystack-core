@@ -91,10 +91,50 @@ export class Reflection {
 		let type: HDict | undefined
 
 		if (entity) {
+			const typesWithInheritance = new Map<HDict, HDict[]>()
+
 			for (const def of this.defs) {
-				if (this.namespace.inheritance(def.defName).includes(entity)) {
-					type = def
-					break
+				const inheritance = this.namespace.inheritance(def.defName)
+
+				if (inheritance.includes(entity)) {
+					typesWithInheritance.set(def, inheritance)
+				}
+			}
+
+			const allDefs = [...typesWithInheritance.keys()]
+
+			if (typesWithInheritance.size === 1) {
+				// Just get the first entity if only one has been found.
+				type = allDefs[0]
+			} else {
+				// If multiple entity tags have been found then we need to find which tag is the most specific.
+				// This can happen if a record has a tag like `ahu` and `equip`. The `ahu` tag extends `equip`.
+				// Therefore, we need to check all the inheritance to find the first tag that isn't any of the
+				// other tag's inheritance. This tag should be the most specific entity.
+				for (const def of allDefs) {
+					let included = false
+
+					for (const [
+						innerDef,
+						inheritance,
+					] of typesWithInheritance) {
+						if (innerDef !== def && inheritance.includes(def)) {
+							included = true
+							break
+						}
+					}
+
+					// If this def isn't in the inhertiance of any other tag then we should
+					// have the most specific entity.
+					if (!included) {
+						type = def
+						break
+					}
+				}
+
+				// If we really can't find anything then just fallback to the first entity we find.
+				if (!type) {
+					type = allDefs[0]
 				}
 			}
 		}
