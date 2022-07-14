@@ -948,6 +948,19 @@ describe('HNamespace', function (): void {
 
 					expect(result.type.defName).toBe('ahu')
 				})
+
+				it('returns the coolingCoil tag from an entity with all sub type marker tags', function (): void {
+					result = defs.reflect(
+						HDict.make({
+							heatExchanger: HMarker.make(),
+							coil: HMarker.make(),
+							equip: HMarker.make(),
+							coolingCoil: HMarker.make(),
+						})
+					)
+
+					expect(result.type.defName).toBe('coolingCoil')
+				})
 			}) // #type
 		}) // Reflection
 	}) // #reflect()
