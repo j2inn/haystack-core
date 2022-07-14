@@ -224,6 +224,34 @@ describe('HNamespace', function (): void {
 		})
 	}) // .isFeature()
 
+	describe('.getFeature()', function (): void {
+		it('returns the feature name for a string', function (): void {
+			expect(HNamespace.getFeature('lib:ph')).toBe('lib')
+		})
+
+		it('returns the feature name for a symbol', function (): void {
+			expect(HNamespace.getFeature(HSymbol.make('lib:ph'))).toBe('lib')
+		})
+
+		it('returns an empty string when not a feature', function (): void {
+			expect(HNamespace.getFeature(HSymbol.make('foo'))).toBe('')
+		})
+	}) // .getFeature()
+
+	describe('.getFeatureName()', function (): void {
+		it('returns the feature name for a string', function (): void {
+			expect(HNamespace.getFeatureName('lib:ph')).toBe('ph')
+		})
+
+		it('returns the feature name for a symbol', function (): void {
+			expect(HNamespace.getFeatureName(HSymbol.make('lib:ph'))).toBe('ph')
+		})
+
+		it('returns an empty string when not a feature', function (): void {
+			expect(HNamespace.getFeatureName(HSymbol.make('foo'))).toBe('')
+		})
+	}) // .getFeatureName()
+
 	describe('#libs', function (): void {
 		it('returns a list of lib defs', function (): void {
 			expect(defs.libs).toEqual(

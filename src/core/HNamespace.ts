@@ -420,6 +420,32 @@ export class HNamespace {
 	}
 
 	/**
+	 * Return the feature from the feature key. An empty
+	 * string is returned if no feature can be found.
+	 *
+	 * For example, `lib:foo` would return `lib`.
+	 *
+	 * @param name The name to parse.
+	 * @returns The feature.
+	 */
+	public static getFeature(name: string | HSymbol): string {
+		return HNamespace.isFeature(name) ? String(name).split(':')[0] : ''
+	}
+
+	/**
+	 * Return the feature name from the feature key. An empty
+	 * string is returned if no feature name can be found.
+	 *
+	 * For example, `lib:foo` would return `foo`.
+	 *
+	 * @param name The name to parse.
+	 * @returns The feature name.
+	 */
+	public static getFeatureName(name: string | HSymbol): string {
+		return HNamespace.isFeature(name) ? String(name).split(':')[1] : ''
+	}
+
+	/**
 	 * @returns A list of all the libs implemented by this namespace.
 	 */
 	@memoize()
