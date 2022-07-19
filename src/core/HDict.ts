@@ -927,12 +927,13 @@ export class HDict implements HVal, Iterable<HValRow> {
 	public diff(dict: HDict): HDict {
 		const diff = new HDict()
 
-		for (const { name, value } of this) {
+		for (const name of HDict.merge(this, dict).keys) {
 			const dictVal = dict.get(name)
+			const val = this.get(name)
 
 			if (!dictVal) {
 				diff.set(name, HRemove.make())
-			} else if (!dictVal.equals(value)) {
+			} else if (!val || !dictVal.equals(val)) {
 				diff.set(name, dictVal)
 			}
 		}
