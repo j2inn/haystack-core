@@ -1107,7 +1107,7 @@ describe('HGrid', function (): void {
 				const result = otherGrid.filter('id == @site')
 
 				expect(result.length).toBe(1)
-				expect(result[0]).toEqual(site)
+				expect(result[0]?.toJSON()).toEqual(site.toJSON())
 			})
 
 			it('follows a ref', function (): void {
@@ -1133,7 +1133,7 @@ describe('HGrid', function (): void {
 				)
 
 				expect(result.length).toBe(1)
-				expect(result[0]).toEqual(equip)
+				expect(result[0]?.toJSON()).toEqual(equip.toJSON())
 			})
 
 			it('follows two refs', function (): void {
@@ -1164,7 +1164,7 @@ describe('HGrid', function (): void {
 				)
 
 				expect(result.length).toBe(1)
-				expect(result[0]).toEqual(point)
+				expect(result[0]?.toJSON()).toEqual(point.toJSON())
 			})
 
 			it('copies the column meta to the new grid', function (): void {

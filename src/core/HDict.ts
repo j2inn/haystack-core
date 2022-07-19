@@ -915,19 +915,26 @@ export class HDict implements HVal, Iterable<HValRow> {
 	}
 
 	/**
-	 * Create a diff dict that can be used in an update.
+	 * Create a diff (difference) dict that can be used in an update.
 	 *
-	 * This will return a new dict with any removed tags having an `HRemove` value.
+	 * This will return a new dict with any changed values and
+	 * removed tags having an `HRemove` value.
 	 *
-	 * @param dict The newly updated dict that will be checked for removed values.
-	 * @returns A diff dict that has `HRemove` values for any tags that have been removed.
+	 * @param dict The newly updated dict that will be checked for differences.
+	 * These differences will be incorporated into the returned dict.
+	 * @returns A diff dict.
 	 */
 	public diff(dict: HDict): HDict {
-		const diff = dict.newCopy()
+		const diff = new HDict()
 
-		for (const key of this.keys) {
-			if (!diff.has(key)) {
-				diff.set(key, HRemove.make())
+		for (const name of HDict.merge(this, dict).keys) {
+			const dictVal = dict.get(name)
+			const val = this.get(name)
+
+			if (!dictVal) {
+				diff.set(name, HRemove.make())
+			} else if (!val || !dictVal.equals(val)) {
+				diff.set(name, dictVal)
 			}
 		}
 
