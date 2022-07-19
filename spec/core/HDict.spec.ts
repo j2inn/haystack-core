@@ -802,15 +802,15 @@ describe('HDict', function (): void {
 
 	describe('#diff()', function (): void {
 		it('returns a dict with removed values', function (): void {
-			const dict = new HDict({ a: 'a', b: 'b' })
-			const newDict = new HDict({ a: 'a' })
+			const dict = new HDict({ a: 'a', b: 'b', c: 'c' })
+			const newDict = new HDict({ a: 'a', c: 'd' })
 			const diff = dict.diff(newDict)
 
 			expect(diff.toJSON()).toEqual({
-				a: 'a',
 				b: {
 					_kind: 'remove',
 				},
+				c: 'd',
 			})
 		})
 	}) // #diff()
