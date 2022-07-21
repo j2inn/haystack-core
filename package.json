@@ -46,7 +46,7 @@
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
 		"@types/lodash": "^4.14.182",
-		"@types/luxon": "^2.4.0",
+		"@types/luxon": "^3.0.0",
 		"@types/moment-range": "^4.0.0",
 		"@types/moment-timezone": "^0.5.30",
 		"@types/node": "^18.0.6",
