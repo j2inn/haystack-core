@@ -190,4 +190,165 @@ describe('HUri', function (): void {
 			expect(uri.toDict()).toValEqual(HDict.make({ val: uri }))
 		})
 	}) // #toDict()
+
+	describe('scheme', function (): void {
+		it('returns a scheme name', function (): void {
+			expect(HUri.make('https://localhost').scheme).toBe('https')
+		})
+
+		it('returns a scheme name in lower case', function (): void {
+			expect(HUri.make('HTTPS://localhost').scheme).toBe('https')
+		})
+
+		it('returns an empty string when no scheme name', function (): void {
+			expect(HUri.make('/foo').scheme).toBe('')
+		})
+	}) // scheme
+
+	describe('hostname', function (): void {
+		it('returns a host name', function (): void {
+			expect(HUri.make('https://localhost').hostname).toBe('localhost')
+		})
+
+		it('returns a host name when port is present', function (): void {
+			expect(HUri.make('https://localhost:8081').hostname).toBe(
+				'localhost'
+			)
+		})
+
+		it('returns a empty string when there is no host name', function (): void {
+			expect(HUri.make('/foo').hostname).toBe('')
+		})
+	}) // hostname
+
+	describe('port', function (): void {
+		it('returns a port number', function (): void {
+			expect(HUri.make('https://localhost:444').port).toBe(444)
+		})
+
+		it('returns a known port number for https', function (): void {
+			expect(HUri.make('https://localhost').port).toBe(443)
+		})
+
+		it('returns a known port number for http', function (): void {
+			expect(HUri.make('http://localhost').port).toBe(80)
+		})
+
+		it('returns -1 for an unknown port number', function (): void {
+			expect(HUri.make('test://localhost').port).toBe(-1)
+		})
+	}) // port
+
+	describe('pathname', function (): void {
+		it('returns the path name from an absolute URI', function (): void {
+			expect(HUri.make('https://localhost/foo/bar?query').pathname).toBe(
+				'/foo/bar'
+			)
+		})
+
+		it('returns the path name from a relative URI', function (): void {
+			expect(HUri.make('/foo/bar?query').pathname).toBe('/foo/bar')
+		})
+
+		it('returns the path name from a relative URI with no root', function (): void {
+			expect(HUri.make('foo/bar?query').pathname).toBe('foo/bar')
+		})
+
+		it('returns an empty string when there is no path', function (): void {
+			expect(HUri.make('https://localhost').pathname).toBe('')
+		})
+	}) // pathname
+
+	describe('paths', function (): void {
+		it('returns the paths from an absolute URI', function (): void {
+			const uri = HUri.make('https://localhost/foo/bar?query')
+
+			expect(uri.paths).toEqual(['foo', 'bar'])
+
+			// Repeat because of caching.
+			expect(uri.paths).toEqual(['foo', 'bar'])
+		})
+
+		it('returns the paths from a relative URI', function (): void {
+			expect(HUri.make('/foo/bar?query').paths).toEqual(['foo', 'bar'])
+		})
+
+		it('returns no paths when there is no path', function (): void {
+			expect(HUri.make('https://localhost').paths).toEqual([])
+		})
+
+		it('filters out invalid paths', function (): void {
+			expect(HUri.make('https://localhost//foo///bar').paths).toEqual([
+				'foo',
+				'bar',
+			])
+		})
+	}) // paths
+
+	describe('hash', function (): void {
+		it('returns the hash for a URI with a query', function (): void {
+			expect(HUri.make('https://localhost/foo/bar?query#frag').hash).toBe(
+				'frag'
+			)
+		})
+
+		it('returns the hash for a URI', function (): void {
+			expect(HUri.make('https://localhost/foo/bar#frag').hash).toBe(
+				'frag'
+			)
+		})
+
+		it('returns an empty string when there is no hash', function (): void {
+			expect(HUri.make('https://localhost/foo/bar').hash).toBe('')
+		})
+	}) // hash
+
+	describe('query', function (): void {
+		it('returns the query for a URI', function (): void {
+			expect(HUri.make('https://localhost/foo/bar?query').query).toBe(
+				'query'
+			)
+		})
+
+		it('returns the query for a URI with a hash', function (): void {
+			expect(
+				HUri.make('https://localhost/foo/bar?query#frag').query
+			).toBe('query')
+		})
+
+		it('returns an empty string when there is no query', function (): void {
+			expect(HUri.make('https://localhost/foo/bar').query).toBe('')
+		})
+	}) // query
+
+	describe('queryParams', function (): void {
+		it('parses some query parameters into an object', function (): void {
+			const uri = HUri.make(
+				'https://localhost/foo/bar?foo=bar&test%20me=hello%20there'
+			)
+
+			expect(uri.queryParams).toEqual({
+				foo: 'bar',
+				'test me': 'hello there',
+			})
+
+			expect(uri.queryParams).toEqual({
+				foo: 'bar',
+				'test me': 'hello there',
+			})
+		})
+
+		it('parses a query with no equals', function (): void {
+			expect(
+				HUri.make('https://localhost/foo/bar?foo=bar&test%20me')
+					.queryParams
+			).toEqual({ foo: 'bar', 'test me': '' })
+		})
+
+		it('returns an empty object where there is no query', function (): void {
+			expect(HUri.make('https://localhost/foo/bar').queryParams).toEqual(
+				{}
+			)
+		})
+	}) // queryParams
 })
