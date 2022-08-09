@@ -19,6 +19,7 @@ import { HDict } from '../core/HDict'
 import { HRef } from '../core/HRef'
 import { HSymbol } from '../core/HSymbol'
 import { TokenRelationship } from './TokenRelationship'
+import { HList } from '../core/HList'
 
 /**
  * AWT Node Implementation for a Haystack Filter.
@@ -130,13 +131,26 @@ function get(context: EvalContext, paths: string[]): HVal | undefined | null {
 		if (valueIsKind<HDict>(hval, Kind.Dict)) {
 			// If a dict then simply look up a property.
 			hval = hval.get(paths[i])
-		} else if (
-			typeof context.resolve === 'function' &&
-			valueIsKind<HRef>(hval, Kind.Ref)
-		) {
-			// If the value is a ref then look up the record. Then
-			// resolve record before resolving the value from it.
-			hval = context.resolve(hval)?.get(paths[i])
+		} else if (typeof context.resolve === 'function') {
+			if (valueIsKind<HRef>(hval, Kind.Ref)) {
+				// If the value is a ref then look up the record. Then
+				// resolve record before resolving the value from it.
+				hval = context.resolve(hval)?.get(paths[i])
+			} else if (valueIsKind<HList>(hval, Kind.List)) {
+				// If the value is a ref list then iterate through each
+				// ref in the list until we find a value.
+				for (const val of hval) {
+					if (valueIsKind<HRef>(val, Kind.Ref)) {
+						hval = context.resolve(val)?.get(paths[i])
+
+						if (hval) {
+							break
+						}
+					}
+				}
+			} else {
+				hval = undefined
+			}
 		} else {
 			hval = undefined
 		}

@@ -873,4 +873,59 @@ describe('Node', function (): void {
 			expect(cmp.eval(valContext)).toBe(false)
 		})
 	}) // EvalContext
+
+	describe('ref list', function (): void {
+		let has: HasNode
+		let dicts: HDict[]
+		let ahu: HDict
+		let duct: HDict
+		let fan: HDict
+
+		const trio = `
+				id: @ahu
+				---
+				id: @duct
+				---
+				id: @fan
+				testRef: [@ahu, @duct]`
+
+		beforeEach(function (): void {
+			has = new HasNode(new TokenPaths(['testRef', 'foo']))
+
+			dicts = new TrioReader(trio).readAllDicts()
+			;[ahu, duct, fan] = dicts
+
+			context = {
+				dict: fan,
+				resolve: (ref) => {
+					for (const dict of dicts) {
+						if (dict.get('id')?.equals(ref)) {
+							return dict
+						}
+					}
+					return undefined
+				},
+			}
+		})
+
+		it('returns false when there is no foo tag on ahu or duct', function (): void {
+			expect(has.eval(context)).toBe(false)
+		})
+
+		it('returns true when ahu has the foo marker tag', function (): void {
+			ahu.set('foo', HMarker.make())
+			expect(has.eval(context)).toBe(true)
+		})
+
+		it('returns true when duct has the foo marker tag', function (): void {
+			duct.set('foo', HMarker.make())
+			expect(has.eval(context)).toBe(true)
+		})
+
+		it('returns true when duct and ahu have the foo marker tag', function (): void {
+			ahu.set('foo', HMarker.make())
+			duct.set('foo', HMarker.make())
+			expect(has.eval(context)).toBe(true)
+		})
+	}) // ref list
 }) // Node
