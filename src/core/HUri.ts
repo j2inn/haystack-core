@@ -16,6 +16,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { memoize } from '../util/memoize'
 
 const HTTP_SCHEME = 'http'
 const HTTP_PORT = 80
@@ -31,20 +32,9 @@ interface UriData {
 	hostname: string
 	port: number
 	pathname: string
-	paths?: string[]
 	query: string
-	queryParams?: Record<string, string>
 	hash: string
 }
-
-/**
- * A weak cache that's used to hold onto cached URI data.
- *
- * This is used because a URI is an immutable data structure and hence
- * can't have data lazily appended to it. Instead we associate extra data
- * that's lazily calculated via weak reference.
- */
-const URI_DATA_CACHE = new WeakMap<HUri, UriData>()
 
 /**
  * Haystack URI.
@@ -278,14 +268,14 @@ export class HUri implements HVal {
 	 * Return the scheme being used or an empty string if it can't be found.
 	 */
 	public get scheme(): string {
-		return this.getUriData().scheme
+		return this.parse().scheme
 	}
 
 	/**
 	 * @returns The host name or an empty string if it can't be found.
 	 */
 	public get hostname(): string {
-		return this.getUriData().hostname
+		return this.parse().hostname
 	}
 
 	/**
@@ -293,81 +283,60 @@ export class HUri implements HVal {
 	 * be parsed for an unknown protocol.
 	 */
 	public get port(): number {
-		return this.getUriData().port
+		return this.parse().port
 	}
 
 	/**
 	 * @returns The pathname or an empty string if none can be found.
 	 */
 	public get pathname(): string {
-		return this.getUriData().pathname
+		return this.parse().pathname
 	}
 
 	/**
 	 * @returns The paths or an empty array if no paths can be found.
 	 */
+	@memoize()
 	public get paths(): string[] {
-		const data = this.getUriData()
-
-		if (!data.paths) {
-			data.paths = data.pathname
-				.split('/')
-				.filter((path) => !!path.length)
-		}
-
-		return data.paths
+		return this.parse()
+			.pathname.split('/')
+			.filter((path) => !!path.length)
 	}
 
 	/**
 	 * @return the fragment identifier or an empty string if it can't be found.
 	 */
 	public get hash(): string {
-		return this.getUriData().hash
+		return this.parse().hash
 	}
 
 	/**
 	 * @returns The whole query string.
 	 */
 	public get query(): string {
-		return this.getUriData().query
+		return this.parse().query
 	}
 
 	/**
 	 * @returns The parsed query object.
 	 */
+	@memoize()
 	public get queryParams(): Record<string, string> {
-		const data = this.getUriData()
-
-		if (!data.queryParams) {
-			data.queryParams = data.query.split('&').reduce((obj, value) => {
+		return this.parse()
+			.query.split('&')
+			.reduce((obj, value) => {
 				const [key, val] = value.split('=')
 				if (key) {
 					obj[decodeURIComponent(key)] = decodeURIComponent(val ?? '')
 				}
 				return obj
 			}, {} as Record<string, string>)
-		}
-
-		return data.queryParams
-	}
-
-	/**
-	 * @returns The data for the URI.
-	 */
-	private getUriData(): UriData {
-		let data = URI_DATA_CACHE.get(this)
-
-		if (!data) {
-			data = this.parse()
-			URI_DATA_CACHE.set(this, data)
-		}
-
-		return data
 	}
 
 	/**
 	 * @returns parse the URI query and return the result.
 	 */
+	@memoize()
 	private parse(): UriData {
 		// https://www.rfc-editor.org/rfc/rfc3986#appendix-B
 		const res =
