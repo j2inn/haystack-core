@@ -5,6 +5,15 @@
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
 /**
+ * Holds all memoized cached values via a weakly referenced map.
+ *
+ * This enables cached values to persist against the lifetime of an object
+ * until they're garbaged collected. This can be achieved without mutating the
+ * original object that could possibly be frozen/immutable.
+ */
+const MEMOIZE_CACHES = new WeakMap<object, MemoizeCache>()
+
+/**
  * Memoization Cache.
  */
 export class MemoizeCache {
@@ -159,18 +168,20 @@ export class MemoizeCache {
 	}
 }
 
-interface MemoizedObjectInternal {
-	$memoizeCache?: MemoizeCache
-}
-
 /**
  * Return the memoize cache.
  *
  * @param obj The object to return the cache from.
- * @returns The memorize cache.
+ * @returns The memoize cache.
  */
-function getCache(obj: MemoizedObjectInternal): MemoizeCache {
-	return obj.$memoizeCache ?? (obj.$memoizeCache = new MemoizeCache())
+function getCache(obj: object): MemoizeCache {
+	let cache = MEMOIZE_CACHES.get(obj)
+
+	if (!cache) {
+		MEMOIZE_CACHES.set(obj, (cache = new MemoizeCache()))
+	}
+
+	return cache
 }
 
 /**
@@ -180,7 +191,7 @@ function getCache(obj: MemoizedObjectInternal): MemoizeCache {
  * @returns The memoize cache or undefined if not found.
  */
 export function getMemoizeCache(obj: any): MemoizeCache | undefined {
-	return obj?.$memoizeCache
+	return MEMOIZE_CACHES.get(obj)
 }
 
 /**
@@ -203,7 +214,7 @@ export function memoize(): (
 		if (typeof get === 'function') {
 			return {
 				get(): any {
-					const cache = getCache(this as MemoizedObjectInternal)
+					const cache = getCache(this)
 
 					return cache.has(propertyKey)
 						? cache.get(propertyKey)
@@ -213,7 +224,7 @@ export function memoize(): (
 		} else if (typeof value === 'function') {
 			return {
 				value(...args: any[]): any {
-					const cache = getCache(this as MemoizedObjectInternal)
+					const cache = getCache(this)
 
 					const key = JSON.stringify({ propertyKey, args })
 
