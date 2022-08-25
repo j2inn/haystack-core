@@ -980,6 +980,16 @@ describe('Node', function (): void {
 				expect(cmp.eval(context)).toBe(false)
 			})
 
+			it('returns true when the filter dis not equals "foo" with single ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'dis']),
+					tokens.notEquals,
+					new TokenValue(TokenType.string, HStr.make('foo'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
 			it('returns true when the filter dis equals "pipe" with double ref', function (): void {
 				const cmp = new CmpNode(
 					new TokenPaths(['testRef', 'testRef', 'dis']),
@@ -1028,6 +1038,16 @@ describe('Node', function (): void {
 				)
 
 				expect(cmp.eval(context)).toBe(false)
+			})
+
+			it('returns true when the filter dis not equals "ahu" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.notEquals,
+					new TokenValue(TokenType.string, HStr.make('ahu'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
 			})
 		}) // equals single ref
 	}) // ref list
