@@ -536,40 +536,39 @@ export class CmpNode extends LeafNode {
 		const pathValueList = get(context, this.path.paths)
 		const value = this.val.value
 
-		// Only equals and not equals support ref lists.
-		if (
-			this.cmpOp.type === TokenType.equals ||
-			this.cmpOp.type === TokenType.notEquals
-		) {
-			for (const pathValue of pathValueList) {
-				if (pathValue.isKind(value.getKind())) {
-					switch (this.cmpOp.type) {
-						case TokenType.equals:
-							if (pathValue.equals(value)) {
-								return true
-							}
-							break
-						case TokenType.notEquals:
-							if (!pathValue.equals(value)) {
-								return true
-							}
-							break
-					}
-				}
-			}
-		} else {
-			const pathValue = pathValueList[0]
-
-			if (pathValue && pathValue.isKind(value.getKind())) {
+		for (const pathValue of pathValueList) {
+			if (pathValue.isKind(value.getKind())) {
 				switch (this.cmpOp.type) {
+					case TokenType.equals:
+						if (pathValue.equals(value)) {
+							return true
+						}
+						break
+					case TokenType.notEquals:
+						if (!pathValue.equals(value)) {
+							return true
+						}
+						break
 					case TokenType.greaterThan:
-						return pathValue.compareTo(value) === 1
+						if (pathValue.compareTo(value) === 1) {
+							return true
+						}
+						break
 					case TokenType.greaterThanOrEqual:
-						return pathValue.compareTo(value) >= 0
+						if (pathValue.compareTo(value) >= 0) {
+							return true
+						}
+						break
 					case TokenType.lessThan:
-						return pathValue.compareTo(value) === -1
+						if (pathValue.compareTo(value) === -1) {
+							return true
+						}
+						break
 					case TokenType.lessThanOrEqual:
-						return pathValue.compareTo(value) <= 0
+						if (pathValue.compareTo(value) <= 0) {
+							return true
+						}
+						break
 				}
 			}
 		}
