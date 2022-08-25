@@ -533,10 +533,9 @@ export class CmpNode extends LeafNode {
 	}
 
 	public eval(context: EvalContext): boolean {
-		const pathValueList = get(context, this.path.paths)
 		const value = this.val.value
 
-		for (const pathValue of pathValueList) {
+		for (const pathValue of get(context, this.path.paths)) {
 			if (pathValue.isKind(value.getKind())) {
 				switch (this.cmpOp.type) {
 					case TokenType.equals:
