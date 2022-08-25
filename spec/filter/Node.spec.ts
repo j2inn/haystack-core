@@ -875,7 +875,6 @@ describe('Node', function (): void {
 	}) // EvalContext
 
 	describe('ref list', function (): void {
-		let has: HasNode
 		let dicts: HDict[]
 		let ahu: HDict
 		let duct: HDict
@@ -883,15 +882,29 @@ describe('Node', function (): void {
 
 		const trio = `
 				id: @ahu
+				dis: "ahu"
+				testRef: [@floor, @point]
 				---
 				id: @duct
+				dis: "duct"
+				testRef: [@equip, @pipe]
 				---
 				id: @fan
-				testRef: [@ahu, @duct]`
+				testRef: [@ahu, @duct]
+				---
+				id: @pipe
+				dis: "pipe"
+				---
+				id: @equip
+				dis: "equip"
+				---
+				id: @floor
+				dis: "floor"
+				---
+				id: @point
+				dis: "point"`
 
 		beforeEach(function (): void {
-			has = new HasNode(new TokenPaths(['testRef', 'foo']))
-
 			dicts = new TrioReader(trio).readAllDicts()
 			;[ahu, duct, fan] = dicts
 
@@ -908,24 +921,114 @@ describe('Node', function (): void {
 			}
 		})
 
-		it('returns false when there is no foo tag on ahu or duct', function (): void {
-			expect(has.eval(context)).toBe(false)
-		})
+		describe('has', function (): void {
+			let has: HasNode
 
-		it('returns true when ahu has the foo marker tag', function (): void {
-			ahu.set('foo', HMarker.make())
-			expect(has.eval(context)).toBe(true)
-		})
+			beforeEach(function (): void {
+				has = new HasNode(new TokenPaths(['testRef', 'foo']))
+			})
 
-		it('returns true when duct has the foo marker tag', function (): void {
-			duct.set('foo', HMarker.make())
-			expect(has.eval(context)).toBe(true)
-		})
+			it('returns false when there is no foo tag on ahu or duct', function (): void {
+				expect(has.eval(context)).toBe(false)
+			})
 
-		it('returns true when duct and ahu have the foo marker tag', function (): void {
-			ahu.set('foo', HMarker.make())
-			duct.set('foo', HMarker.make())
-			expect(has.eval(context)).toBe(true)
-		})
+			it('returns true when ahu has the foo marker tag', function (): void {
+				ahu.set('foo', HMarker.make())
+				expect(has.eval(context)).toBe(true)
+			})
+
+			it('returns true when duct has the foo marker tag', function (): void {
+				duct.set('foo', HMarker.make())
+				expect(has.eval(context)).toBe(true)
+			})
+
+			it('returns true when duct and ahu have the foo marker tag', function (): void {
+				ahu.set('foo', HMarker.make())
+				duct.set('foo', HMarker.make())
+				expect(has.eval(context)).toBe(true)
+			})
+		}) // has
+
+		describe('equals', function (): void {
+			it('returns true when the filter dis equals "ahu" with single ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('ahu'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns true when the filter dis equals "ahu" with single ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('duct'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns false when the filter dis equals "foo" with single ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('foo'))
+				)
+
+				expect(cmp.eval(context)).toBe(false)
+			})
+
+			it('returns true when the filter dis equals "pipe" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('pipe'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns true when the filter dis equals "pipe" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('equip'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns true when the filter dis equals "floor" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('floor'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns true when the filter dis equals "point" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('point'))
+				)
+
+				expect(cmp.eval(context)).toBe(true)
+			})
+
+			it('returns false when the filter dis equals "ahu" with double ref', function (): void {
+				const cmp = new CmpNode(
+					new TokenPaths(['testRef', 'testRef', 'dis']),
+					tokens.equals,
+					new TokenValue(TokenType.string, HStr.make('ahu'))
+				)
+
+				expect(cmp.eval(context)).toBe(false)
+			})
+		}) // equals single ref
 	}) // ref list
 }) // Node
