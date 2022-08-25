@@ -110,57 +110,72 @@ export function isNode(node: any): node is Node {
 	)
 }
 
+const EMPTY_HVAL_ARRAY: readonly HVal[] = Object.freeze([])
+
 /**
- * Get a value from a path.
+ * Get all the values from a path.
  *
  * @param context The evaluation context.
  * @param paths The path to find.
+ * @returns The values found.
  */
-function get(context: EvalContext, paths: string[]): HVal | undefined | null {
+function get(context: EvalContext, paths: string[]): readonly HVal[] {
 	if (!paths.length) {
-		return undefined
+		return EMPTY_HVAL_ARRAY
 	}
 
-	let hval = context.dict.get(paths[0])
+	const hvalue = context.dict.get(paths[0])
 
-	if (!hval) {
-		return undefined
+	if (!hvalue) {
+		return EMPTY_HVAL_ARRAY
 	}
+
+	let hvalList: HVal[] = [hvalue]
 
 	for (let i = 1; i < paths.length; ++i) {
-		if (valueIsKind<HDict>(hval, Kind.Dict)) {
-			// If a dict then simply look up a property.
-			hval = hval.get(paths[i])
-		} else if (typeof context.resolve === 'function') {
-			if (valueIsKind<HRef>(hval, Kind.Ref)) {
-				// If the value is a ref then look up the record. Then
-				// resolve record before resolving the value from it.
-				hval = context.resolve(hval)?.get(paths[i])
-			} else if (valueIsKind<HList>(hval, Kind.List)) {
-				// If the value is a ref list then iterate through each
-				// ref in the list until we find a value.
-				for (const val of hval) {
-					if (valueIsKind<HRef>(val, Kind.Ref)) {
-						hval = context.resolve(val)?.get(paths[i])
+		const newHvalList: HVal[] = []
 
-						if (hval) {
-							break
+		for (const hval of hvalList) {
+			if (valueIsKind<HDict>(hval, Kind.Dict)) {
+				// If a dict then simply look up a property.
+				const newHval = hval.get(paths[i])
+
+				if (newHval) {
+					newHvalList.push(newHval)
+				}
+			} else if (typeof context.resolve === 'function') {
+				if (valueIsKind<HRef>(hval, Kind.Ref)) {
+					// If the value is a ref then look up the record. Then
+					// resolve record before resolving the value from it.
+					const newHVal = context.resolve(hval)?.get(paths[i])
+
+					if (newHVal) {
+						newHvalList.push(newHVal)
+					}
+				} else if (valueIsKind<HList>(hval, Kind.List)) {
+					// If the value is a ref list then iterate through each
+					// ref in the list.
+					for (const val of hval) {
+						if (valueIsKind<HRef>(val, Kind.Ref)) {
+							const newHVal = context.resolve(val)?.get(paths[i])
+
+							if (newHVal) {
+								newHvalList.push(newHVal)
+							}
 						}
 					}
 				}
-			} else {
-				hval = undefined
 			}
-		} else {
-			hval = undefined
 		}
 
-		if (!hval) {
+		hvalList = newHvalList
+
+		if (!hvalList.length) {
 			break
 		}
 	}
 
-	return hval
+	return hvalList
 }
 
 /**
@@ -440,7 +455,7 @@ export class HasNode extends LeafNode {
 	}
 
 	public eval(context: EvalContext): boolean {
-		return !!get(context, this.path.paths)
+		return !!get(context, this.path.paths).length
 	}
 }
 
@@ -469,7 +484,7 @@ export class MissingNode extends LeafNode {
 	}
 
 	public eval(context: EvalContext): boolean {
-		return !get(context, this.path.paths)
+		return !get(context, this.path.paths).length
 	}
 }
 
@@ -518,23 +533,42 @@ export class CmpNode extends LeafNode {
 	}
 
 	public eval(context: EvalContext): boolean {
-		const pathValue = get(context, this.path.paths)
 		const value = this.val.value
 
-		if (pathValue && pathValue.isKind(value.getKind())) {
-			switch (this.cmpOp.type) {
-				case TokenType.equals:
-					return pathValue.equals(value)
-				case TokenType.notEquals:
-					return !pathValue.equals(value)
-				case TokenType.greaterThan:
-					return pathValue.compareTo(value) === 1
-				case TokenType.greaterThanOrEqual:
-					return pathValue.compareTo(value) >= 0
-				case TokenType.lessThan:
-					return pathValue.compareTo(value) === -1
-				case TokenType.lessThanOrEqual:
-					return pathValue.compareTo(value) <= 0
+		for (const pathValue of get(context, this.path.paths)) {
+			if (pathValue.isKind(value.getKind())) {
+				switch (this.cmpOp.type) {
+					case TokenType.equals:
+						if (pathValue.equals(value)) {
+							return true
+						}
+						break
+					case TokenType.notEquals:
+						if (!pathValue.equals(value)) {
+							return true
+						}
+						break
+					case TokenType.greaterThan:
+						if (pathValue.compareTo(value) === 1) {
+							return true
+						}
+						break
+					case TokenType.greaterThanOrEqual:
+						if (pathValue.compareTo(value) >= 0) {
+							return true
+						}
+						break
+					case TokenType.lessThan:
+						if (pathValue.compareTo(value) === -1) {
+							return true
+						}
+						break
+					case TokenType.lessThanOrEqual:
+						if (pathValue.compareTo(value) <= 0) {
+							return true
+						}
+						break
+				}
 			}
 		}
 
@@ -659,7 +693,9 @@ export class WildcardEqualsNode extends LeafNode {
 		const allRefs = new Set<string>()
 
 		// Keep resolving until we find the reference we're looking.
-		let ref = get(context, paths)
+		// Please note, this is purposely short circuited to only use the first value.
+		// Therefore ref lists are not supported in this context.
+		let ref = get(context, paths)[0]
 
 		let matched = false
 
@@ -679,7 +715,7 @@ export class WildcardEqualsNode extends LeafNode {
 				const dict = context.resolve(ref)
 
 				if (dict) {
-					ref = get({ ...context, dict }, paths)
+					ref = get({ ...context, dict }, paths)[0]
 				} else {
 					break
 				}
