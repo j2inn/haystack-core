@@ -26,9 +26,6 @@ export interface DateObj {
 	day: number
 }
 
-/** Accepted types for making a `HDate` from */
-type DateBaseType = string | Date | DateObj | HaysonDate | HDate
-
 /**
  * Haystack date.
  */
@@ -74,8 +71,8 @@ export class HDate implements HVal {
 
 			let date = String(year)
 
-			date += '-' + (month <= 10 ? '0' : '') + month
-			date += '-' + (day <= 10 ? '0' : '') + day
+			date += '-' + (month < 10 ? '0' : '') + month
+			date += '-' + (day < 10 ? '0' : '') + day
 
 			this.#value = date
 			this.#date = HDate.toJsDate(this.#value)
@@ -98,7 +95,9 @@ export class HDate implements HVal {
 	 * literal with year, month and day values.
 	 * @returns The haystack date.
 	 */
-	public static make(value: DateBaseType): HDate {
+	public static make(
+		value: string | Date | DateObj | HaysonDate | HDate
+	): HDate {
 		if (valueIsKind<HDate>(value, Kind.Date)) {
 			return value
 		} else {

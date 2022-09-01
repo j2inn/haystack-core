@@ -189,18 +189,28 @@ describe('HDate', function (): void {
 	describe('#year', function (): void {
 		it('returns the year', function (): void {
 			expect(HDate.make('2020-01-01').year).toBe(2020)
+
+			expect(HDate.make({ year: 2022, month: 10, day: 10 }).year).toBe(
+				2022
+			)
 		})
 	}) // #year
 
 	describe('#month', function (): void {
 		it('returns the year', function (): void {
 			expect(HDate.make('2020-02-01').month).toBe(2)
+
+			expect(HDate.make({ year: 2022, month: 10, day: 10 }).month).toBe(
+				10
+			)
 		})
 	}) // #month
 
 	describe('#day', function (): void {
 		it('returns the day', function (): void {
 			expect(HDate.make('2020-01-15').day).toBe(15)
+
+			expect(HDate.make({ year: 2022, month: 10, day: 10 }).day).toBe(10)
 		})
 	}) // #day
 
