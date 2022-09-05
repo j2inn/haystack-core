@@ -25,7 +25,7 @@ describe('HNa', function (): void {
 
 	describe('#toString()', function (): void {
 		it('returns a string encoded version', function (): void {
-			expect(HNa.make().toString()).toBe('[NA]')
+			expect(HNa.make().toString()).toBe('NA')
 		})
 	}) // #toString()
 
