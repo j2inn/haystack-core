@@ -217,6 +217,24 @@ describe('util', function (): void {
 		it('returns null for a null value', function (): void {
 			expect(makeValue(null)).toBeNull()
 		})
+
+		it("encodes a grid to JSON and then decodes it ensuring it's still the same", function (): void {
+			// This use case covers how a
+			const grid = new HGrid({
+				rows: [
+					new HDict({ id: HRef.make('a'), dis: 'a display' }),
+					new HDict({ id: HRef.make('b'), dis: 'b display' }),
+				],
+			})
+
+			const gridStr = JSON.stringify(grid.toJSON())
+
+			const decodedGrid = makeValue(JSON.parse(gridStr)) as
+				| HGrid
+				| undefined
+
+			expect(decodedGrid?.equals(grid)).toBe(true)
+		})
 	}) // makeValue
 
 	describe('toTagName()', function (): void {

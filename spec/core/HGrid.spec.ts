@@ -4,7 +4,12 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HGrid, DEFAULT_GRID_VERSION, GridColumn } from '../../src/core/HGrid'
+import {
+	HGrid,
+	DEFAULT_GRID_VERSION,
+	GridColumn,
+	GRID_VERSION_NAME,
+} from '../../src/core/HGrid'
 import { HDict } from '../../src/core/HDict'
 import { HStr } from '../../src/core/HStr'
 import { Kind } from '../../src/core/Kind'
@@ -246,6 +251,24 @@ describe('HGrid', function (): void {
 				const newGrid = new HGrid([dict])
 
 				expect(new HGrid([hayson])).toValEqual(newGrid)
+			})
+
+			it('creates a grid from hayson and ensures the version is removed from the meta', function (): void {
+				const grid = new HGrid({
+					rows: [
+						new HDict({ id: HRef.make('a'), dis: 'a display' }),
+						new HDict({ id: HRef.make('b'), dis: 'b display' }),
+					],
+				})
+
+				const gridJson = grid.toJSON()
+
+				expect(gridJson?.meta?.ver).toBe(DEFAULT_GRID_VERSION)
+
+				const decodedGrid = new HGrid(gridJson)
+
+				expect(decodedGrid.equals(grid)).toBe(true)
+				expect(decodedGrid.meta.has(GRID_VERSION_NAME)).toBe(false)
 			})
 		}) // #constructor()
 
