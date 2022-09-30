@@ -26,6 +26,11 @@ import { HRef } from './HRef'
 import { EvalContext, EvalContextResolve } from '../filter/EvalContext'
 
 /**
+ * The grid's version tag name.
+ */
+export const GRID_VERSION_NAME = 'ver'
+
+/**
  * The default grid version number.
  */
 export const DEFAULT_GRID_VERSION = '3.0'
@@ -555,8 +560,21 @@ export class HGrid<DictVal extends HDict = HDict>
 					HDict.make(dict) as DictVal
 			) as DictVal[]
 		} else {
+			// Covers grid objects (GridObj) and Hayson...
+
 			if (value.meta) {
 				meta = makeValue(value.meta) as HDict
+
+				// Remove the version from the meta. This is used when decoding a Hayson based grid that
+				// adds the version number to the grid's meta data. We need to remove the version so
+				// comparisons (i.e. `equals`) still work as expected.
+				if (meta.has(GRID_VERSION_NAME)) {
+					version =
+						meta.get<HStr>(GRID_VERSION_NAME)?.value ??
+						DEFAULT_GRID_VERSION
+
+					meta.remove(GRID_VERSION_NAME)
+				}
 			}
 
 			if ((value as GridObj).columns) {
@@ -699,7 +717,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		return {
 			_kind: this.getKind(),
 			meta: {
-				ver: this.version,
+				[GRID_VERSION_NAME]: this.version,
 				...(this.meta ? this.meta.toJSON() : {}),
 			},
 			cols: this.$store.columns.map(
@@ -747,7 +765,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		let zinc = nested ? '<<\n' : ''
 
 		// Header and version
-		zinc += `ver:${HStr.make(this.version).toZinc()}`
+		zinc += `${GRID_VERSION_NAME}:${HStr.make(this.version).toZinc()}`
 
 		// Meta
 		const metaZinc = toMetaZinc(this.meta)
