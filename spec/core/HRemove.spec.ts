@@ -25,7 +25,7 @@ describe('HRemove', function (): void {
 
 	describe('#toString()', function (): void {
 		it('returns a string encoded version', function (): void {
-			expect(HRemove.make().toString()).toBe('[remove]')
+			expect(HRemove.make().toString()).toBe('REMOVE')
 		})
 	}) // #toString()
 
