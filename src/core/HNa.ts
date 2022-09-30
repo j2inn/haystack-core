@@ -88,7 +88,7 @@ export class HNa implements HVal {
 	 * @returns A string representation of the value.
 	 */
 	public toString(): string {
-		return '[NA]'
+		return this.toZinc()
 	}
 
 	/**

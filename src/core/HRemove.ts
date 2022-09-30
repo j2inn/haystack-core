@@ -88,7 +88,7 @@ export class HRemove implements HVal {
 	 * @returns A string representation of the value.
 	 */
 	public toString(): string {
-		return '[remove]'
+		return 'REMOVE'
 	}
 
 	/**
