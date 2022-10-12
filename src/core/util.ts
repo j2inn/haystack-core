@@ -81,54 +81,97 @@ export function makeValue(val: HaysonVal | HVal): OptionalHVal {
 	const obj = val as { _kind?: string }
 
 	// Support new and old Hayson for decoding values.
-	switch (obj._kind) {
+	switch (toKind(obj._kind ?? '')) {
 		case Kind.Marker:
-		case 'Marker':
 			return HMarker.make()
 		case Kind.Remove:
-		case 'Remove':
 			return HRemove.make()
 		case Kind.NA:
-		case 'NA':
 			return HNa.make()
 		case Kind.Coord:
-		case 'Coord':
 			return HCoord.make(obj as HaysonCoord)
 		case Kind.XStr:
-		case 'XStr':
 		case Kind.Bin:
-		case 'Bin':
 			return HXStr.make(obj as HaysonXStr)
 		case Kind.Date:
-		case 'Date':
 			return HDate.make(obj as HaysonDate)
 		case Kind.DateTime:
-		case 'DateTime':
 			return HDateTime.make(obj as HaysonDateTime)
 		case Kind.Number:
-		case 'Number':
 			return HNum.make(obj as HaysonNum)
 		case Kind.Ref:
-		case 'Ref':
 			return HRef.make(obj as HaysonRef)
 		case Kind.Symbol:
-		case 'Symbol':
 			return HSymbol.make(obj as HaysonSymbol)
 		case Kind.Time:
-		case 'Time':
 			return HTime.make(obj as HaysonTime)
 		case Kind.Uri:
-		case 'Uri':
 			return HUri.make(obj as HaysonUri)
 		case Kind.Dict:
-		case 'Dict':
 		case undefined:
 			return HDict.make(obj as HaysonDict)
 		case Kind.Grid:
-		case 'Grid':
 			return HGrid.make(obj as HaysonGrid)
 		default:
 			throw new Error('Could not resolve value from kind: ' + obj._kind)
+	}
+}
+
+/**
+ * Convert the kind enumeration to a real haystack kind.
+ *
+ * @param kind The kind string.
+ * @returns The kind or undefined if the kind can't be found.
+ */
+export function toKind(kind: string): Kind | undefined {
+	switch (kind) {
+		case 'Marker':
+		case Kind.Marker:
+			return Kind.Marker
+		case 'Remove':
+		case Kind.Remove:
+			return Kind.Remove
+		case 'NA':
+		case Kind.NA:
+			return Kind.NA
+		case 'Coord':
+		case Kind.Coord:
+			return Kind.Coord
+		case 'XStr':
+		case Kind.XStr:
+			return Kind.XStr
+		case 'Bin':
+		case Kind.Bin:
+			return Kind.Bin
+		case 'Date':
+		case Kind.Date:
+			return Kind.Date
+		case 'DateTime':
+		case Kind.DateTime:
+			return Kind.DateTime
+		case 'Number':
+		case Kind.Number:
+			return Kind.Number
+		case 'Ref':
+		case Kind.Ref:
+			return Kind.Ref
+		case 'Symbol':
+		case Kind.Symbol:
+			return Kind.Symbol
+		case 'Time':
+		case Kind.Time:
+			return Kind.Time
+		case 'Uri':
+		case Kind.Uri:
+			return Kind.Uri
+		case 'Dict':
+		case Kind.Dict:
+			return Kind.Dict
+		case 'Grid':
+		case Kind.Grid:
+			return Kind.Grid
+		default:
+			return undefined
 	}
 }
 
