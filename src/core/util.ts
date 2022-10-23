@@ -51,9 +51,10 @@ import { Scanner } from '../util/Scanner'
  * @param options.kind The kind of value.
  * @param options.unit Any units.
  * @param options.type Any type information for an xstring.
+ * @returns The haystack value or null.
  */
-export function makeValue(val: HaysonVal | HVal): OptionalHVal {
-	if (val === null) {
+export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
+	if (val === null || val === undefined) {
 		return null
 	}
 

@@ -219,6 +219,10 @@ describe('util', function (): void {
 			expect(makeValue(null)).toBeNull()
 		})
 
+		it('returns null for an undefined value', function (): void {
+			expect(makeValue(undefined)).toBeNull()
+		})
+
 		it("encodes a grid to JSON and then decodes it ensuring it's still the same", function (): void {
 			// This use case covers how a
 			const grid = new HGrid({
