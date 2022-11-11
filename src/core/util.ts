@@ -285,8 +285,19 @@ export function toTagName(name: string): string {
 				if (index === 0) {
 					// The start of a tag can only be a lower case letter (a-z).
 					if (Scanner.isUpperCase(start)) {
-						part = part.substring(1, part.length)
-						part = start.toLowerCase() + part
+						let newPart = ''
+
+						let capsPrefix = true
+						for (const ch of part) {
+							if (capsPrefix && Scanner.isUpperCase(ch)) {
+								newPart += ch.toLowerCase()
+							} else {
+								capsPrefix = false
+								newPart += ch
+							}
+						}
+
+						part = newPart
 					}
 				} else if (
 					Scanner.isLetter(start) &&

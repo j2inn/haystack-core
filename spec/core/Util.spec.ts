@@ -405,6 +405,22 @@ describe('util', function (): void {
 			expect(toTagName('test/me')).toBe('test_me')
 		})
 
+		it('converts `AIR TEMP` to `airTEMP`', () => {
+			expect(toTagName('AIR TEMP')).toBe('airTEMP')
+		})
+
+		it('converts `AiR TEMP` to `aiRTEMP`', () => {
+			expect(toTagName('AiR TEMP')).toBe('aiRTEMP')
+		})
+
+		it('converts `aIR TEMP` to `aIRTEMP`', () => {
+			expect(toTagName('aIR TEMP')).toBe('aIRTEMP')
+		})
+
+		it('converts `AIrR TEMP` to `aIRTEMP`', () => {
+			expect(toTagName('AIrR TEMP')).toBe('airRTEMP')
+		})
+
 		describe('ensure first character', function (): void {
 			it('is lowercase', function (): void {
 				expect(toTagName('Hello')).toBe('hello')
