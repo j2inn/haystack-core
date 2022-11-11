@@ -27,9 +27,6 @@ export interface TimeObj {
 	milliseconds?: number
 }
 
-/** Accepted types for making a `HTime` from */
-type TimeBaseType = string | Date | TimeObj | HaysonTime | HTime
-
 /**
  * Haystack time.
  */
@@ -93,7 +90,9 @@ export class HTime implements HVal {
 	 * @param value The value.
 	 * @returns A haystack time.
 	 */
-	public static make(value: TimeBaseType): HTime {
+	public static make(
+		value: string | Date | TimeObj | HaysonTime | HTime
+	): HTime {
 		if (valueIsKind<HTime>(value, Kind.Time)) {
 			return value
 		} else {

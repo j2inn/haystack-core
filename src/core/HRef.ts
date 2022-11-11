@@ -18,9 +18,6 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 
-/** Accepted types for making a `HRef` from */
-type RefBaseType = string | HaysonRef | HRef | HStr
-
 /**
  * Haystack ref.
  */
@@ -69,7 +66,10 @@ export class HRef implements HVal {
 	 * @param displayName Optional display string for a reference.
 	 * @returns A haystack ref.
 	 */
-	public static make(value: RefBaseType, displayName?: string): HRef {
+	public static make(
+		value: string | HaysonRef | HRef | HStr,
+		displayName?: string
+	): HRef {
 		if (valueIsKind<HRef>(value, Kind.Ref)) {
 			return value
 		} else {

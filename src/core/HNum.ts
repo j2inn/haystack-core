@@ -18,9 +18,6 @@ import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { HUnit } from './HUnit'
 
-/** Accepted types for making a `HNum` from */
-type NumberBaseType = number | HaysonNum | HNum
-
 /**
  * The default numeric precision.
  */
@@ -79,7 +76,10 @@ export class HNum implements HVal {
 	 * @param unit Optional units.
 	 * @returns A haystack number.
 	 */
-	public static make(value: NumberBaseType, unit?: string | HUnit): HNum {
+	public static make(
+		value: number | HaysonNum | HNum,
+		unit?: string | HUnit
+	): HNum {
 		let val = 0
 		if (typeof value === 'number') {
 			val = value as number

@@ -2,45 +2,45 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
+import {
+	HaysonCoord,
+	HaysonDate,
+	HaysonDateTime,
+	HaysonDict,
+	HaysonGrid,
+	HaysonList,
+	HaysonNum,
+	HaysonRef,
+	HaysonSymbol,
+	HaysonTime,
+	HaysonUri,
+	HaysonVal,
+	HaysonXStr,
+} from './core/hayson'
 import { HBool } from './core/HBool'
-import { HCoord, CoordObj } from './core/HCoord'
-import { HDate, DateObj } from './core/HDate'
+import { CoordObj, HCoord } from './core/HCoord'
+import { DateObj, HDate } from './core/HDate'
 import { HDateTime } from './core/HDateTime'
-import { HSymbol } from './core/HSymbol'
-import { HDict, HValObj } from './core/HDict'
-import { HGrid, GridObj } from './core/HGrid'
+import { DictStore, HDict } from './core/HDict'
+import { HGrid } from './core/HGrid'
 import { HList } from './core/HList'
-import { HVal, OptionalHVal } from './core/HVal'
 import { HMarker } from './core/HMarker'
 import { HNa } from './core/HNa'
+import { HNamespace } from './core/HNamespace'
 import { HNum } from './core/HNum'
 import { HRef } from './core/HRef'
 import { HRemove } from './core/HRemove'
 import { HStr } from './core/HStr'
+import { HSymbol } from './core/HSymbol'
 import { HTime, TimeObj } from './core/HTime'
 import { HUri } from './core/HUri'
+import { HVal, OptionalHVal } from './core/HVal'
 import { HXStr } from './core/HXStr'
-import { ZincReader } from './core/ZincReader'
 import { TrioReader } from './core/TrioReader'
-import { HNamespace } from './core/HNamespace'
-import {
-	HaysonDate,
-	HaysonCoord,
-	HaysonDateTime,
-	HaysonSymbol,
-	HaysonGrid,
-	HaysonList,
-	HaysonVal,
-	HaysonNum,
-	HaysonTime,
-	HaysonUri,
-	HaysonXStr,
-	HaysonRef,
-	HaysonDict,
-} from './core/hayson'
+import { ZincReader } from './core/ZincReader'
 
-import { makeValue, toTagName, isValidTagName } from './core/util'
 import { HUnit } from './core/HUnit'
+import { isValidTagName, makeValue, toTagName } from './core/util'
 
 /**
  * Core Haystack utility shorthand functions.
@@ -52,40 +52,51 @@ import { HUnit } from './core/HUnit'
  * @module
  */
 
-export function bool(bool: boolean): HBool {
+export function bool(bool: boolean | HBool): HBool {
 	return HBool.make(bool)
 }
 
 export const TRUE = HBool.make(true)
 export const FALSE = HBool.make(false)
 
-export function coord(value: CoordObj | HaysonCoord): HCoord {
+export function coord(value: CoordObj | HaysonCoord | HCoord): HCoord {
 	return HCoord.make(value)
 }
 
-export function date(value: string | Date | DateObj | HaysonDate): HDate {
+export function date(
+	value: string | Date | DateObj | HaysonDate | HDate
+): HDate {
 	return HDate.make(value)
 }
 
-export function dateTime(value: string | Date | HaysonDateTime): HDateTime {
+export function dateTime(
+	value: string | Date | HaysonDateTime | HDateTime
+): HDateTime {
 	return HDateTime.make(value)
 }
 
-export function symbol(value: string | HaysonSymbol): HSymbol {
+export function symbol(value: string | HaysonSymbol | HSymbol): HSymbol {
 	return HSymbol.make(value)
 }
 
-export function dict(values?: HValObj | HaysonDict | HVal): HDict {
+export function dict(
+	values?:
+		| { [prop: string]: OptionalHVal | HaysonVal }
+		| OptionalHVal
+		| DictStore
+): HDict {
 	return HDict.make(values)
 }
 
-export function grid(values: GridObj | HaysonGrid | HVal): HGrid {
+export function grid(
+	values: HaysonGrid | HVal | (HaysonDict | HDict)[]
+): HGrid {
 	return HGrid.make(values)
 }
 
-export function list<T extends HVal>(
-	...values: (T | HaysonVal | T[] | HaysonList)[]
-): HList<T> {
+export function list<Value extends OptionalHVal = OptionalHVal>(
+	...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
+): HList<Value> {
 	return HList.make(...values)
 }
 
@@ -93,29 +104,34 @@ export const MARKER = HMarker.make()
 
 export const NA = HNa.make()
 
-export function num(value: number | HaysonNum, unit?: string): HNum {
+export const REMOVE = HRemove.make()
+
+export function num(value: number | HaysonNum | HNum, unit?: string): HNum {
 	return HNum.make(value, unit)
 }
 
-export function ref(value: string | HaysonRef, displayName?: string): HRef {
+export function ref(
+	value: string | HaysonRef | HRef | HStr,
+	displayName?: string
+): HRef {
 	return HRef.make(value, displayName)
 }
 
-export const REMOVE = HRemove.make()
-
-export function str(value: string): HStr {
+export function str(value: string | HStr): HStr {
 	return HStr.make(value)
 }
 
-export function time(value: string | Date | TimeObj | HaysonTime): HTime {
+export function time(
+	value: string | Date | TimeObj | HaysonTime | HTime
+): HTime {
 	return HTime.make(value)
 }
 
-export function uri(value: string | HaysonUri): HUri {
+export function uri(value: string | HaysonUri | HUri): HUri {
 	return HUri.make(value)
 }
 
-export function xstr(type: string | HaysonXStr, value?: string): HXStr {
+export function xstr(type: string | HaysonXStr | HXStr, value?: string): HXStr {
 	return HXStr.make(type, value)
 }
 
@@ -127,7 +143,7 @@ export function trio(input: string): HGrid | undefined {
 	return TrioReader.readGrid(input)
 }
 
-export function make(value: HaysonVal): OptionalHVal {
+export function make(value: HaysonVal | HVal | undefined): OptionalHVal {
 	return makeValue(value)
 }
 

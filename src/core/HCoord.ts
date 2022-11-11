@@ -23,9 +23,6 @@ export interface CoordObj {
 	longitude: number
 }
 
-/** Accepted types for making a `HCoord` from */
-type CoordBaseType = CoordObj | HaysonCoord | HCoord
-
 /**
  * Haystack coord.
  */
@@ -83,7 +80,7 @@ export class HCoord implements HVal {
 	 * @returns A haystack coordinate.
 	 * @throws An error if the latitude or longitude are invalid.
 	 */
-	public static make(value: CoordBaseType): HCoord {
+	public static make(value: CoordObj | HaysonCoord | HCoord): HCoord {
 		if (valueIsKind<HCoord>(value, Kind.Coord)) {
 			return value
 		} else {

@@ -26,9 +26,6 @@ export interface PartialHaysonDateTime {
 	tz?: string
 }
 
-/** Accepted types for making a `HDateTime` from */
-type DateTimeBaseType = string | Date | HaysonDateTime | HDateTime
-
 /**
  * Prefixes for IANA timezone names.
  */
@@ -172,7 +169,9 @@ export class HDateTime implements HVal {
 	 * @param value The date time as a string, a JS Date or Hayson date object.
 	 * @returns A haystack date time.
 	 */
-	public static make(value: DateTimeBaseType): HDateTime {
+	public static make(
+		value: string | Date | HaysonDateTime | HDateTime
+	): HDateTime {
 		if (valueIsKind<HDateTime>(value, Kind.DateTime)) {
 			return value
 		} else {
