@@ -204,6 +204,11 @@ export class HDict implements HVal, Iterable<HValRow> {
 	private readonly $store: DictStore;
 
 	/**
+	 * Readonly key access.
+	 */
+	readonly [prop: string]: unknown | undefined
+
+	/**
 	 * Readonly numerical index access.
 	 */
 	readonly [prop: number]: { name: string; value: OptionalHVal } | undefined

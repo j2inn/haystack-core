@@ -351,6 +351,11 @@ describe('HDict', function (): void {
 				value: HStr.make('foovalue'),
 			})
 		})
+
+		// Required for lodash to work with dict.
+		it('access proxy by property name', function (): void {
+			expect(dict.foo).toEqual(HStr.make('foovalue'))
+		})
 	}) // proxy
 
 	describe('#set()', function (): void {
