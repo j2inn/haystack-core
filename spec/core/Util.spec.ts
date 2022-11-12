@@ -393,53 +393,49 @@ describe('util', function (): void {
 			expect(toTagName('£$%test&*( this!')).toBe('testThis')
 		})
 
+		it('replaces . with _', () => {
+			expect(toTagName('test.me')).toBe('test_me')
+		})
+
+		it('replaces - with _', () => {
+			expect(toTagName('test-me')).toBe('test_me')
+		})
+
+		it('replaces / with _', () => {
+			expect(toTagName('test/me')).toBe('test_me')
+		})
+
+		it('converts `AIR TEMP` to `airTEMP`', () => {
+			expect(toTagName('AIR TEMP')).toBe('airTEMP')
+		})
+
+		it('converts `AiR TEMP` to `aiRTEMP`', () => {
+			expect(toTagName('AiR TEMP')).toBe('aiRTEMP')
+		})
+
+		it('converts `aIR TEMP` to `aIRTEMP`', () => {
+			expect(toTagName('aIR TEMP')).toBe('aIRTEMP')
+		})
+
+		it('converts `AIrR TEMP` to `aIRTEMP`', () => {
+			expect(toTagName('AIrR TEMP')).toBe('airRTEMP')
+		})
+
 		describe('ensure first character', function (): void {
 			it('is lowercase', function (): void {
 				expect(toTagName('Hello')).toBe('hello')
 			})
 
-			it('converts 1 to one', function (): void {
-				expect(toTagName('1test')).toBe('onetest')
-			})
-
-			it('converts 2 to two', function (): void {
-				expect(toTagName('2test')).toBe('twotest')
-			})
-
-			it('converts 3 to three', function (): void {
-				expect(toTagName('3test')).toBe('threetest')
-			})
-
-			it('converts 4 to four', function (): void {
-				expect(toTagName('4test')).toBe('fourtest')
-			})
-
-			it('converts 5 to five', function (): void {
-				expect(toTagName('5test')).toBe('fivetest')
-			})
-
-			it('converts 6 to six', function (): void {
-				expect(toTagName('6test')).toBe('sixtest')
-			})
-
-			it('converts 7 to seven', function (): void {
-				expect(toTagName('7test')).toBe('seventest')
-			})
-
-			it('converts 8 to eight', function (): void {
-				expect(toTagName('8test')).toBe('eighttest')
-			})
-
-			it('converts 9 to nine', function (): void {
-				expect(toTagName('9test')).toBe('ninetest')
+			it('converts 1 to v1', function (): void {
+				expect(toTagName('1test')).toBe('v1test')
 			})
 
 			it('converts one big number to a usable name', function (): void {
-				expect(toTagName('0123456789')).toBe('zero123456789')
+				expect(toTagName('0123456789')).toBe('v0123456789')
 			})
 
-			it('converts underscore to us', function (): void {
-				expect(toTagName('_foo')).toBe('usfoo')
+			it('converts underscore to v_', function (): void {
+				expect(toTagName('_foo')).toBe('v_foo')
 			})
 		})
 	}) // toTagName()

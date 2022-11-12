@@ -177,49 +177,6 @@ export function toKind(kind: string): Kind | undefined {
 }
 
 /**
- * Converts a numerical digit into a name.
- *
- * @param digit The digit to convert.
- * @returns The name of the number.
- */
-function convertDigitToName(digit: string): string {
-	let name: string
-	switch (digit) {
-		case '1':
-			name = 'one'
-			break
-		case '2':
-			name = 'two'
-			break
-		case '3':
-			name = 'three'
-			break
-		case '4':
-			name = 'four'
-			break
-		case '5':
-			name = 'five'
-			break
-		case '6':
-			name = 'six'
-			break
-		case '7':
-			name = 'seven'
-			break
-		case '8':
-			name = 'eight'
-			break
-		case '9':
-			name = 'nine'
-			break
-		default:
-			name = 'zero'
-	}
-
-	return name
-}
-
-/**
  * Returns a default haystack value for the kind.
  *
  * @param kind The haystack data type's kind.
@@ -301,42 +258,61 @@ export function makeDefaultValue(kind: Kind): HVal | undefined {
  */
 export function toTagName(name: string): string {
 	name = String(name) || ''
-	name = name.replace(/[^a-z0-9_ ]/gi, '').trim()
 
-	if (!name) {
-		return 'empty'
+	// If already valid, just return it.
+	if (isValidTagName(name)) {
+		return name
 	}
+
+	// Replace `.`, `-` or `/` with an underscore.
+	name = name.replace(/[.\-\/]/gi, '_')
+
+	// If the string starts with a number or underscore then add a `v` prefix.
+	name = name.replace(/^[0-9_]/, (c) => `v${c}`)
+
+	// Remove any invalid characters from the string.
+	name = name.replace(/[^a-z0-9_ ]/gi, '').trim()
 
 	const parts = name.split(' ')
 
 	// Convert a from a sentance into a camel case string.
 	// Ensure the first character is a lower case letter.
-	return parts
-		.filter((part: string): boolean => part.trim().length > 0)
-		.map((part: string, index: number): string => {
-			const start = part[0]
-			if (index === 0) {
-				// The start of a tag can only be a lower case letter (a-z).
-				if (Scanner.isDigit(start)) {
-					part = part.substring(1, part.length)
-					part = convertDigitToName(start) + part
-				} else if (start === '_') {
-					part = part.substring(1, part.length)
-					part = 'us' + part
-				} else if (Scanner.isUpperCase(start)) {
-					part = part.substring(1, part.length)
-					part = start.toLowerCase() + part
-				}
-			} else if (Scanner.isLetter(start) && Scanner.isLowerCase(start)) {
-				// Anything after the first space needs to be coverted to camel case.
-				// Therefore the first letter needs to be upper case.
-				part = part.substring(1, part.length)
-				part = start.toUpperCase() + part
-			}
+	return (
+		parts
+			.filter((part: string): boolean => part.trim().length > 0)
+			.map((part: string, index: number): string => {
+				const start = part[0]
+				if (index === 0) {
+					// The start of a tag can only be a lower case letter (a-z).
+					if (Scanner.isUpperCase(start)) {
+						let newPart = ''
 
-			return part
-		})
-		.join('')
+						let capsPrefix = true
+						for (const ch of part) {
+							if (capsPrefix && Scanner.isUpperCase(ch)) {
+								newPart += ch.toLowerCase()
+							} else {
+								capsPrefix = false
+								newPart += ch
+							}
+						}
+
+						part = newPart
+					}
+				} else if (
+					Scanner.isLetter(start) &&
+					Scanner.isLowerCase(start)
+				) {
+					// Anything after the first space needs to be converted to camel case.
+					// Therefore the first letter needs to be upper case.
+					part = part.substring(1, part.length)
+					part = start.toUpperCase() + part
+				}
+
+				return part
+			})
+			.join('') || 'empty'
+	)
 }
 
 /**
