@@ -265,7 +265,15 @@ export function toTagName(name: string): string {
 	}
 
 	// Replace `.`, `-` or `/` with an underscore.
-	name = name.replace(/[.\-\/]/gi, '_')
+	name = name.replace(/[.\-\/]/gi, (_, i) => {
+		// If the tag name is the first letter then just return a v.
+		if (!i) {
+			return 'v'
+		}
+
+		// Return nothing if this is the last character in a string.
+		return i !== name.length - 1 ? '_' : ''
+	})
 
 	// If the string starts with a number or underscore then add a `v` prefix.
 	name = name.replace(/^[0-9_]/, (c) => `v${c}`)

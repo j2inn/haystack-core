@@ -421,6 +421,18 @@ describe('util', function (): void {
 			expect(toTagName('AIrR TEMP')).toBe('airRTEMP')
 		})
 
+		it('converts `-` to `v`', () => {
+			expect(toTagName('-')).toBe('v')
+		})
+
+		it('converts `v-` to `v`', () => {
+			expect(toTagName('v-')).toBe('v')
+		})
+
+		it('converts `this is a test-` to `v`', () => {
+			expect(toTagName('this is a test -')).toBe('thisIsATest')
+		})
+
 		describe('ensure first character', function (): void {
 			it('is lowercase', function (): void {
 				expect(toTagName('Hello')).toBe('hello')
