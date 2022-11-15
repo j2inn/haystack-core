@@ -23,9 +23,6 @@ export interface PartialHaysonSymbol {
 	val: string
 }
 
-/** Accepted types for making a `HSymbol` from */
-type SymbolBaseType = string | HaysonSymbol | HSymbol
-
 /**
  * Haystack symbol.
  */
@@ -50,7 +47,7 @@ export class HSymbol implements HVal {
 	 * @param value The value string or Hayson symbol object.
 	 * @returns A haystack symbol.
 	 */
-	public static make(value: SymbolBaseType): HSymbol {
+	public static make(value: string | HaysonSymbol | HSymbol): HSymbol {
 		if (valueIsKind<HSymbol>(value, Kind.Symbol)) {
 			return value
 		} else {

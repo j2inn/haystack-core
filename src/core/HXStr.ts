@@ -19,9 +19,6 @@ import { HDict } from './HDict'
 import { HStr } from './HStr'
 import { EvalContext } from '../filter/EvalContext'
 
-/** Accepted types for making a `HXStr` from */
-type XStrBaseType = string | HaysonXStr | HXStr
-
 /**
  * Haystack XStr.
  */
@@ -60,7 +57,10 @@ export class HXStr implements HVal {
 	 * @param value The value.
 	 * @returns A haystack xstring.
 	 */
-	public static make(type: XStrBaseType, value?: string): HXStr {
+	public static make(
+		type: string | HaysonXStr | HXStr,
+		value?: string
+	): HXStr {
 		if (valueIsKind<HXStr>(type, Kind.XStr)) {
 			return type
 		} else {
