@@ -992,8 +992,9 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * The comparison is made by checking the `mod` tag first.
 	 * If the `mod` tag is missing in the dict, then fallback to checking whether the two dicts contents differ.
 	 * @param dict The other dict to compare to this dict
+	 * @return True if this dict is newer than the other dict
 	 */
-	public isNewer(dict: HDict) {
+	public isNewer(dict: HDict): boolean {
 		const modA = this.get<HDateTime>('mod')?.value || ''
 		const modB = dict.get<HDateTime>('mod')?.value || ''
 
