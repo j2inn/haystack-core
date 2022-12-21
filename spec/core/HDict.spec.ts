@@ -19,6 +19,7 @@ import { HaysonDict } from '../../src/core/hayson'
 import { HFilter } from '../../src/filter/HFilter'
 import '../matchers'
 import '../customMatchers'
+import { HDateTime } from '../../src/core/HDateTime'
 
 describe('HDict', function (): void {
 	let dict: HDict
@@ -820,4 +821,51 @@ describe('HDict', function (): void {
 			})
 		})
 	}) // #diff()
+
+	describe('isNewer()', function (): void {
+		let dict1: HDict
+		let dict2: HDict
+
+		beforeEach(function (): void {
+			dict1 = new HDict({
+				mod: HDateTime.make('2022-12-21T12:45:00Z'),
+			})
+
+			dict2 = new HDict({
+				mod: HDateTime.make('2022-12-21T12:42:00Z'),
+			})
+		})
+
+		it('returns true if dict1 gets compared to dict2', function (): void {
+			expect(dict1.isNewer(dict2)).toBe(true)
+		})
+
+		it('returns false if dict2 gets compared to dict1', function (): void {
+			expect(dict2.isNewer(dict1)).toBe(false)
+		})
+
+		it('returns false if mod is not defined and dicts content is the same', function (): void {
+			dict1 = new HDict({
+				foo: 'foo',
+			})
+
+			dict2 = new HDict({
+				foo: 'foo',
+			})
+
+			expect(dict1.isNewer(dict2)).toBe(false)
+		})
+
+		it('returns true if mod is not defined and dict1 content differs', function (): void {
+			dict1 = new HDict({
+				foo: 'foo new',
+			})
+
+			dict2 = new HDict({
+				foo: 'foo',
+			})
+
+			expect(dict1.isNewer(dict2)).toBe(true)
+		})
+	}) // isDictNewer()
 })

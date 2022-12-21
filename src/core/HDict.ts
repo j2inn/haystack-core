@@ -8,6 +8,7 @@ import { EvalContext } from '../filter/EvalContext'
 import { HFilter } from '../filter/HFilter'
 import { Node } from '../filter/Node'
 import { HaysonDict, HaysonVal } from './hayson'
+import { HDateTime } from './HDateTime'
 import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HMarker } from './HMarker'
@@ -983,5 +984,19 @@ export class HDict implements HVal, Iterable<HValRow> {
 	public protos(namespace?: HNamespace): HDict[] {
 		const ns = namespace ?? HNamespace.defaultNamespace
 		return ns.protos(this)
+	}
+
+	/**
+	 * Determines whether this dict is newer than the `dict` specified as parameter
+	 *
+	 * The comparison is made by checking the `mod` tag first.
+	 * If the `mod` tag is missing in the dict, then fallback to checking whether the two dicts contents differ.
+	 * @param dict The other dict to compare to this dict
+	 */
+	public isNewer(dict: HDict) {
+		const modA = this.get<HDateTime>('mod')?.value || ''
+		const modB = dict.get<HDateTime>('mod')?.value || ''
+
+		return modA > modB || (modA === modB && !this.equals(dict))
 	}
 }

@@ -490,19 +490,3 @@ export function disKey(
 	const [, pod, disKey] = /^([^:]+)::([^:]+)$/.exec(key.trim()) ?? []
 	return pod && disKey ? i18n(pod, disKey) : undefined
 }
-
-/**
- * Return true if dict `a` should be considered newer than dict `b`.
- * The comparison is made by checking the `mod` tag first.
- * If the `mod` tag is not present in the dict, then fallback to checking whether the dicts differ.
- *
- * @param a The first dict.
- * @param b The second dict.
- * @returns True if newer.
- */
-export function isDictNewer(a: HDict, b: HDict): boolean {
-	const modA = a.get<HDateTime>('mod')?.value ?? ''
-	const modB = b.get<HDateTime>('mod')?.value ?? ''
-
-	return modA > modB || (modA === modB && !a.equals(b))
-}
