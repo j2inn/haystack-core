@@ -12,6 +12,7 @@ import {
 	disKey,
 	makeDefaultValue,
 	toKind,
+	isDictNewer,
 } from '../../src/core/util'
 import { Kind } from '../../src/core/Kind'
 import { HBool } from '../../src/core/HBool'
@@ -715,4 +716,51 @@ describe('util', function (): void {
 			expect(disKey('pod:key', i18n)).toBeUndefined()
 		})
 	}) // disKey()
+
+	describe('isDictNewer()', function (): void {
+		let dict1: HDict
+		let dict2: HDict
+
+		beforeEach(function (): void {
+			dict1 = new HDict({
+				mod: HDateTime.make('2022-12-21T12:40:00Z'),
+			})
+
+			dict2 = new HDict({
+				mod: HDateTime.make('2022-12-21T12:35:00Z'),
+			})
+		})
+
+		it('returns true if dict `a` is newer than dict `b`', function (): void {
+			expect(isDictNewer(dict1, dict2)).toBe(true)
+		})
+
+		it('returns false if dict `a` is older than dict `b`', function (): void {
+			expect(isDictNewer(dict2, dict1)).toBe(false)
+		})
+
+		it('returns false if mod is not defined and dict `a` is equal to dict `b`', function (): void {
+			dict1 = new HDict({
+				foo: 'foo',
+			})
+
+			dict2 = new HDict({
+				foo: 'foo',
+			})
+
+			expect(isDictNewer(dict1, dict2)).toBe(false)
+		})
+
+		it('returns true if mod is not defined and dict `a` is not equal to dict `b`', function (): void {
+			dict1 = new HDict({
+				foo: 'foo new',
+			})
+
+			dict2 = new HDict({
+				foo: 'foo',
+			})
+
+			expect(isDictNewer(dict1, dict2)).toBe(true)
+		})
+	}) // isDictNewer()
 })
