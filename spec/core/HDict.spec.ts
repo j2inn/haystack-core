@@ -867,5 +867,5 @@ describe('HDict', function (): void {
 
 			expect(dict1.isNewer(dict2)).toBe(true)
 		})
-	}) // isDictNewer()
+	}) // isNewer()
 })
