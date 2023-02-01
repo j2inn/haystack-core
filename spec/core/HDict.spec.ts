@@ -857,7 +857,7 @@ describe('HDict', function (): void {
 			expect(dict1.isNewer(dict2)).toBe(true)
 		})
 
-		it('returns true if mod is not defined in for second dict', function (): void {
+		it('returns true if mod is not defined in first dict', function (): void {
 			dict1 = new HDict({
 				foo: 'foo',
 			})
