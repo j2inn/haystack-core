@@ -822,7 +822,7 @@ describe('HDict', function (): void {
 		})
 	}) // #diff()
 
-	describe('isNewer()', function (): void {
+	describe('isNewerOrLatest()', function (): void {
 		let dict1: HDict
 		let dict2: HDict
 
@@ -837,11 +837,11 @@ describe('HDict', function (): void {
 		})
 
 		it('returns true if dict1 gets compared to dict2', function (): void {
-			expect(dict1.isNewer(dict2)).toBe(true)
+			expect(dict1.isNewerOrLatest(dict2)).toBe(true)
 		})
 
 		it('returns false if dict2 gets compared to dict1', function (): void {
-			expect(dict2.isNewer(dict1)).toBe(false)
+			expect(dict2.isNewerOrLatest(dict1)).toBe(false)
 		})
 
 		it('returns true if mod is not defined in second dict', function (): void {
@@ -854,7 +854,7 @@ describe('HDict', function (): void {
 				foo: 'foo',
 			})
 
-			expect(dict1.isNewer(dict2)).toBe(true)
+			expect(dict1.isNewerOrLatest(dict2)).toBe(true)
 		})
 
 		it('returns true if mod is not defined in first dict', function (): void {
@@ -867,7 +867,7 @@ describe('HDict', function (): void {
 				mod: HDateTime.make('2022-12-21T12:45:00Z'),
 			})
 
-			expect(dict1.isNewer(dict2)).toBe(true)
+			expect(dict1.isNewerOrLatest(dict2)).toBe(true)
 		})
 
 		it('returns true if mods are the same', function (): void {
@@ -881,7 +881,7 @@ describe('HDict', function (): void {
 				mod: HDateTime.make('2022-12-21T12:45:00Z'),
 			})
 
-			expect(dict1.isNewer(dict2)).toBe(true)
+			expect(dict1.isNewerOrLatest(dict2)).toBe(true)
 		})
-	}) // isNewer()
+	}) // isNewerOrLatest()
 })
