@@ -844,25 +844,41 @@ describe('HDict', function (): void {
 			expect(dict2.isNewer(dict1)).toBe(false)
 		})
 
-		it('returns false if mod is not defined and dicts content is the same', function (): void {
+		it('returns true if mod is not defined in for first dict', function (): void {
 			dict1 = new HDict({
 				foo: 'foo',
+				mod: HDateTime.make('2022-12-21T12:45:00Z'),
 			})
 
 			dict2 = new HDict({
 				foo: 'foo',
 			})
 
-			expect(dict1.isNewer(dict2)).toBe(false)
+			expect(dict1.isNewer(dict2)).toBe(true)
 		})
 
-		it('returns true if mod is not defined and dict1 content differs', function (): void {
+		it('returns true if mod is not defined in for second dict', function (): void {
 			dict1 = new HDict({
-				foo: 'foo new',
+				foo: 'foo',
 			})
 
 			dict2 = new HDict({
 				foo: 'foo',
+				mod: HDateTime.make('2022-12-21T12:45:00Z'),
+			})
+
+			expect(dict1.isNewer(dict2)).toBe(true)
+		})
+
+		it('returns true if mods are the same', function (): void {
+			dict1 = new HDict({
+				foo: 'foo',
+				mod: HDateTime.make('2022-12-21T12:45:00Z'),
+			})
+
+			dict2 = new HDict({
+				foo: 'foo',
+				mod: HDateTime.make('2022-12-21T12:45:00Z'),
 			})
 
 			expect(dict1.isNewer(dict2)).toBe(true)

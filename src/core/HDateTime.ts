@@ -308,15 +308,13 @@ export class HDateTime implements HVal {
 			return -1
 		}
 
-		// Always compare the ISO 8601 date time values as this naturally
-		// can be sorted as strings.
-		if (this.iso < value.iso) {
+		if (this.date < value.date) {
 			return -1
-		}
-		if (this.iso === value.iso) {
+		} else if (this.date > value.date) {
+			return 1
+		} else {
 			return 0
 		}
-		return 1
 	}
 
 	/**
