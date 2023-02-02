@@ -137,6 +137,22 @@ describe('HDateTime', function (): void {
 				)
 			).toBe(0)
 		})
+
+		it('returns -1 for different timezone offsets for 10am compared to 11am', function (): void {
+			expect(
+				HDateTime.make('2022-02-01T12:00:00+02:00').compareTo(
+					HDateTime.make('2022-02-01T12:00:00+01:00')
+				)
+			).toBe(-1)
+		})
+
+		it('returns 1 for different timezone offsets for 10am compared to 4am', function (): void {
+			expect(
+				HDateTime.make('2022-02-01T12:00:00+02:00').compareTo(
+					HDateTime.make('2022-02-01T12:01:00+08:00')
+				)
+			).toBe(1)
+		})
 	}) // #compareTo()
 
 	describe('#toFilter()', function (): void {

@@ -836,36 +836,28 @@ describe('HDict', function (): void {
 			})
 		})
 
-		it('returns true if dict1 gets compared to dict2', function (): void {
+		it('returns true for a newer dict', function (): void {
 			expect(dict1.isNewer(dict2)).toBe(true)
 		})
 
-		it('returns false if dict2 gets compared to dict1', function (): void {
+		it('returns false for an older dict', function (): void {
 			expect(dict2.isNewer(dict1)).toBe(false)
 		})
 
-		it('returns false if mod is not defined and dicts content is the same', function (): void {
-			dict1 = new HDict({
-				foo: 'foo',
-			})
-
-			dict2 = new HDict({
-				foo: 'foo',
-			})
-
+		it('returns false when the first dict does not have a timestamp', function (): void {
+			dict1.remove('mod')
 			expect(dict1.isNewer(dict2)).toBe(false)
 		})
 
-		it('returns true if mod is not defined and dict1 content differs', function (): void {
-			dict1 = new HDict({
-				foo: 'foo new',
-			})
-
-			dict2 = new HDict({
-				foo: 'foo',
-			})
-
+		it('returns true when the second dict does not have a timestamp', function (): void {
+			dict2.remove('mod')
 			expect(dict1.isNewer(dict2)).toBe(true)
+		})
+
+		it('returns false when neither dict has a timestamp', function (): void {
+			dict1.remove('mod')
+			dict2.remove('mod')
+			expect(dict1.isNewer(dict2)).toBe(false)
 		})
 	}) // isNewer()
 })
