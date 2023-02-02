@@ -987,18 +987,16 @@ export class HDict implements HVal, Iterable<HValRow> {
 	}
 
 	/**
-	 * Determines whether this dict is newer (or the latest) than the `dict`
-	 * specified as parameter.
+	 * Returns true if this dict is newer than the specified dict.
+	 * The `mod` timestamp is used to perform the check.
 	 *
-	 * If either dict doesn't contain a `mod` then true is always returned.
-	 *
-	 * @param dict The other dict to compare to this dict
-	 * @return True if this dict is newer than the other dict
+	 * @param dict The other dict to compare to this dict.
+	 * @return True if this dict is newer.
 	 */
-	public isNewerOrLatest(dict: HDict): boolean {
-		const a = this.get<HDateTime>('mod')
-		const b = dict.get<HDateTime>('mod')
+	public isNewer(dict: HDict): boolean {
+		const a = this.get<HDateTime>('mod') ?? HDateTime.make(new Date(0))
+		const b = dict.get<HDateTime>('mod') ?? HDateTime.make(new Date(0))
 
-		return !(a && b) || a.compareTo(b) >= 0
+		return a.compareTo(b) > 0
 	}
 }
