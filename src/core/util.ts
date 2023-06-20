@@ -113,7 +113,7 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 			return HDict.make(obj as HaysonDict)
 		case Kind.Grid:
 			return HGrid.make(obj as HaysonGrid)
-		default:
+
 			throw new Error('Could not resolve value from kind: ' + obj._kind)
 	}
 }
@@ -171,6 +171,15 @@ export function toKind(kind: string): Kind | undefined {
 		case 'Grid':
 		case Kind.Grid:
 			return Kind.Grid
+		case 'Str':
+		case Kind.Str:
+			return Kind.Str
+		case 'List':
+		case Kind.List:
+			return Kind.List
+		case 'Bool':
+		case Kind.Bool:
+			return Kind.Bool
 		default:
 			return undefined
 	}

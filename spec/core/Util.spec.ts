@@ -243,124 +243,148 @@ describe('util', function (): void {
 	}) // makeValue()
 
 	describe('toKind()', function (): void {
-		it('returns a marker for Marker', function (): void {
+		it('returns kind for Marker', function (): void {
 			expect(toKind('Marker')).toBe(Kind.Marker)
 		})
 
-		it('returns a marker for Kind.Marker', function (): void {
+		it('returns the kind for Kind.Marker', function (): void {
 			expect(toKind(Kind.Marker)).toBe(Kind.Marker)
 		})
 
-		it('returns a marker for Remove', function (): void {
+		it('returns the kind for Remove', function (): void {
 			expect(toKind('Remove')).toBe(Kind.Remove)
 		})
 
-		it('returns a marker for Kind.Remove', function (): void {
+		it('returns the kind for Kind.Remove', function (): void {
 			expect(toKind(Kind.Remove)).toBe(Kind.Remove)
 		})
 
-		it('returns a marker for NA', function (): void {
+		it('returns the kind for NA', function (): void {
 			expect(toKind('NA')).toBe(Kind.NA)
 		})
 
-		it('returns a marker for Kind.NA', function (): void {
+		it('returns the kind for Kind.NA', function (): void {
 			expect(toKind(Kind.NA)).toBe(Kind.NA)
 		})
 
-		it('returns a marker for Coord', function (): void {
+		it('returns the kind for Coord', function (): void {
 			expect(toKind('Coord')).toBe(Kind.Coord)
 		})
 
-		it('returns a marker for Kind.Coord', function (): void {
+		it('returns the kind for Kind.Coord', function (): void {
 			expect(toKind(Kind.Coord)).toBe(Kind.Coord)
 		})
 
-		it('returns a marker for XStr', function (): void {
+		it('returns the kind for XStr', function (): void {
 			expect(toKind('XStr')).toBe(Kind.XStr)
 		})
 
-		it('returns a marker for Kind.XStr', function (): void {
+		it('returns the kind for Kind.XStr', function (): void {
 			expect(toKind(Kind.XStr)).toBe(Kind.XStr)
 		})
 
-		it('returns a marker for Bin', function (): void {
+		it('returns the kind for Bin', function (): void {
 			expect(toKind('Bin')).toBe(Kind.Bin)
 		})
 
-		it('returns a marker for Kind.Bin', function (): void {
+		it('returns the kind for Kind.Bin', function (): void {
 			expect(toKind(Kind.Bin)).toBe(Kind.Bin)
 		})
 
-		it('returns a marker for Date', function (): void {
+		it('returns the kind for Date', function (): void {
 			expect(toKind('Date')).toBe(Kind.Date)
 		})
 
-		it('returns a marker for Kind.Date', function (): void {
+		it('returns the kind for Kind.Date', function (): void {
 			expect(toKind(Kind.Date)).toBe(Kind.Date)
 		})
 
-		it('returns a marker for DateTime', function (): void {
+		it('returns the kind for DateTime', function (): void {
 			expect(toKind('DateTime')).toBe(Kind.DateTime)
 		})
 
-		it('returns a marker for Kind.DateTime', function (): void {
+		it('returns the kind for Kind.DateTime', function (): void {
 			expect(toKind(Kind.DateTime)).toBe(Kind.DateTime)
 		})
 
-		it('returns a marker for Number', function (): void {
+		it('returns the kind for Number', function (): void {
 			expect(toKind('Number')).toBe(Kind.Number)
 		})
 
-		it('returns a marker for Kind.Number', function (): void {
+		it('returns the kind for Kind.Number', function (): void {
 			expect(toKind(Kind.Number)).toBe(Kind.Number)
 		})
 
-		it('returns a marker for Ref', function (): void {
+		it('returns the kind for Ref', function (): void {
 			expect(toKind('Ref')).toBe(Kind.Ref)
 		})
 
-		it('returns a marker for Kind.Ref', function (): void {
+		it('returns the kind for Kind.Ref', function (): void {
 			expect(toKind(Kind.Ref)).toBe(Kind.Ref)
 		})
 
-		it('returns a marker for Symbol', function (): void {
+		it('returns the kind for Symbol', function (): void {
 			expect(toKind('Symbol')).toBe(Kind.Symbol)
 		})
 
-		it('returns a marker for Kind.Symbol', function (): void {
+		it('returns the kind for Kind.Symbol', function (): void {
 			expect(toKind(Kind.Symbol)).toBe(Kind.Symbol)
 		})
 
-		it('returns a marker for Time', function (): void {
+		it('returns the kind for Time', function (): void {
 			expect(toKind('Time')).toBe(Kind.Time)
 		})
 
-		it('returns a marker for Kind.Time', function (): void {
+		it('returns the kind for Kind.Time', function (): void {
 			expect(toKind(Kind.Time)).toBe(Kind.Time)
 		})
 
-		it('returns a marker for Uri', function (): void {
+		it('returns the kind for Uri', function (): void {
 			expect(toKind('Uri')).toBe(Kind.Uri)
 		})
 
-		it('returns a marker for Kind.Uri', function (): void {
+		it('returns the kind for Kind.Uri', function (): void {
 			expect(toKind(Kind.Uri)).toBe(Kind.Uri)
 		})
 
-		it('returns a marker for Dict', function (): void {
+		it('returns the kind for Dict', function (): void {
 			expect(toKind('Dict')).toBe(Kind.Dict)
 		})
 
-		it('returns a marker for Kind.Dict', function (): void {
+		it('returns the kind for Kind.Dict', function (): void {
 			expect(toKind(Kind.Dict)).toBe(Kind.Dict)
 		})
 
-		it('returns a marker for Grid', function (): void {
+		it('returns the kind for Grid', function (): void {
 			expect(toKind('Grid')).toBe(Kind.Grid)
 		})
 
-		it('returns a marker for Kind.Grid', function (): void {
+		it('returns the kind for Kind.Grid', function (): void {
 			expect(toKind(Kind.Grid)).toBe(Kind.Grid)
+		})
+
+		it('returns the kind for Str', function (): void {
+			expect(toKind('Str')).toBe(Kind.Str)
+		})
+
+		it('returns the kind for Kind.Str', function (): void {
+			expect(toKind(Kind.Str)).toBe(Kind.Str)
+		})
+
+		it('returns the kind for List', function (): void {
+			expect(toKind('List')).toBe(Kind.List)
+		})
+
+		it('returns the kind for Kind.List', function (): void {
+			expect(toKind(Kind.List)).toBe(Kind.List)
+		})
+
+		it('returns the kind for Bool', function (): void {
+			expect(toKind('Bool')).toBe(Kind.Bool)
+		})
+
+		it('returns the kind for Kind.Bool', function (): void {
+			expect(toKind(Kind.Bool)).toBe(Kind.Bool)
 		})
 
 		it('returns undefined for unknown kind', function (): void {
