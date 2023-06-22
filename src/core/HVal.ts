@@ -10,6 +10,7 @@ import { HList } from './HList'
 import { HGrid } from './HGrid'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Val } from './jsonv3'
 
 /**
  * Default error message when a zinc value is not supported in the filter.
@@ -205,12 +206,14 @@ export interface HVal {
 
 	/**
 	 * Encode the value using the older Haystack version 3 JSON encoding.
+	 * Please note, this has been supplanted by the newer `Hayson` JSON
+	 * format (use `toJSON`).
 	 *
 	 * https://project-haystack.org/doc/docHaystack/Json
 	 *
 	 * @returns  A JSON v3 representation of the object.
 	 */
-	toJSONv3(): unknown
+	toJSONv3(): JsonV3Val
 
 	/**
 	 * @returns A string representation of the value.

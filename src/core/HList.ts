@@ -24,6 +24,7 @@ import { makeValue } from './util'
 import { HNum } from './HNum'
 import { HGrid } from './HGrid'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3List, JsonV3Val } from './jsonv3'
 
 /**
  * An iterator for a list.
@@ -864,8 +865,8 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
-		return this.values.map((val): HaysonVal => val?.toJSONv3() ?? null)
+	public toJSONv3(): JsonV3List {
+		return this.values.map((val): JsonV3Val => val?.toJSONv3() ?? null)
 	}
 
 	/**

@@ -17,6 +17,7 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { HUnit } from './HUnit'
+import { JsonV3Num } from './jsonv3'
 
 /**
  * The default numeric precision.
@@ -354,7 +355,7 @@ export class HNum implements HVal {
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
+	public toJSONv3(): JsonV3Num {
 		return `n:${this.encodeToZinc(/*unitSeparator*/ ' ')}`
 	}
 

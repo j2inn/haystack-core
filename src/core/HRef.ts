@@ -17,6 +17,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Ref } from './jsonv3'
 
 /**
  * Haystack ref.
@@ -243,7 +244,7 @@ export class HRef implements HVal {
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
+	public toJSONv3(): JsonV3Ref {
 		return `r:${this.value}${
 			this.#displayName ? ` ${this.#displayName}` : ''
 		}`

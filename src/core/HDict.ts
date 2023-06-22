@@ -24,6 +24,7 @@ import {
 	valueIsKind,
 	ZINC_NULL,
 } from './HVal'
+import { JsonV3Dict, JsonV3Val } from './jsonv3'
 import { Kind } from './Kind'
 import { makeValue, dictToDis, LocalizedCallback } from './util'
 
@@ -642,8 +643,8 @@ export class HDict implements HVal, Iterable<HValRow> {
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
-		const obj: Record<string, unknown> = {}
+	public toJSONv3(): JsonV3Dict {
+		const obj: Record<string, JsonV3Val> = {}
 
 		for (const key of this.keys) {
 			obj[key] = this.get(key)?.toJSONv3() ?? null

@@ -17,6 +17,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Coord } from './jsonv3'
 
 export interface CoordObj {
 	latitude: number
@@ -229,7 +230,7 @@ export class HCoord implements HVal {
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
+	public toJSONv3(): JsonV3Coord {
 		return `c:${this.latitude},${this.longitude}`
 	}
 

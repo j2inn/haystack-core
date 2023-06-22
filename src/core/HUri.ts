@@ -17,6 +17,7 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { memoize } from '../util/memoize'
+import { JsonV3Uri } from './jsonv3'
 
 const HTTP_SCHEME = 'http'
 const HTTP_PORT = 80
@@ -232,7 +233,7 @@ export class HUri implements HVal {
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): unknown {
+	public toJSONv3(): JsonV3Uri {
 		return `u:${this.value}`
 	}
 
