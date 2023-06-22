@@ -718,7 +718,7 @@ export class HGrid<DictVal extends HDict = HDict>
 			_kind: this.getKind(),
 			meta: {
 				[GRID_VERSION_NAME]: this.version,
-				...(this.meta ? this.meta.toJSON() : {}),
+				...this.meta.toJSON(),
 			},
 			cols: this.$store.columns.map(
 				(
@@ -729,6 +729,35 @@ export class HGrid<DictVal extends HDict = HDict>
 				} => ({
 					name: column.name,
 					meta: column.meta.toJSON(),
+				})
+			),
+			rows,
+		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		const rows = this.getRows().map((row: DictVal): unknown => {
+			this.addMissingColumns(row)
+			return row.toJSONv3()
+		})
+
+		return {
+			meta: {
+				[GRID_VERSION_NAME]: this.version,
+				...(this.meta.toJSONv3() as object),
+			},
+			cols: this.$store.columns.map(
+				(
+					column: GridColumn
+				): {
+					name: string
+					[prop: string]: unknown
+				} => ({
+					name: column.name,
+					...(column.meta.toJSONv3() as object),
 				})
 			),
 			rows,

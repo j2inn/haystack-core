@@ -309,6 +309,30 @@ describe('HNum', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns the number encoded as a string', function (): void {
+			expect(HNum.make(34.6).toJSONv3()).toBe('n:34.6')
+		})
+
+		it('returns the number and units encoded as a string', function (): void {
+			expect(HNum.make(34.6, 'cm').toJSONv3()).toBe('n:34.6 cm')
+		})
+
+		it('returns INF for positive infinity', function (): void {
+			expect(HNum.make(Number.POSITIVE_INFINITY).toJSONv3()).toBe('n:INF')
+		})
+
+		it('returns -INF for negative infinity', function (): void {
+			expect(HNum.make(Number.NEGATIVE_INFINITY).toJSONv3()).toBe(
+				'n:-INF'
+			)
+		})
+
+		it('returns NaN for not a number', function (): void {
+			expect(HNum.make(Number.NaN).toJSONv3()).toBe('n:NaN')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HNum.make(34.6, 'm').toZinc()).toBe('34.6m')

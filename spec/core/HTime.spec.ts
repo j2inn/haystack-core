@@ -155,6 +155,12 @@ describe('HTime', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HTime.make('12:00:00').toJSONv3()).toBe('h:12:00:00')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HTime.make('12:00:00').toAxon()).toEqual('12:00:00')

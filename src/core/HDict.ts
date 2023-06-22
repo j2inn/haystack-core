@@ -640,6 +640,19 @@ export class HDict implements HVal, Iterable<HValRow> {
 	}
 
 	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		const obj: Record<string, unknown> = {}
+
+		for (const key of this.keys) {
+			obj[key] = this.get(key)?.toJSONv3() ?? null
+		}
+
+		return obj
+	}
+
+	/**
 	 * Encodes to an encoded zinc value that can be used
 	 * in a haystack filter string.
 	 *

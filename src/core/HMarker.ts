@@ -147,6 +147,13 @@ export class HMarker implements HVal {
 	}
 
 	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		return 'm:'
+	}
+
+	/**
 	 * @returns An Axon encoded string of the value.
 	 */
 	public toAxon(): string {

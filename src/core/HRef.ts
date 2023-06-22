@@ -241,6 +241,15 @@ export class HRef implements HVal {
 	}
 
 	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		return `r:${this.value}${
+			this.#displayName ? ` ${this.#displayName}` : ''
+		}`
+	}
+
+	/**
 	 * @returns An Axon encoded string.
 	 */
 	public toAxon(): string {

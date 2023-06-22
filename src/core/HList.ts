@@ -862,6 +862,13 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	}
 
 	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		return this.values.map((val): HaysonVal => val?.toJSONv3() ?? null)
+	}
+
+	/**
 	 * @returns A string representation of the value.
 	 */
 	public toString(): string {

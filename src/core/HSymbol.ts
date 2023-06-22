@@ -207,6 +207,13 @@ export class HSymbol implements HVal {
 	}
 
 	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): unknown {
+		return `y:${this.value}`
+	}
+
+	/**
 	 * @returns An Axon encoded string of the value.
 	 */
 	public toAxon(): string {

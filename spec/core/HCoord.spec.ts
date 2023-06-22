@@ -171,6 +171,16 @@ describe('HCoord', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(makeCoord(2, 4).toJSONv3()).toBe('c:2,4')
+		})
+
+		it('returns a JSON string with negative numbers', function (): void {
+			expect(makeCoord(-6, -4).toJSONv3()).toBe('c:-6,-4')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(makeCoord(2, 4).toAxon()).toBe(`coord(2,4)`)

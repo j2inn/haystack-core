@@ -195,6 +195,16 @@ describe('HDict', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a JSON Object', function (): void {
+			expect(dict.toJSONv3()).toEqual({
+				foo: 'foovalue',
+				goo: 'n:99',
+				soo: 'm:',
+			})
+		})
+	}) // #toJSONv3()
+
 	describe('#toFilter()', function (): void {
 		it('throws an error', function (): void {
 			expect((): void => {

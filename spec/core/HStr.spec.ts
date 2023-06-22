@@ -171,6 +171,16 @@ describe('HStr', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HStr.make('foo').toJSONv3()).toEqual('foo')
+		})
+
+		it('returns a string with a colon', function (): void {
+			expect(HStr.make('foo:goo').toJSONv3()).toEqual('s:foo:goo')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon encoded string', function (): void {
 			expect(HStr.make('foo').toAxon()).toEqual('"foo"')

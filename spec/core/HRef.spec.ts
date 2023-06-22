@@ -136,6 +136,16 @@ describe('HRef', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HRef.make('foo').toJSONv3()).toBe('r:foo')
+		})
+
+		it('returns a string with a display name', function (): void {
+			expect(HRef.make('foo', 'Foo').toJSONv3()).toBe('r:foo Foo')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HRef.make('foo', 'Foo').toAxon()).toBe('@foo')
