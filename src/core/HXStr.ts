@@ -18,6 +18,7 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { HStr } from './HStr'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3XStr } from './jsonv3'
 
 /**
  * Haystack XStr.
@@ -211,6 +212,13 @@ export class HXStr implements HVal {
 			val: this.value,
 			type: this.type,
 		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3XStr {
+		return `x:${this.type}:${this.value}`
 	}
 
 	/**

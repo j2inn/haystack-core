@@ -205,6 +205,14 @@ describe('HDateTime', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', () => {
+		it('returns a string', function (): void {
+			expect(HDateTime.make('2009-11-09T15:39:00Z').toJSONv3()).toBe(
+				't:2009-11-09T15:39:00Z'
+			)
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HDateTime.make('2009-11-09T15:39:00Z').toAxon()).toBe(

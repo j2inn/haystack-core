@@ -17,6 +17,7 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { memoize } from '../util/memoize'
+import { JsonV3Symbol } from './jsonv3'
 
 export interface PartialHaysonSymbol {
 	_kind?: Kind
@@ -204,6 +205,13 @@ export class HSymbol implements HVal {
 			_kind: this.getKind(),
 			val: this.value,
 		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Symbol {
+		return `y:${this.value}`
 	}
 
 	/**

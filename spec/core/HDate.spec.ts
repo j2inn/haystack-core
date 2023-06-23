@@ -170,6 +170,12 @@ describe('HDate', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HDate.make('2020-01-01').toJSONv3()).toBe('d:2020-01-01')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HDate.make('2020-01-01').toAxon()).toBe('2020-01-01')

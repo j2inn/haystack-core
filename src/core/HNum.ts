@@ -17,6 +17,7 @@ import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { HUnit } from './HUnit'
+import { JsonV3Num } from './jsonv3'
 
 /**
  * The default numeric precision.
@@ -252,6 +253,16 @@ export class HNum implements HVal {
 	 * @returns The encoded zinc string.
 	 */
 	public toZinc(): string {
+		return this.encodeToZinc(/*unitSeparator*/ '')
+	}
+
+	/**
+	 * Returns a number encoded as zinc.
+	 *
+	 * @param unitSeparator The separator to use between the unit and the number when encoding.
+	 * @returns The encoded number.
+	 */
+	private encodeToZinc(separator: string): string {
 		if (this.value === Number.POSITIVE_INFINITY) {
 			return POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
@@ -260,7 +271,7 @@ export class HNum implements HVal {
 			return NOT_A_NUMBER_ZINC
 		} else {
 			return this.#unitSymbol
-				? String(this.value) + this.#unitSymbol
+				? String(this.value) + separator + this.#unitSymbol
 				: String(this.value)
 		}
 	}
@@ -339,6 +350,13 @@ export class HNum implements HVal {
 				return val
 			}
 		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Num {
+		return `n:${this.encodeToZinc(/*unitSeparator*/ ' ')}`
 	}
 
 	/**

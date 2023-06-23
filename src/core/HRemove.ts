@@ -18,6 +18,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Remove } from './jsonv3'
 
 /**
  * An immutable JSON value.
@@ -144,6 +145,13 @@ export class HRemove implements HVal {
 	 */
 	public toJSON(): HaysonRemove {
 		return JSON_REMOVE
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Remove {
+		return '-:'
 	}
 
 	/**

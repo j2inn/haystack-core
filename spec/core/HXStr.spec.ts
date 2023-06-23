@@ -171,6 +171,12 @@ describe('HXStr', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HXStr.make('Type', 'value').toJSONv3()).toBe('x:Type:value')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HXStr.make('Type', 'value').toAxon()).toBe(

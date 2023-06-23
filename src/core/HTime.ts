@@ -16,6 +16,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Time } from './jsonv3'
 
 /**
  * A date object.
@@ -331,6 +332,13 @@ export class HTime implements HVal {
 			_kind: this.getKind(),
 			val: this.#value,
 		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Time {
+		return `h:${this.#value}`
 	}
 
 	/**

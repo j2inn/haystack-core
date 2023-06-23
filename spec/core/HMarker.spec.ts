@@ -75,6 +75,12 @@ describe('HMarker', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns JSON', function (): void {
+			expect(HMarker.make().toJSONv3()).toEqual('m:')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HMarker.make().toAxon()).toBe('marker()')

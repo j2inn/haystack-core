@@ -19,6 +19,7 @@ import { HDict } from './HDict'
 import { HDate } from './HDate'
 import { HTime } from './HTime'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3DateTime } from './jsonv3'
 
 export interface PartialHaysonDateTime {
 	_kind?: Kind
@@ -345,6 +346,13 @@ export class HDateTime implements HVal {
 		}
 
 		return json
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3DateTime {
+		return `t:${this.toZinc()}`
 	}
 
 	/**

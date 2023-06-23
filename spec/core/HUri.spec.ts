@@ -135,6 +135,12 @@ describe('HUri', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a string', function (): void {
+			expect(HUri.make('/foo').toJSONv3()).toBe('u:/foo')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns a string', function (): void {
 			expect(HUri.make('/foo').toAxon()).toBe('`/foo`')

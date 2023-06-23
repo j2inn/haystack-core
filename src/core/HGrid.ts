@@ -24,6 +24,7 @@ import { HList } from './HList'
 import { makeValue } from './util'
 import { HRef } from './HRef'
 import { EvalContext, EvalContextResolve } from '../filter/EvalContext'
+import { JsonV3Dict, JsonV3Grid, JsonV3Val } from './jsonv3'
 
 /**
  * The grid's version tag name.
@@ -718,7 +719,7 @@ export class HGrid<DictVal extends HDict = HDict>
 			_kind: this.getKind(),
 			meta: {
 				[GRID_VERSION_NAME]: this.version,
-				...(this.meta ? this.meta.toJSON() : {}),
+				...this.meta.toJSON(),
 			},
 			cols: this.$store.columns.map(
 				(
@@ -729,6 +730,35 @@ export class HGrid<DictVal extends HDict = HDict>
 				} => ({
 					name: column.name,
 					meta: column.meta.toJSON(),
+				})
+			),
+			rows,
+		}
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Grid {
+		const rows = this.getRows().map((row: DictVal): JsonV3Dict => {
+			this.addMissingColumns(row)
+			return row.toJSONv3()
+		})
+
+		return {
+			meta: {
+				[GRID_VERSION_NAME]: this.version,
+				...this.meta.toJSONv3(),
+			},
+			cols: this.$store.columns.map(
+				(
+					column: GridColumn
+				): {
+					name: string
+					[prop: string]: JsonV3Val
+				} => ({
+					name: column.name,
+					...column.meta.toJSONv3(),
 				})
 			),
 			rows,

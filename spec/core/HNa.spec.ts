@@ -71,6 +71,12 @@ describe('HNa', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns JSON', function (): void {
+			expect(HNa.make().toJSONv3()).toEqual('z:')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HNa.make().toAxon()).toBe('na()')

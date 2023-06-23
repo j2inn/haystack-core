@@ -75,6 +75,12 @@ describe('HRemove', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns a zinc encoded string', function (): void {
+			expect(HRemove.make().toJSONv3()).toBe('-:')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HRemove.make().toAxon()).toBe('removeMarker()')

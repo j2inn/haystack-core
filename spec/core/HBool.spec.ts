@@ -126,6 +126,16 @@ describe('HBool', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns JSON for false', function (): void {
+			expect(HBool.make(false).toJSONv3()).toBe(false)
+		})
+
+		it('returns JSON for true', function (): void {
+			expect(HBool.make(true).toJSONv3()).toBe(true)
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon true value', function (): void {
 			expect(HBool.make(true).toAxon()).toBe('true')

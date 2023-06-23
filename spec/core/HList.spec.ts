@@ -586,6 +586,13 @@ describe('HList', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns the list as JSON', function (): void {
+			list.push(null)
+			expect(list.toJSONv3()).toEqual(['foovalue', 'n:99', 'm:', null])
+		})
+	}) // #toJSONv3()
+
 	describe('#toFilter()', function (): void {
 		it('throws an error', function (): void {
 			expect((): void => {

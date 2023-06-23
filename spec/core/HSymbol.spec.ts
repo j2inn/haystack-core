@@ -109,6 +109,12 @@ describe('HSymbol', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONv3()', function (): void {
+		it('returns an encoded symbol', function (): void {
+			expect(HSymbol.make('foo').toJSONv3()).toBe('y:foo')
+		})
+	}) // #toJSONv3()
+
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HSymbol.make('foo').toAxon()).toBe('^foo')

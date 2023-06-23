@@ -22,6 +22,7 @@ import { HaysonDict } from '../../src/core/hayson'
 import '../matchers'
 import '../customMatchers'
 import { HBool } from '../../src/core/HBool'
+import { ZincReader } from '../../src/core/ZincReader'
 
 describe('HGrid', function (): void {
 	let grid: HGrid
@@ -352,6 +353,103 @@ describe('HGrid', function (): void {
 				})
 			})
 		}) // #toJSON()
+
+		describe('#toJSONv3()', function (): void {
+			it('returns a JSON representation of a grid', function (): void {
+				grid.get(0)?.set('goo', null)
+
+				expect(grid.toJSONv3()).toEqual({
+					meta: { ver: DEFAULT_GRID_VERSION },
+					cols: [
+						{
+							name: 'foo',
+						},
+						{
+							name: 'goo',
+						},
+					],
+					rows: [
+						{
+							foo: 'foo',
+							goo: null,
+						},
+					],
+				})
+			})
+
+			// https://project-haystack.org/doc/docHaystack/Json
+			it('decode example 1 from project haystack spec into JSON', function (): void {
+				const zinc = `ver:"3.0" projName:"test"
+dis dis:"Equip Name",equip,siteRef,installed
+"RTU-1",M,@153c-699a "HQ",2005-06-01
+"RTU-2",M,@153c-699a "HQ",1999-07-12
+
+`
+				const value = ZincReader.readValue(zinc)
+
+				expect(value?.toJSONv3()).toEqual({
+					meta: { ver: '3.0', projName: 'test' },
+					cols: [
+						{ name: 'dis', dis: 'Equip Name' },
+						{ name: 'equip' },
+						{ name: 'siteRef' },
+						{ name: 'installed' },
+					],
+					rows: [
+						{
+							dis: 'RTU-1',
+							equip: 'm:',
+							siteRef: 'r:153c-699a HQ',
+							installed: 'd:2005-06-01',
+						},
+						{
+							dis: 'RTU-2',
+							equip: 'm:',
+							siteRef: 'r:153c-699a HQ',
+							installed: 'd:1999-07-12',
+						},
+					],
+				})
+			})
+
+			it('decode example 2 from project haystack spec into JSON', function (): void {
+				const zinc = `ver:"3.0"
+type,val
+"list",[1,2,3]
+"dict",{dis:"Dict!" foo}
+"grid",<<
+ ver:"3.0"
+ a,b
+ 1,2
+ 3,4
+ >>
+"scalar","simple string"
+
+`
+				const value = ZincReader.readValue(zinc)
+
+				expect(value?.toJSONv3()).toEqual({
+					meta: { ver: '3.0' },
+					cols: [{ name: 'type' }, { name: 'val' }],
+					rows: [
+						{ type: 'list', val: ['n:1', 'n:2', 'n:3'] },
+						{ type: 'dict', val: { dis: 'Dict!', foo: 'm:' } },
+						{
+							type: 'grid',
+							val: {
+								meta: { ver: '3.0' },
+								cols: [{ name: 'a' }, { name: 'b' }],
+								rows: [
+									{ a: 'n:1', b: 'n:2' },
+									{ a: 'n:3', b: 'n:4' },
+								],
+							},
+						},
+						{ type: 'scalar', val: 'simple string' },
+					],
+				})
+			})
+		}) // #toJSONv3()
 
 		describe('#valueOf()', function (): void {
 			it('returns the instance', function (): void {

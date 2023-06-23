@@ -18,6 +18,7 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
+import { JsonV3Na } from './jsonv3'
 
 /**
  * An immutable JSON value.
@@ -144,6 +145,13 @@ export class HNa implements HVal {
 	 */
 	public toJSON(): HaysonNa {
 		return JSON_NA
+	}
+
+	/**
+	 * @returns A JSON v3 representation of the object.
+	 */
+	public toJSONv3(): JsonV3Na {
+		return 'z:'
 	}
 
 	/**

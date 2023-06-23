@@ -18,6 +18,7 @@ A core [haystack](https://project-haystack.org/) implementation written in TypeS
 -   [Hayson](https://github.com/j2inn/hayson) encoding/decoding.
 -   [Zinc 3.0](https://project-haystack.org/doc/Zinc) encoding/decoding.
 -   [Haystack v4 defs](https://project-haystack.dev/doc/docHaystack/Defs) full normalization, namespace and filter support.
+-   Older Haystack version 3 JSON encoding.
 
 This library is designed to be used in conjunction with these other haystack libraries depending on your use case...
 
