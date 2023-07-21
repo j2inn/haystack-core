@@ -18,6 +18,8 @@ import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { HUnit } from './HUnit'
 import { JsonV3Num } from './jsonv3'
+import './duration'
+import { millisecond } from './duration'
 
 /**
  * The default numeric precision.
@@ -309,13 +311,35 @@ export class HNum implements HVal {
 			return -1
 		}
 
-		if (this.value < value.value) {
+		let value0 = this.value
+		let value1 = value.value
+
+		if (this.unit && value.unit && !this.unit.equals(value.unit)) {
+			// Allow time comparisons of unlike units.
+			if (this.isDuration() && value.isDuration()) {
+				value0 = this.convertTo(millisecond).value
+				value1 = value.convertTo(millisecond).value
+			} else {
+				throw new Error(`${this.unit.symbol} <=> ${value.unit.symbol}`)
+			}
+		}
+
+		if (value0 < value1) {
 			return -1
 		}
-		if (this.value === value.value) {
+		if (value0 === value1) {
 			return 0
 		}
 		return 1
+	}
+
+	/**
+	 * Returns true if the number is a type of duration.
+	 *
+	 * @returns True if the number is a duration.
+	 */
+	public isDuration(): boolean {
+		return this.unit?.quantity === 'time'
 	}
 
 	/**

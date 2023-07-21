@@ -4,6 +4,7 @@
 
 import { UnitDatabase } from '../../src/core/UnitDatabase'
 import { joule, pound, square_mile, mile } from './units'
+import { HUnit } from '../../src/core/HUnit'
 
 describe('UnitDatabase', function (): void {
 	let db: UnitDatabase
@@ -19,6 +20,20 @@ describe('UnitDatabase', function (): void {
 	describe('#define()', function (): void {
 		it('does not throw an error if the same unit is defined twice', function (): void {
 			expect(() => db.define(joule)).not.toThrow()
+		})
+
+		it('does not define a unit multiple times in the database', function (): void {
+			// Define joules again but as a different instance.
+			const joule2 = new HUnit({
+				ids: ['joule', 'J'],
+				scale: 1,
+				offset: 0,
+				dimensions: { kg: 1, m: 2, sec: -2, K: 0, A: 0, mol: 0, cd: 0 },
+				quantity: 'energy',
+			})
+
+			db.define(joule2)
+			expect(db.getUnitsForQuantity('energy')).toEqual([joule])
 		})
 	}) // #define()
 

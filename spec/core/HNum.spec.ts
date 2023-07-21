@@ -580,5 +580,49 @@ describe('HNum', function (): void {
 				expect(() => HNum.make(1, hour).convertTo(joule)).toThrow()
 			})
 		}) // #convertTo()
+
+		describe('#isDuration()', function (): void {
+			it('returns true for seconds', function (): void {
+				expect(HNum.make(1, second).isDuration()).toBe(true)
+			})
+
+			it('returns true for milliseconds', function (): void {
+				expect(HNum.make(1, millisecond).isDuration()).toBe(true)
+			})
+
+			it('returns false for joule', function (): void {
+				expect(HNum.make(1, joule).isDuration()).toBe(false)
+			})
+
+			it('returns false for celsius', function (): void {
+				expect(HNum.make(1, celsius).isDuration()).toBe(false)
+			})
+		}) // #isDuration()
+
+		describe('#compareTo()', function (): void {
+			it('throws an error when comparing two numbers with incompatible units', function (): void {
+				expect(() =>
+					HNum.make(2, millisecond).compareTo(HNum.make(3, joule))
+				).toThrow('ms <=> J')
+			})
+
+			it('one millisecond is less than one second', function (): void {
+				expect(
+					HNum.make(1, millisecond).compareTo(HNum.make(1, second))
+				).toBe(-1)
+			})
+
+			it('one second is greater than one millisecond', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1, millisecond))
+				).toBe(1)
+			})
+
+			it('one second is equal to one second', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1, second))
+				).toBe(0)
+			})
+		}) // #compareTo()
 	}) // units
 })
