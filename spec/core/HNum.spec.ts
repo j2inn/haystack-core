@@ -27,6 +27,7 @@ import {
 } from './units'
 import '../matchers'
 import '../customMatchers'
+import { nanosecond, microsecond } from '../../src/core/duration'
 
 describe('HNum', function (): void {
 	describe('.make()', function (): void {
@@ -627,6 +628,22 @@ describe('HNum', function (): void {
 			it('one second is equal to one thousand milliseconds', function (): void {
 				expect(
 					HNum.make(1, second).compareTo(HNum.make(1000, millisecond))
+				).toBe(0)
+			})
+
+			it('one thousand nanoseconds are equal to one microsecond', function (): void {
+				expect(
+					HNum.make(1000, nanosecond).compareTo(
+						HNum.make(1, microsecond)
+					)
+				).toBe(0)
+			})
+
+			it('one nanoseconds are equal to one thousand microsecond', function (): void {
+				expect(
+					HNum.make(1, nanosecond).compareTo(
+						HNum.make(0.001, microsecond)
+					)
 				).toBe(0)
 			})
 		}) // #compareTo()

@@ -319,6 +319,11 @@ export class HNum implements HVal {
 			if (this.isDuration() && value.isDuration()) {
 				value0 = this.convertTo(millisecond).value
 				value1 = value.convertTo(millisecond).value
+
+				// Handle floating point comparison.
+				if (Math.abs(value0 - value1) < 0.0000000001) {
+					value0 = value1
+				}
 			} else {
 				throw new Error(`${this.unit.symbol} <=> ${value.unit.symbol}`)
 			}
