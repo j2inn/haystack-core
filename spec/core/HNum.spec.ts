@@ -27,7 +27,7 @@ import {
 } from './units'
 import '../matchers'
 import '../customMatchers'
-import { nanosecond, microsecond } from '../../src/core/duration'
+import { nanosecond, microsecond, year } from '../../src/core/duration'
 
 describe('HNum', function (): void {
 	describe('.make()', function (): void {
@@ -643,6 +643,14 @@ describe('HNum', function (): void {
 				expect(
 					HNum.make(1, nanosecond).compareTo(
 						HNum.make(0.001, microsecond)
+					)
+				).toBe(0)
+			})
+
+			it('one thousand years are equal to a lot of microseconds', function (): void {
+				expect(
+					HNum.make(1000, year).compareTo(
+						HNum.make(31536000000000000, microsecond)
 					)
 				).toBe(0)
 			})
