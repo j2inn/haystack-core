@@ -623,6 +623,12 @@ describe('HNum', function (): void {
 					HNum.make(1, second).compareTo(HNum.make(1, second))
 				).toBe(0)
 			})
+
+			it('one second is equal to one thousand milliseconds', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1000, millisecond))
+				).toBe(0)
+			})
 		}) // #compareTo()
 	}) // units
 })
