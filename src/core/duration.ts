@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, J2 Innovations. All Rights Reserved
+ * Copyright (c) 2023, J2 Innovations. All Rights Reserved
  */
 
 import { HUnit } from './HUnit'
