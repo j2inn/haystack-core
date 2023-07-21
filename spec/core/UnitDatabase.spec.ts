@@ -33,7 +33,7 @@ describe('UnitDatabase', function (): void {
 			})
 
 			db.define(joule2)
-			expect(db.getUnitsForQuantity('energy')).toEqual([joule])
+			expect(db.getUnitsForQuantity('energy')).toEqual([joule2])
 		})
 	}) // #define()
 
