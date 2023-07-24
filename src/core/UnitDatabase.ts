@@ -18,7 +18,7 @@ export class UnitDatabase {
 	/**
 	 * All units organized by quantity.
 	 */
-	readonly #quantities = new Map<string, Set<HUnit>>()
+	readonly #quantities = new Map<string, Map<string, HUnit>>()
 
 	/**
 	 * All the registered units.
@@ -33,16 +33,16 @@ export class UnitDatabase {
 	public define(unit: HUnit): void {
 		for (const id of unit.ids) {
 			this.#byId.set(id, unit)
+		}
 
-			const quantity = unit.quantity
-			if (quantity) {
-				let units = this.#quantities.get(quantity)
-				if (!units) {
-					units = new Set()
-					this.#quantities.set(quantity, units)
-				}
-				units.add(unit)
+		const quantity = unit.quantity
+		if (quantity) {
+			let units = this.#quantities.get(quantity)
+			if (!units) {
+				units = new Map()
+				this.#quantities.set(quantity, units)
 			}
+			units.set(unit.name, unit)
 		}
 
 		this.#units.add(unit)

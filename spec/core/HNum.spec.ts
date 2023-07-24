@@ -27,6 +27,7 @@ import {
 } from './units'
 import '../matchers'
 import '../customMatchers'
+import { nanosecond, microsecond, year } from '../../src/core/duration'
 
 describe('HNum', function (): void {
 	describe('.make()', function (): void {
@@ -580,5 +581,79 @@ describe('HNum', function (): void {
 				expect(() => HNum.make(1, hour).convertTo(joule)).toThrow()
 			})
 		}) // #convertTo()
+
+		describe('#isDuration()', function (): void {
+			it('returns true for seconds', function (): void {
+				expect(HNum.make(1, second).isDuration()).toBe(true)
+			})
+
+			it('returns true for milliseconds', function (): void {
+				expect(HNum.make(1, millisecond).isDuration()).toBe(true)
+			})
+
+			it('returns false for joule', function (): void {
+				expect(HNum.make(1, joule).isDuration()).toBe(false)
+			})
+
+			it('returns false for celsius', function (): void {
+				expect(HNum.make(1, celsius).isDuration()).toBe(false)
+			})
+		}) // #isDuration()
+
+		describe('#compareTo()', function (): void {
+			it('throws an error when comparing two numbers with incompatible units', function (): void {
+				expect(() =>
+					HNum.make(2, millisecond).compareTo(HNum.make(3, joule))
+				).toThrow('ms <=> J')
+			})
+
+			it('one millisecond is less than one second', function (): void {
+				expect(
+					HNum.make(1, millisecond).compareTo(HNum.make(1, second))
+				).toBe(-1)
+			})
+
+			it('one second is greater than one millisecond', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1, millisecond))
+				).toBe(1)
+			})
+
+			it('one second is equal to one second', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1, second))
+				).toBe(0)
+			})
+
+			it('one second is equal to one thousand milliseconds', function (): void {
+				expect(
+					HNum.make(1, second).compareTo(HNum.make(1000, millisecond))
+				).toBe(0)
+			})
+
+			it('one thousand nanoseconds are equal to one microsecond', function (): void {
+				expect(
+					HNum.make(1000, nanosecond).compareTo(
+						HNum.make(1, microsecond)
+					)
+				).toBe(0)
+			})
+
+			it('one nanosecond is equal to one thousand microseconds', function (): void {
+				expect(
+					HNum.make(1, nanosecond).compareTo(
+						HNum.make(0.001, microsecond)
+					)
+				).toBe(0)
+			})
+
+			it('one thousand years are equal to a lot of microseconds', function (): void {
+				expect(
+					HNum.make(1000, year).compareTo(
+						HNum.make(31536000000000000, microsecond)
+					)
+				).toBe(0)
+			})
+		}) // #compareTo()
 	}) // units
 })
