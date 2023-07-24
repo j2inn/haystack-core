@@ -8,6 +8,10 @@ import { HUnit } from './HUnit'
  * @module
  *
  * Defines all the time units required for number comparison.
+ *
+ * Please note these units were originally created in `haystack-units` whereby
+ * all the units are dynamically created from the Fantom unit database at
+ * build time.
  */
 
 export const nanosecond = HUnit.define({

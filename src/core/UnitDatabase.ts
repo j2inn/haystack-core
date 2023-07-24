@@ -33,16 +33,16 @@ export class UnitDatabase {
 	public define(unit: HUnit): void {
 		for (const id of unit.ids) {
 			this.#byId.set(id, unit)
+		}
 
-			const quantity = unit.quantity
-			if (quantity) {
-				let units = this.#quantities.get(quantity)
-				if (!units) {
-					units = new Map()
-					this.#quantities.set(quantity, units)
-				}
-				units.set(unit.name, unit)
+		const quantity = unit.quantity
+		if (quantity) {
+			let units = this.#quantities.get(quantity)
+			if (!units) {
+				units = new Map()
+				this.#quantities.set(quantity, units)
 			}
+			units.set(unit.name, unit)
 		}
 
 		this.#units.add(unit)

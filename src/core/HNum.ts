@@ -321,7 +321,7 @@ export class HNum implements HVal {
 				value1 = value.convertTo(millisecond).value
 
 				// Handle floating point comparison.
-				if (Math.abs(value0 - value1) < 0.0000000000001) {
+				if (Math.abs(value0 - value1) < Number.EPSILON) {
 					value0 = value1
 				}
 			} else {

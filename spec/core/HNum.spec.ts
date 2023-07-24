@@ -639,7 +639,7 @@ describe('HNum', function (): void {
 				).toBe(0)
 			})
 
-			it('one nanoseconds are equal to one thousand microsecond', function (): void {
+			it('one nanosecond is equal to one thousand microseconds', function (): void {
 				expect(
 					HNum.make(1, nanosecond).compareTo(
 						HNum.make(0.001, microsecond)
