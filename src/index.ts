@@ -63,7 +63,6 @@ export * from './core/UnitDatabase'
 export * from './core/UnitDimensions'
 export * from './core/HSpan'
 export * from './core/jsonv3'
-export * from './core/duration'
 
 // Shorthand
 export * from './shorthand'
