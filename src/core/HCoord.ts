@@ -85,9 +85,7 @@ export class HCoord implements HVal {
 		if (valueIsKind<HCoord>(value, Kind.Coord)) {
 			return value
 		} else {
-			return Object.freeze(
-				new HCoord(value as CoordObj | HaysonCoord)
-			) as HCoord
+			return new HCoord(value as CoordObj | HaysonCoord)
 		}
 	}
 

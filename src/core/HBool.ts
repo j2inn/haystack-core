@@ -44,18 +44,20 @@ export class HBool implements HVal {
 	 * @returns A haystack boolean value.
 	 */
 	public static make(value: boolean | HBool): HBool {
-		if (valueIsKind<HBool>(value, Kind.Bool)) {
-			return value
-		} else if (value) {
-			return (
-				trueInstance ||
-				(trueInstance = Object.freeze(new HBool(true)) as HBool)
-			)
+		if (typeof value === 'boolean') {
+			if (value) {
+				return (
+					trueInstance ||
+					(trueInstance = Object.freeze(new HBool(true)) as HBool)
+				)
+			} else {
+				return (
+					falseInstance ||
+					(falseInstance = Object.freeze(new HBool(false)) as HBool)
+				)
+			}
 		} else {
-			return (
-				falseInstance ||
-				(falseInstance = Object.freeze(new HBool(false)) as HBool)
-			)
+			return value
 		}
 	}
 

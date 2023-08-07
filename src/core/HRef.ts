@@ -74,9 +74,7 @@ export class HRef implements HVal {
 		if (valueIsKind<HRef>(value, Kind.Ref)) {
 			return value
 		} else {
-			return Object.freeze(
-				new HRef(value as string | HaysonRef, displayName)
-			) as HRef
+			return new HRef(value as string | HaysonRef, displayName)
 		}
 	}
 

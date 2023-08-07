@@ -114,11 +114,8 @@ export class HNum implements HVal {
 		}
 
 		return val === 0 && !unit
-			? zeroNoUnitsNum ||
-					(zeroNoUnitsNum = Object.freeze(
-						new HNum(val, unit)
-					) as HNum)
-			: (Object.freeze(new HNum(val, unit)) as HNum)
+			? zeroNoUnitsNum || (zeroNoUnitsNum = new HNum(val, unit))
+			: new HNum(val, unit)
 	}
 
 	/**

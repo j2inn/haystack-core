@@ -65,9 +65,7 @@ export class HXStr implements HVal {
 		if (valueIsKind<HXStr>(type, Kind.XStr)) {
 			return type
 		} else {
-			return Object.freeze(
-				new HXStr(type as string | HaysonXStr, value)
-			) as HXStr
+			return new HXStr(type as string | HaysonXStr, value)
 		}
 	}
 

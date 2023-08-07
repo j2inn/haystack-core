@@ -97,9 +97,7 @@ export class HTime implements HVal {
 		if (valueIsKind<HTime>(value, Kind.Time)) {
 			return value
 		} else {
-			return Object.freeze(
-				new HTime(value as string | Date | TimeObj | HaysonTime)
-			) as HTime
+			return new HTime(value as string | Date | TimeObj | HaysonTime)
 		}
 	}
 

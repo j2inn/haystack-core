@@ -102,9 +102,7 @@ export class HDate implements HVal {
 		if (valueIsKind<HDate>(value, Kind.Date)) {
 			return value
 		} else {
-			return Object.freeze(
-				new HDate(value as string | Date | DateObj | HaysonDate)
-			) as HDate
+			return new HDate(value as string | Date | DateObj | HaysonDate)
 		}
 	}
 

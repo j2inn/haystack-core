@@ -43,15 +43,12 @@ export class HStr implements HVal {
 	 * @returns A haystack string.
 	 */
 	public static make(value: string | HStr): HStr {
-		if (valueIsKind<HStr>(value, Kind.Str)) {
+		if (typeof value === 'string') {
 			return value
+				? new HStr(value)
+				: emptyStr || (emptyStr = new HStr(value))
 		} else {
-			const valStr = String(value)
-
-			return valStr
-				? (Object.freeze(new HStr(valStr)) as HStr)
-				: emptyStr ||
-						(emptyStr = Object.freeze(new HStr(valStr)) as HStr)
+			return value
 		}
 	}
 

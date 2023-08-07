@@ -16,7 +16,6 @@ import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HDict } from './HDict'
 import { EvalContext } from '../filter/EvalContext'
-import { memoize } from '../util/memoize'
 import { JsonV3Symbol } from './jsonv3'
 
 export interface PartialHaysonSymbol {
@@ -64,19 +63,8 @@ export class HSymbol implements HVal {
 				valStr = obj.val
 			}
 
-			return HSymbol.makeInterned(valStr)
+			return new HSymbol(valStr)
 		}
-	}
-
-	/**
-	 * Returns an interned symbol value.
-	 *
-	 * @param value The value to make.
-	 * @returns An interned symbol value.
-	 */
-	@memoize()
-	private static makeInterned(value: string): HSymbol {
-		return Object.freeze(new HSymbol(value)) as HSymbol
 	}
 
 	/**
