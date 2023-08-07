@@ -47,13 +47,13 @@ export class HBool implements HVal {
 		if (typeof value === 'boolean') {
 			if (value) {
 				return (
-					trueInstance ||
-					(trueInstance = Object.freeze(new HBool(true)) as HBool)
+					trueInstance ??
+					Object.freeze((trueInstance = new HBool(true)))
 				)
 			} else {
 				return (
-					falseInstance ||
-					(falseInstance = Object.freeze(new HBool(false)) as HBool)
+					falseInstance ??
+					Object.freeze((falseInstance = new HBool(false)))
 				)
 			}
 		} else {

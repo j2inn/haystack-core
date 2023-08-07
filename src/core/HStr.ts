@@ -46,7 +46,7 @@ export class HStr implements HVal {
 		if (typeof value === 'string') {
 			return value
 				? new HStr(value)
-				: emptyStr || (emptyStr = new HStr(value))
+				: emptyStr ?? Object.freeze((emptyStr = new HStr(value)))
 		} else {
 			return value
 		}
