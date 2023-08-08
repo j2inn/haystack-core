@@ -74,7 +74,7 @@ export class HUri implements HVal {
 				val = obj.val
 			}
 
-			return Object.freeze(new HUri(val)) as HUri
+			return new HUri(val)
 		}
 	}
 

@@ -176,9 +176,7 @@ export class HDateTime implements HVal {
 		if (valueIsKind<HDateTime>(value, Kind.DateTime)) {
 			return value
 		} else {
-			return Object.freeze(
-				new HDateTime(value as string | Date | HaysonDateTime)
-			) as HDateTime
+			return new HDateTime(value as string | Date | HaysonDateTime)
 		}
 	}
 

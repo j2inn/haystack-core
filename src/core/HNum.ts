@@ -114,11 +114,9 @@ export class HNum implements HVal {
 		}
 
 		return val === 0 && !unit
-			? zeroNoUnitsNum ||
-					(zeroNoUnitsNum = Object.freeze(
-						new HNum(val, unit)
-					) as HNum)
-			: (Object.freeze(new HNum(val, unit)) as HNum)
+			? zeroNoUnitsNum ??
+					Object.freeze((zeroNoUnitsNum = new HNum(val, unit)))
+			: new HNum(val, unit)
 	}
 
 	/**
@@ -314,7 +312,8 @@ export class HNum implements HVal {
 		let value0 = this.value
 		let value1 = value.value
 
-		if (this.unit && value.unit && !this.unit.equals(value.unit)) {
+		const unit = this.unit
+		if (unit && value.unit && !unit.equals(value.unit)) {
 			// Allow time comparisons of unlike units.
 			if (this.isDuration() && value.isDuration()) {
 				value0 = this.convertTo(millisecond).value
@@ -325,7 +324,7 @@ export class HNum implements HVal {
 					value0 = value1
 				}
 			} else {
-				throw new Error(`${this.unit.symbol} <=> ${value.unit.symbol}`)
+				throw new Error(`${unit.symbol} <=> ${value.unit.symbol}`)
 			}
 		}
 
