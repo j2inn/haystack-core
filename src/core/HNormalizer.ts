@@ -522,6 +522,7 @@ export class HNormalizer {
 
 		if (!tagLib) {
 			throw this.fatal('couldNotFindLibForDef', {
+				libName: defLib.name,
 				defName: tag,
 			})
 		}
