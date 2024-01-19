@@ -1840,6 +1840,45 @@ describe('HNamespace', function (): void {
 				)
 			})
 
+			it('validates a conjunct', function (): void {
+				expect(() =>
+					defs.validate(
+						'mobile-phone',
+						new HDict({
+							mobile: HMarker.make(),
+							phone: HMarker.make(),
+							device: HMarker.make(),
+						})
+					)
+				).not.toThrow()
+			})
+
+			it('validates a marker tag', function (): void {
+				expect(() =>
+					defs.validate(
+						'active',
+						new HDict({
+							active: HMarker.make(),
+						})
+					)
+				).not.toThrow()
+			})
+
+			it('validates an airHandlingEquip for an ahu', function (): void {
+				expect(() =>
+					defs.validate('airHandlingEquip', dict)
+				).not.toThrow()
+			})
+
+			it('validates userAuth for a dict', function (): void {
+				expect(() =>
+					defs.validate(
+						'userAuth',
+						new HDict({ userAuth: new HDict() })
+					)
+				).not.toThrow()
+			})
+
 			describe('compulsory', function (): void {
 				beforeEach(function (): void {
 					defs.byName('dis')?.set('compulsory', HMarker.make())
