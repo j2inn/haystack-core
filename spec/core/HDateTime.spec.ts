@@ -385,4 +385,15 @@ describe('HDateTime', function (): void {
 			).toBe('America/New_York')
 		})
 	}) // #getIANATimeZone()
+
+	describe('.getTimezoneDb()', function (): void {
+		it('returns the timezone for London', function (): void {
+			const result = HDateTime.getTimezoneDb().filter('name == "London"')
+
+			expect(result.first?.toJSON()).toEqual({
+				name: 'London',
+				fullName: 'Europe/London',
+			})
+		})
+	}) // .getTimezoneDb()
 })
