@@ -216,8 +216,26 @@ describe('HDateTime', function (): void {
 	describe('#toAxon()', function (): void {
 		it('returns an Axon string', function (): void {
 			expect(HDateTime.make('2009-11-09T15:39:00Z').toAxon()).toBe(
-				'dateTime(2009-11-09,15:39:00)'
+				'dateTime(2009-11-09,15:39:00,"UTC")'
 			)
+		})
+
+		it('returns an Axon string with the timezone set to UTC', function (): void {
+			expect(
+				HDateTime.make({
+					_kind: Kind.DateTime,
+					val: '2009-11-09T15:39:00Z',
+					tz: 'London',
+				}).toAxon()
+			).toBe('dateTime(2009-11-09,15:39:00,"UTC")')
+		})
+
+		it('returns an Axon string with an offset and the timezone set to UTC', function () {
+			expect(
+				HDateTime.make(
+					'2021-04-14T07:42:46.275-05:00 New_York'
+				).toAxon()
+			).toBe('dateTime(2021-04-14,12:42:46.275,"UTC")')
 		})
 	}) // #toAxon()
 
