@@ -305,15 +305,9 @@ export class HDate implements HVal {
 	 * @throws An error if the date can't be found.
 	 */
 	private static getDateFromDateObj(date: Date): string {
-		// Parse date string from ISO format.
-		const iso = date.toISOString() || ''
-		const res = /^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])./.exec(iso)
-
-		if (!res || !res[1]) {
-			throw new Error('Invalid date')
-		}
-
-		return res[1]
+		return `${date.getUTCFullYear()}-${String(
+			date.getUTCMonth() + 1
+		).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
 	}
 
 	/**

@@ -287,7 +287,7 @@ export class HTime implements HVal {
 		const hours = date.getUTCHours()
 		const minutes = date.getUTCMinutes()
 		const seconds = date.getUTCSeconds()
-		const ms = date.getMilliseconds()
+		const ms = date.getUTCMilliseconds()
 
 		return HTime.getTime(hours, minutes, seconds, ms)
 	}

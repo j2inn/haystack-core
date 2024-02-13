@@ -375,9 +375,10 @@ export class HDateTime implements HVal {
 	 */
 	public toAxon(): string {
 		const date = this.date
+
 		return `dateTime(${HDate.make(date).toAxon()},${HTime.make(
 			date
-		).toAxon()})`
+		).toAxon()},"UTC")`
 	}
 
 	/**
