@@ -72,6 +72,26 @@ describe('EnumTag', () => {
 				c: 3,
 			})
 		})
+
+		it('creates an enum tag from a grid with no codes', () => {
+			const grid = new HGrid([
+				new HDict({
+					name: 'a',
+				}),
+				new HDict({
+					name: 'b',
+				}),
+				new HDict({
+					name: 'c',
+				}),
+			])
+
+			expect(new EnumTag(grid).encodeToObject()).toEqual({
+				a: 0,
+				b: 1,
+				c: 2,
+			})
+		})
 	}) // construction
 
 	describe('#nameToCode()', () => {

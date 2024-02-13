@@ -65,16 +65,17 @@ export class EnumTag {
 		let falseName: string | undefined
 
 		const addEnumEntry = (name: string, code: number): void => {
-			if (!trueName && code) {
-				trueName = name
-			}
-			if (!falseName && !code) {
-				falseName = name
-			}
-			if (!this.#nameToCodeMap.has(name)) {
+			if (
+				!this.#nameToCodeMap.has(name) &&
+				!this.#codeToNameMap.has(code)
+			) {
+				if (!trueName && code) {
+					trueName = name
+				}
+				if (!falseName && !code) {
+					falseName = name
+				}
 				this.#nameToCodeMap.set(name, code)
-			}
-			if (!this.#codeToNameMap.has(code)) {
 				this.#codeToNameMap.set(code, name)
 			}
 		}
