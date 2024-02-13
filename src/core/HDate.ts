@@ -305,14 +305,9 @@ export class HDate implements HVal {
 	 * @throws An error if the date can't be found.
 	 */
 	private static getDateFromDateObj(date: Date): string {
-		return `${date.getUTCFullYear()}-${HDate.encodeDigits(
+		return `${date.getUTCFullYear()}-${String(
 			date.getUTCMonth() + 1
-		)}-${this.encodeDigits(date.getUTCDate())}`
-	}
-
-	private static encodeDigits(value: number): string {
-		const val = String(value)
-		return val.length === 1 ? `0${val}` : val
+		).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`
 	}
 
 	/**
