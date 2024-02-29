@@ -645,6 +645,34 @@ describe('util', function (): void {
 				'dis'
 			)
 		})
+
+		it('returns shortened display name with starting refs skipped', function (): void {
+			const dict = new HDict({
+				navName: HStr.make('a nav name'),
+				equipRef: HRef.make('equipRef'),
+				siteRef: HRef.make('siteRef'),
+				disMacro: HStr.make('    $siteRef $equipRef $navName   '),
+			})
+
+			// Shortening a display name will remove any refs from output of
+			// processing `disMacro`.
+			expect(
+				dictToDis(dict, undefined, undefined, /*shorten*/ true)
+			).toBe('a nav name')
+		})
+
+		it('returns display name when shortened but initial pass is empty', function (): void {
+			const dict = new HDict({
+				navName: HStr.make('a nav name'),
+				equipRef: HRef.make('equipRef'),
+				siteRef: HRef.make('siteRef'),
+				disMacro: HStr.make('    $siteRef $equipRef   '),
+			})
+
+			expect(
+				dictToDis(dict, undefined, undefined, /*shorten*/ true)
+			).toBe('siteRef equipRef')
+		})
 	}) // dictToDis()
 
 	describe('macro()', function (): void {
@@ -716,6 +744,13 @@ describe('util', function (): void {
 			expect(macro('$ref$ref $ref something', makeGetValue(scope))).toBe(
 				'IdId Id something'
 			)
+		})
+
+		it('trims any whitespace', function (): void {
+			const scope = new HDict({ ref: HRef.make('id', 'Id') })
+			expect(
+				macro('   $ref$ref $ref something    ', makeGetValue(scope))
+			).toBe('IdId Id something')
 		})
 	}) // macro()
 

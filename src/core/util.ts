@@ -367,8 +367,29 @@ export interface LocalizedCallback {
 	(pod: string, key: string): string | undefined
 }
 
+interface GetValueFunc {
+	(key: string): HVal | undefined
+}
+
+function makeDictGetValueFunc(dict: HDict): GetValueFunc {
+	return (key: string): HVal | undefined => dict.get(key)
+}
+
+function makeShortenedDictGetValueFunc(dict: HDict): GetValueFunc {
+	return (key: string): HVal | undefined => {
+		const value = dict.get(key)
+
+		// To short a display name, we skip any resolved Refs
+		// by the macro. Therefore `$equipRef $navName` really just becomes
+		// `$navName`.
+		return valueIsKind<HRef>(value, Kind.Ref)
+			? HStr.make('')
+			: value ?? undefined
+	}
+}
+
 /**
- * Return a display string from the dict...
+ * Return a display string from the dict (or function)...
  *
  * 1. 'dis' tag.
  * 2. 'disMacro' tag returns macro using dict as scope.
@@ -383,14 +404,18 @@ export interface LocalizedCallback {
  * @see {@link disKey}
  *
  * @param dict The dict to use.
- * @param def The default fallback value.
- * @param i18n The localization callback.
+ * @param def Optional default fallback value.
+ * @param i18n Optional localization callback.
+ * @param short Optional flag to shorten the display name when
+ * processing a `disMacro` tag. This will automatically remove any
+ * resolved `Ref` values from the macro.
  * @return The display string value.
  */
 export function dictToDis(
 	dict: HDict,
 	def?: string,
-	i18n?: LocalizedCallback
+	i18n?: LocalizedCallback,
+	short?: boolean
 ): string {
 	let val = dict.get('dis')
 	if (isHVal(val)) {
@@ -399,7 +424,19 @@ export function dictToDis(
 
 	val = dict.get('disMacro')
 	if (isHVal(val)) {
-		return macro(val.toString(), (key: string) => dict.get(key), i18n)
+		const getValue: GetValueFunc = short
+			? makeShortenedDictGetValueFunc(dict)
+			: makeDictGetValueFunc(dict)
+
+		let value = macro(val.toString(), getValue, i18n)
+
+		// If the shortened display name is empty then fallback
+		// to processing it with no shortening.
+		if (short && !value) {
+			value = macro(val.toString(), makeDictGetValueFunc(dict), i18n)
+		}
+
+		return value
 	}
 
 	val = dict.get('disKey')
@@ -453,7 +490,7 @@ export function dictToDis(
  */
 export function macro(
 	pattern: string,
-	getValue: (key: string) => HVal | undefined,
+	getValue: GetValueFunc,
 	i18n?: LocalizedCallback
 ): string {
 	const replacer = (match: string, key: string): string => {
@@ -480,7 +517,7 @@ export function macro(
 		)
 	}
 
-	return result
+	return result.trim()
 }
 
 /**
