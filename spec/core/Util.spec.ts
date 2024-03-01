@@ -647,7 +647,7 @@ describe('util', function (): void {
 		})
 
 		it('returns navName', function (): void {
-			expect(dictToDis(new HDict({ dis: 'navName' }))).toBe('navName')
+			expect(dictToDis(new HDict({ navName: 'navName' }))).toBe('navName')
 		})
 
 		it('returns shortened display name with starting refs skipped', function (): void {
@@ -658,8 +658,6 @@ describe('util', function (): void {
 				disMacro: HStr.make('    $siteRef $equipRef $navName   '),
 			})
 
-			// Shortening a display name will remove any refs from output of
-			// processing `disMacro`.
 			expect(
 				dictToDis(dict, undefined, undefined, /*shorten*/ true)
 			).toBe('a nav name')

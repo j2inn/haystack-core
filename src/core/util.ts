@@ -376,8 +376,8 @@ export interface LocalizedCallback {
  * 4. 'name' tag.
  * 5. 'tag' tag.
  * 6. 'navName' tag.
- * 6. 'id' tag.
- * 7. default
+ * 7. 'id' tag.
+ * 8. default
  *
  * If a short name is specified, resolving `disMacro` is given a
  * lower precedence.
