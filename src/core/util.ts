@@ -379,7 +379,7 @@ export interface LocalizedCallback {
  * 6. 'id' tag.
  * 7. default
  *
- * If a short name is specified, resolving `disMacro` is given
+ * If a short name is specified, resolving `disMacro` is given a
  * lower precedence.
  *
  * @see {@link HDict.toDis}
