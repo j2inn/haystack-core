@@ -840,20 +840,23 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param options.name Optional tag name.
 	 * @param options.def Optional default value.
 	 * @param options.i18n Optional function to get localized strings.
-	 * @returns The display string
+	 * @param options.short Optional flag to automatically shorten the display name.
+	 * @returns The display string.
 	 */
 	public toDis({
 		name,
 		def,
 		i18n,
+		short,
 	}: {
 		name?: string
 		def?: string
 		i18n?: LocalizedCallback
+		short?: boolean
 	} = {}): string {
 		return name
 			? this.get(name)?.toString() ?? def ?? ''
-			: dictToDis(this, def, i18n)
+			: dictToDis(this, def, i18n, short)
 	}
 
 	/**

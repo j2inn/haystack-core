@@ -645,6 +645,23 @@ describe('util', function (): void {
 				'dis'
 			)
 		})
+
+		it('returns navName', function (): void {
+			expect(dictToDis(new HDict({ navName: 'navName' }))).toBe('navName')
+		})
+
+		it('returns shortened display name with starting refs skipped', function (): void {
+			const dict = new HDict({
+				navName: HStr.make('a nav name'),
+				equipRef: HRef.make('equipRef'),
+				siteRef: HRef.make('siteRef'),
+				disMacro: HStr.make('    $siteRef $equipRef $navName   '),
+			})
+
+			expect(
+				dictToDis(dict, undefined, undefined, /*shorten*/ true)
+			).toBe('a nav name')
+		})
 	}) // dictToDis()
 
 	describe('macro()', function (): void {
@@ -716,6 +733,13 @@ describe('util', function (): void {
 			expect(macro('$ref$ref $ref something', makeGetValue(scope))).toBe(
 				'IdId Id something'
 			)
+		})
+
+		it('trims any whitespace', function (): void {
+			const scope = new HDict({ ref: HRef.make('id', 'Id') })
+			expect(
+				macro('   $ref$ref $ref something    ', makeGetValue(scope))
+			).toBe('IdId Id something')
 		})
 	}) // macro()
 

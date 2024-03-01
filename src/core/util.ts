@@ -375,31 +375,44 @@ export interface LocalizedCallback {
  * 3. 'disKey' maps to qname locale key.
  * 4. 'name' tag.
  * 5. 'tag' tag.
- * 6. 'id' tag.
- * 7. default
+ * 6. 'navName' tag.
+ * 7. 'id' tag.
+ * 8. default
+ *
+ * If a short name is specified, resolving `disMacro` is given a
+ * lower precedence.
  *
  * @see {@link HDict.toDis}
  * @see {@link macro}
  * @see {@link disKey}
  *
  * @param dict The dict to use.
- * @param def The default fallback value.
- * @param i18n The localization callback.
+ * @param def Optional default fallback value.
+ * @param i18n Optional localization callback.
+ * @param short Optional flag to shorten the display name.
  * @return The display string value.
  */
 export function dictToDis(
 	dict: HDict,
 	def?: string,
-	i18n?: LocalizedCallback
+	i18n?: LocalizedCallback,
+	short?: boolean
 ): string {
 	let val = dict.get('dis')
 	if (isHVal(val)) {
 		return val.toString()
 	}
 
-	val = dict.get('disMacro')
-	if (isHVal(val)) {
-		return macro(val.toString(), (key: string) => dict.get(key), i18n)
+	const runMacro = (val: HVal) =>
+		macro(val.toString(), (val) => dict.get(val), i18n)
+
+	// If we're wanting a short display name then try other
+	// display names first.
+	if (!short) {
+		val = dict.get('disMacro')
+		if (isHVal(val)) {
+			return runMacro(val)
+		}
 	}
 
 	val = dict.get('disKey')
@@ -422,6 +435,20 @@ export function dictToDis(
 	val = dict.get('tag')
 	if (isHVal(val)) {
 		return val.toString()
+	}
+
+	val = dict.get('navName')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	// If by this point we don't have a short display name
+	// then fallback to running the macro as a last resort.
+	if (short) {
+		val = dict.get('disMacro')
+		if (isHVal(val)) {
+			return runMacro(val)
+		}
 	}
 
 	val = dict.get('id')
@@ -480,7 +507,7 @@ export function macro(
 		)
 	}
 
-	return result
+	return result.trim()
 }
 
 /**

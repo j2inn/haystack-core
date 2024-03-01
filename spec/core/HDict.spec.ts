@@ -15,6 +15,7 @@ import { HGrid } from '../../src/core/HGrid'
 import { HVal } from '../../src/core/HVal'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HNamespace } from '../../src/core/HNamespace'
+import { HRef } from '../../src/core/HRef'
 import { HaysonDict } from '../../src/core/hayson'
 import { HFilter } from '../../src/filter/HFilter'
 import '../matchers'
@@ -813,6 +814,17 @@ describe('HDict', function (): void {
 				'test'
 			)
 			expect(i18n).toHaveBeenCalledWith('pod', 'key')
+		})
+
+		it('returns a shortened display name from a macro', function (): void {
+			const dict = new HDict({
+				navName: HStr.make('a nav name'),
+				equipRef: HRef.make('equipRef'),
+				siteRef: HRef.make('siteRef'),
+				disMacro: HStr.make('    $siteRef $equipRef $navName   '),
+			})
+
+			expect(dict.toDis({ short: true })).toBe('a nav name')
 		})
 	}) // #toDis()
 
