@@ -368,7 +368,7 @@ export interface LocalizedCallback {
 }
 
 /**
- * Return a display string from the dict (or function)...
+ * Return a display string from the dict...
  *
  * 1. 'dis' tag.
  * 2. 'disMacro' tag returns macro using dict as scope.
