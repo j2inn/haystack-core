@@ -840,9 +840,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param options.name Optional tag name.
 	 * @param options.def Optional default value.
 	 * @param options.i18n Optional function to get localized strings.
-	 * @param options.short Optional flag to automatically shorten the display
-	 * name when processing a `disMacro` tag. This will automatically remove any
-	 * resolved `Ref` values from the macro.
+	 * @param options.short Optional flag to automatically shorten the display name.
 	 * @returns The display string.
 	 */
 	public toDis({

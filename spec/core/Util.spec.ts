@@ -646,6 +646,10 @@ describe('util', function (): void {
 			)
 		})
 
+		it('returns navName', function (): void {
+			expect(dictToDis(new HDict({ dis: 'navName' }))).toBe('navName')
+		})
+
 		it('returns shortened display name with starting refs skipped', function (): void {
 			const dict = new HDict({
 				navName: HStr.make('a nav name'),
@@ -659,19 +663,6 @@ describe('util', function (): void {
 			expect(
 				dictToDis(dict, undefined, undefined, /*shorten*/ true)
 			).toBe('a nav name')
-		})
-
-		it('returns display name when shortened but initial pass is empty', function (): void {
-			const dict = new HDict({
-				navName: HStr.make('a nav name'),
-				equipRef: HRef.make('equipRef'),
-				siteRef: HRef.make('siteRef'),
-				disMacro: HStr.make('    $siteRef $equipRef   '),
-			})
-
-			expect(
-				dictToDis(dict, undefined, undefined, /*shorten*/ true)
-			).toBe('siteRef equipRef')
 		})
 	}) // dictToDis()
 

@@ -367,27 +367,6 @@ export interface LocalizedCallback {
 	(pod: string, key: string): string | undefined
 }
 
-interface GetValueFunc {
-	(key: string): HVal | undefined
-}
-
-function makeDictGetValueFunc(dict: HDict): GetValueFunc {
-	return (key: string): HVal | undefined => dict.get(key)
-}
-
-function makeShortenedDictGetValueFunc(dict: HDict): GetValueFunc {
-	return (key: string): HVal | undefined => {
-		const value = dict.get(key)
-
-		// To short a display name, we skip any resolved Refs
-		// by the macro. Therefore `$equipRef $navName` really just becomes
-		// `$navName`.
-		return valueIsKind<HRef>(value, Kind.Ref)
-			? HStr.make('')
-			: value ?? undefined
-	}
-}
-
 /**
  * Return a display string from the dict (or function)...
  *
@@ -396,8 +375,12 @@ function makeShortenedDictGetValueFunc(dict: HDict): GetValueFunc {
  * 3. 'disKey' maps to qname locale key.
  * 4. 'name' tag.
  * 5. 'tag' tag.
+ * 6. 'navName' tag.
  * 6. 'id' tag.
  * 7. default
+ *
+ * If a short name is specified, resolving `disMacro` is given
+ * lower precedence.
  *
  * @see {@link HDict.toDis}
  * @see {@link macro}
@@ -406,9 +389,7 @@ function makeShortenedDictGetValueFunc(dict: HDict): GetValueFunc {
  * @param dict The dict to use.
  * @param def Optional default fallback value.
  * @param i18n Optional localization callback.
- * @param short Optional flag to shorten the display name when
- * processing a `disMacro` tag. This will automatically remove any
- * resolved `Ref` values from the macro.
+ * @param short Optional flag to shorten the display name.
  * @return The display string value.
  */
 export function dictToDis(
@@ -422,21 +403,16 @@ export function dictToDis(
 		return val.toString()
 	}
 
-	val = dict.get('disMacro')
-	if (isHVal(val)) {
-		const getValue: GetValueFunc = short
-			? makeShortenedDictGetValueFunc(dict)
-			: makeDictGetValueFunc(dict)
+	const runMacro = (val: HVal) =>
+		macro(val.toString(), (val) => dict.get(val), i18n)
 
-		let value = macro(val.toString(), getValue, i18n)
-
-		// If the shortened display name is empty then fallback
-		// to processing it with no shortening.
-		if (short && !value) {
-			value = macro(val.toString(), makeDictGetValueFunc(dict), i18n)
+	// If we're wanting a short display name then try other
+	// display names first.
+	if (!short) {
+		val = dict.get('disMacro')
+		if (isHVal(val)) {
+			return runMacro(val)
 		}
-
-		return value
 	}
 
 	val = dict.get('disKey')
@@ -459,6 +435,20 @@ export function dictToDis(
 	val = dict.get('tag')
 	if (isHVal(val)) {
 		return val.toString()
+	}
+
+	val = dict.get('navName')
+	if (isHVal(val)) {
+		return val.toString()
+	}
+
+	// If by this point we don't have a short display name
+	// then fallback to running the macro as a last resort.
+	if (short) {
+		val = dict.get('disMacro')
+		if (isHVal(val)) {
+			return runMacro(val)
+		}
 	}
 
 	val = dict.get('id')
@@ -490,7 +480,7 @@ export function dictToDis(
  */
 export function macro(
 	pattern: string,
-	getValue: GetValueFunc,
+	getValue: (key: string) => HVal | undefined,
 	i18n?: LocalizedCallback
 ): string {
 	const replacer = (match: string, key: string): string => {
