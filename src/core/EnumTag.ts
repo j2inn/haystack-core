@@ -73,8 +73,13 @@ export class EnumTag {
 			if (!falseName && !code) {
 				falseName = name
 			}
-			this.#nameToCodeMap.set(name, code)
-			this.#codeToNameMap.set(code, name)
+
+			if (!this.#nameToCodeMap.has(name)) {
+				this.#nameToCodeMap.set(name, code)
+			}
+			if (!this.#codeToNameMap.has(code)) {
+				this.#codeToNameMap.set(code, name)
+			}
 		}
 
 		if (typeof data === 'string' || valueIsKind<HStr>(data, Kind.Str)) {

@@ -79,7 +79,7 @@ describe('EnumTag', () => {
 			expect(new EnumTag(obj).encodeToObject()).toEqual({
 				a: [0],
 				b: [1],
-				c: [3, 2],
+				c: [2, 3],
 			})
 		})
 
@@ -149,7 +149,7 @@ describe('EnumTag', () => {
 
 			expect(enumTag.nameToCode('a')).toBe(-1)
 			expect(enumTag.nameToCode('x')).toBe(-1)
-			expect(enumTag.nameToCode('b')).toBe(10)
+			expect(enumTag.nameToCode('b')).toBe(9)
 		})
 	}) // #nameToCode()
 
@@ -281,11 +281,11 @@ describe('EnumTag', () => {
 					}),
 					new HDict({
 						name: 'b',
-						code: 10,
+						code: 9,
 					}),
 					new HDict({
 						name: 'b',
-						code: 9,
+						code: 10,
 					}),
 				]).toJSON()
 			)
