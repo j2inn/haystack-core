@@ -60,7 +60,9 @@ export class EnumTag {
 	 *
 	 * @param data A comma separated string of enumerations, enum grid or enum name to code object.
 	 */
-	constructor(data: string | HStr | HGrid | Record<string, number>) {
+	constructor(
+		data: string | HStr | HGrid | Record<string, number | number[]>
+	) {
 		let trueName: string | undefined
 		let falseName: string | undefined
 
@@ -95,8 +97,16 @@ export class EnumTag {
 			Object.keys(data).forEach((name) => {
 				const code = data[name]
 
-				if (typeof name === 'string' && typeof code === 'number') {
-					addEnumEntry(name, code)
+				if (typeof name === 'string') {
+					if (typeof code === 'number') {
+						addEnumEntry(name, code)
+					} else if (Array.isArray(code)) {
+						for (const c of code) {
+							if (typeof c === 'number') {
+								addEnumEntry(name, c)
+							}
+						}
+					}
 				}
 			})
 		}
@@ -166,6 +176,8 @@ export class EnumTag {
 	encodeToString(): string {
 		const values: string[] = []
 
+		// Please note, this doesn't encode everything. For instance,
+		// enumerations that share a common index.
 		for (const [name, code] of this.#nameToCodeMap) {
 			values[code] = name
 		}
@@ -179,16 +191,20 @@ export class EnumTag {
 	encodeToGrid(): HGrid {
 		const rows: HDict[] = []
 
-		for (const name of this.#nameToCodeMap.keys()) {
-			const code = this.nameToCode(name)
+		const obj = this.encodeToObject()
 
-			if (code !== undefined) {
-				rows.push(
-					new HDict({
-						name,
-						code,
-					})
-				)
+		for (const name of Object.keys(obj)) {
+			const codes = obj[name]
+
+			if (codes) {
+				for (const code of codes) {
+					rows.push(
+						new HDict({
+							name,
+							code,
+						})
+					)
+				}
 			}
 		}
 
@@ -198,14 +214,32 @@ export class EnumTag {
 	/**
 	 * @returns encodes the enumerations to an object.
 	 */
-	encodeToObject(): Record<string, number> {
-		const obj: Record<string, number> = {}
+	encodeToObject(): Record<string, number[]> {
+		const obj: Record<string, number[]> = {}
 
+		// Try name to code first.
 		for (const name of this.#nameToCodeMap.keys()) {
 			const code = this.nameToCode(name)
 
 			if (code !== undefined) {
-				obj[name] = code
+				obj[name] = [code]
+			}
+		}
+
+		// Try codes to name so we have everything.
+		for (const code of this.#codeToNameMap.keys()) {
+			const name = this.codeToName(code)
+
+			if (name !== undefined) {
+				let codes = obj[name]
+
+				if (!codes) {
+					obj[name] = codes = []
+				}
+
+				if (!codes.includes(code)) {
+					codes.push(code)
+				}
 			}
 		}
 

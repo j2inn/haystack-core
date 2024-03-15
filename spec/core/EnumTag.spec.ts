@@ -11,28 +11,47 @@ import { EnumTag } from '../../src/core/EnumTag'
 import { makeValue } from '../../src/core/util'
 
 describe('EnumTag', () => {
+	const duplicateNameGrid = HGrid.make([
+		new HDict({
+			name: 'a',
+			code: -1,
+		}),
+		new HDict({
+			name: 'x',
+			code: -1,
+		}),
+		new HDict({
+			name: 'b',
+			code: 9,
+		}),
+		new HDict({
+			name: 'b',
+			code: 10,
+		}),
+	])
+
 	describe('construction', () => {
 		it('creates an enum tag from a string', () => {
 			expect(new EnumTag('a,b,c').encodeToObject()).toEqual({
-				a: 0,
-				b: 1,
-				c: 2,
+				a: [0],
+				b: [1],
+				c: [2],
 			})
 		})
 
 		it('creates an enum tag from a haystack string', () => {
 			expect(new EnumTag(HStr.make('a,b,c')).encodeToObject()).toEqual({
-				a: 0,
-				b: 1,
-				c: 2,
+				a: [0],
+				b: [1],
+				c: [2],
 			})
 		})
 
 		it('creates an enum tag from a string with different indexes', () => {
 			expect(new EnumTag('a,,,b,,c,,,').encodeToObject()).toEqual({
-				a: 0,
-				b: 3,
-				c: 5,
+				a: [0],
+				b: [3],
+				c: [5],
 			})
 		})
 
@@ -44,9 +63,23 @@ describe('EnumTag', () => {
 			}
 
 			expect(new EnumTag(obj).encodeToObject()).toEqual({
+				a: [0],
+				b: [1],
+				c: [2],
+			})
+		})
+
+		it('creates an enum tag from an object with many codes', () => {
+			const obj = {
 				a: 0,
 				b: 1,
-				c: 2,
+				c: [2, 3],
+			}
+
+			expect(new EnumTag(obj).encodeToObject()).toEqual({
+				a: [0],
+				b: [1],
+				c: [3, 2],
 			})
 		})
 
@@ -67,40 +100,10 @@ describe('EnumTag', () => {
 			])
 
 			expect(new EnumTag(grid).encodeToObject()).toEqual({
-				a: 1,
-				b: 2,
-				c: 3,
+				a: [1],
+				b: [2],
+				c: [3],
 			})
-		})
-
-		it('decode values from a dict with differing codes', () => {
-			const grid = HGrid.make([
-				new HDict({
-					name: 'a',
-					code: -1,
-				}),
-				new HDict({
-					name: 'x',
-					code: -1,
-				}),
-				new HDict({
-					name: 'b',
-					code: 9,
-				}),
-				new HDict({
-					name: 'b',
-					code: 10,
-				}),
-			])
-
-			const enumTag = new EnumTag(grid)
-
-			expect(enumTag.nameToCode('a')).toBe(-1)
-			expect(enumTag.nameToCode('x')).toBe(-1)
-			expect(enumTag.nameToCode('b')).toBe(10)
-
-			expect(enumTag.codeToName(9)).toBe('b')
-			expect(enumTag.codeToName(10)).toBe('b')
 		})
 
 		it('creates an enum tag from a grid with no codes', () => {
@@ -117,9 +120,9 @@ describe('EnumTag', () => {
 			])
 
 			expect(new EnumTag(grid).encodeToObject()).toEqual({
-				a: 0,
-				b: 1,
-				c: 2,
+				a: [0],
+				b: [1],
+				c: [2],
 			})
 		})
 	}) // construction
@@ -140,6 +143,14 @@ describe('EnumTag', () => {
 		it('returns undefined when a name cannot be found', () => {
 			expect(new EnumTag('a,b,c').nameToCode('notFound')).toBe(undefined)
 		})
+
+		it('handles duplicate names', () => {
+			const enumTag = new EnumTag(duplicateNameGrid)
+
+			expect(enumTag.nameToCode('a')).toBe(-1)
+			expect(enumTag.nameToCode('x')).toBe(-1)
+			expect(enumTag.nameToCode('b')).toBe(10)
+		})
 	}) // #nameToCode()
 
 	describe('#codeToName()', () => {
@@ -157,6 +168,13 @@ describe('EnumTag', () => {
 
 		it('returns undefined for a code that cannot be found', () => {
 			expect(new EnumTag('a,b,c').codeToName(99)).toBe(undefined)
+		})
+
+		it('handles duplicate names', () => {
+			const enumTag = new EnumTag(duplicateNameGrid)
+
+			expect(enumTag.codeToName(9)).toBe('b')
+			expect(enumTag.codeToName(10)).toBe('b')
 		})
 	}) // #codeToName()
 
@@ -206,6 +224,14 @@ describe('EnumTag', () => {
 		it('returns the names', () => {
 			expect(new EnumTag('a,b,c').names).toEqual(['a', 'b', 'c'])
 		})
+
+		it('returns the names for duplicates', () => {
+			expect(new EnumTag(duplicateNameGrid).names).toEqual([
+				'a',
+				'x',
+				'b',
+			])
+		})
 	}) // #names
 
 	describe('#encodeToString()', () => {
@@ -239,14 +265,39 @@ describe('EnumTag', () => {
 				]).toJSON()
 			)
 		})
+
+		it('encodes enumerations with duplicate names to a grid', () => {
+			expect(
+				new EnumTag(duplicateNameGrid).encodeToGrid().toJSON()
+			).toEqual(
+				HGrid.make([
+					new HDict({
+						name: 'a',
+						code: -1,
+					}),
+					new HDict({
+						name: 'x',
+						code: -1,
+					}),
+					new HDict({
+						name: 'b',
+						code: 10,
+					}),
+					new HDict({
+						name: 'b',
+						code: 9,
+					}),
+				]).toJSON()
+			)
+		})
 	}) // #encodeToGrid()
 
 	describe('#encodeToObject()', () => {
 		it('encode the enumerations to an object', () => {
 			expect(new EnumTag('a,b,c').encodeToObject()).toEqual({
-				a: 0,
-				b: 1,
-				c: 2,
+				a: [0],
+				b: [1],
+				c: [2],
 			})
 		})
 	}) // #encodeToObject()
