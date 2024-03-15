@@ -65,19 +65,14 @@ export class EnumTag {
 		let falseName: string | undefined
 
 		const addEnumEntry = (name: string, code: number): void => {
-			if (
-				!this.#nameToCodeMap.has(name) &&
-				!this.#codeToNameMap.has(code)
-			) {
-				if (!trueName && code) {
-					trueName = name
-				}
-				if (!falseName && !code) {
-					falseName = name
-				}
-				this.#nameToCodeMap.set(name, code)
-				this.#codeToNameMap.set(code, name)
+			if (!trueName && code) {
+				trueName = name
 			}
+			if (!falseName && !code) {
+				falseName = name
+			}
+			this.#nameToCodeMap.set(name, code)
+			this.#codeToNameMap.set(code, name)
 		}
 
 		if (typeof data === 'string' || valueIsKind<HStr>(data, Kind.Str)) {

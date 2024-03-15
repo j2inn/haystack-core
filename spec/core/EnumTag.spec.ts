@@ -73,6 +73,36 @@ describe('EnumTag', () => {
 			})
 		})
 
+		it('decode values from a dict with differing codes', () => {
+			const grid = HGrid.make([
+				new HDict({
+					name: 'a',
+					code: -1,
+				}),
+				new HDict({
+					name: 'x',
+					code: -1,
+				}),
+				new HDict({
+					name: 'b',
+					code: 9,
+				}),
+				new HDict({
+					name: 'b',
+					code: 10,
+				}),
+			])
+
+			const enumTag = new EnumTag(grid)
+
+			expect(enumTag.nameToCode('a')).toBe(-1)
+			expect(enumTag.nameToCode('x')).toBe(-1)
+			expect(enumTag.nameToCode('b')).toBe(10)
+
+			expect(enumTag.codeToName(9)).toBe('b')
+			expect(enumTag.codeToName(10)).toBe('b')
+		})
+
 		it('creates an enum tag from a grid with no codes', () => {
 			const grid = new HGrid([
 				new HDict({
