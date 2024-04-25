@@ -64,15 +64,15 @@ describe('memoize', () => {
 					'increment'
 				)?.get
 
-				const obj = memoize()(getter, {
+				const func = memoize()(getter, {
 					name: 'increment',
 					kind: 'getter',
 				} as unknown as ClassMethodDecoratorContext) as any
 
 				const util = new MathUtil()
 
-				expect(obj.get.call(util)).toBe(1)
-				expect(obj.get.call(util)).toBe(1)
+				expect(func.call(util)).toBe(1)
+				expect(func.call(util)).toBe(1)
 			})
 		}) // TC39
 	}) // getters
@@ -123,18 +123,18 @@ describe('memoize', () => {
 					}
 				}
 
-				const obj = memoize()(StrUtil.prototype.add, {
+				const func = memoize()(StrUtil.prototype.add, {
 					name: 'add',
 					kind: 'method',
 				} as ClassMethodDecoratorContext) as any
 
 				const util = new StrUtil()
 
-				let result = obj.value.call(util, 1, 2)
+				let result = func.call(util, 1, 2)
 				expect(result).toBe(3)
 				expect(util.counter).toBe(1)
 
-				result = obj.value.call(util, 1, 2)
+				result = func.call(util, 1, 2)
 				expect(result).toBe(3)
 				expect(util.counter).toBe(1)
 			})

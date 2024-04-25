@@ -206,10 +206,11 @@ export function memoize(): (
 		target: any,
 		context: string | ClassMemberDecoratorContext,
 		descriptor?: PropertyDescriptor
-	): PropertyDescriptor {
+	): any {
 		let propKey = ''
 		let get: any
 		let value: any
+		let tc39 = false
 
 		if (typeof context === 'string') {
 			propKey = context
@@ -220,6 +221,8 @@ export function memoize(): (
 			context?.name &&
 			typeof context.name === 'string'
 		) {
+			tc39 = true
+
 			// Support newer decorator standard (TC39). Found some issues
 			// with certain build processes where we need to dynamically
 			// support both standards.
@@ -236,27 +239,35 @@ export function memoize(): (
 		}
 
 		if (typeof get === 'function') {
-			return {
-				get(): any {
-					const cache = getCache(this)
+			const getter = function (this: any): any {
+				const cache = getCache(this)
 
-					return cache.has(propKey)
-						? cache.get(propKey)
-						: cache.set(propKey, get.call(this))
-				},
+				return cache.has(propKey)
+					? cache.get(propKey)
+					: cache.set(propKey, get.call(this))
 			}
+
+			return tc39
+				? getter
+				: {
+						get: getter,
+				  }
 		} else if (typeof value === 'function') {
-			return {
-				value(...args: any[]): any {
-					const cache = getCache(this)
+			const method = function (this: any, ...args: any[]): any {
+				const cache = getCache(this)
 
-					const key = JSON.stringify({ propKey, args })
+				const key = JSON.stringify({ propKey, args })
 
-					return cache.has(key)
-						? cache.get(key)
-						: cache.set(key, value.apply(this, args))
-				},
+				return cache.has(key)
+					? cache.get(key)
+					: cache.set(key, value.apply(this, args))
 			}
+
+			return tc39
+				? method
+				: {
+						value: method,
+				  }
 		} else {
 			throw new Error('Only class methods and getters can be memoized')
 		}
