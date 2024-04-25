@@ -4,6 +4,8 @@
 
 import { memoize, getMemoizeCache, MemoizeCache } from '../../src/util/memoize'
 
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+
 describe('memoize', () => {
 	describe('memoize class getter methods', () => {
 		class MathUtil {
@@ -46,6 +48,33 @@ describe('memoize', () => {
 
 			expect(util.increment).toBe(2)
 		})
+
+		describe('memoize using TC39 decorators', () => {
+			it('returns the same value', () => {
+				class MathUtil {
+					index = 0
+
+					get increment(): number {
+						return ++this.index
+					}
+				}
+
+				const getter = Object.getOwnPropertyDescriptor(
+					MathUtil.prototype,
+					'increment'
+				)?.get
+
+				const obj = memoize()(getter, {
+					name: 'increment',
+					kind: 'getter',
+				} as unknown as ClassMethodDecoratorContext) as any
+
+				const util = new MathUtil()
+
+				expect(obj.get.call(util)).toBe(1)
+				expect(obj.get.call(util)).toBe(1)
+			})
+		}) // TC39
 	}) // getters
 
 	describe('memoize class methods', () => {
@@ -82,6 +111,34 @@ describe('memoize', () => {
 			expect(util.add(2, 2)).toBe(4)
 			expect(util.counter).toBe(2)
 		})
+
+		describe('memoize using TC39 decorators', () => {
+			it('adds two numbers together and increments the counter', () => {
+				class StrUtil {
+					counter = 0
+
+					add(a: number, b: number): number {
+						this.counter++
+						return a + b
+					}
+				}
+
+				const obj = memoize()(StrUtil.prototype.add, {
+					name: 'add',
+					kind: 'method',
+				} as ClassMethodDecoratorContext) as any
+
+				const util = new StrUtil()
+
+				let result = obj.value.call(util, 1, 2)
+				expect(result).toBe(3)
+				expect(util.counter).toBe(1)
+
+				result = obj.value.call(util, 1, 2)
+				expect(result).toBe(3)
+				expect(util.counter).toBe(1)
+			})
+		}) // TC39
 	}) // methods
 
 	describe('memoize class setter methods', () => {

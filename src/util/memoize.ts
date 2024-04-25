@@ -199,26 +199,50 @@ export function getMemoizeCache(obj: any): MemoizeCache | undefined {
  */
 export function memoize(): (
 	target: any,
-	propertyKey: string,
-	descriptor: PropertyDescriptor
+	context: string | ClassMemberDecoratorContext,
+	descriptor?: PropertyDescriptor
 ) => void {
 	return function (
 		target: any,
-		propertyKey: string,
-		descriptor: PropertyDescriptor
+		context: string | ClassMemberDecoratorContext,
+		descriptor?: PropertyDescriptor
 	): PropertyDescriptor {
-		// The original getter.
-		const get = descriptor?.get
-		const value = descriptor?.value
+		let propKey = ''
+		let get: any
+		let value: any
+
+		if (typeof context === 'string') {
+			propKey = context
+			get = descriptor?.get
+			value = descriptor?.value
+		} else if (
+			context?.kind &&
+			context?.name &&
+			typeof context.name === 'string'
+		) {
+			// Support newer decorator standard (TC39). Found some issues
+			// with certain build processes where we need to dynamically
+			// support both standards.
+			// https://github.com/tc39/proposal-decorators
+			propKey = context.name
+			switch (context.kind) {
+				case 'getter':
+					get = target
+					break
+				case 'method':
+					value = target
+					break
+			}
+		}
 
 		if (typeof get === 'function') {
 			return {
 				get(): any {
 					const cache = getCache(this)
 
-					return cache.has(propertyKey)
-						? cache.get(propertyKey)
-						: cache.set(propertyKey, get.call(this))
+					return cache.has(propKey)
+						? cache.get(propKey)
+						: cache.set(propKey, get.call(this))
 				},
 			}
 		} else if (typeof value === 'function') {
@@ -226,7 +250,7 @@ export function memoize(): (
 				value(...args: any[]): any {
 					const cache = getCache(this)
 
-					const key = JSON.stringify({ propertyKey, args })
+					const key = JSON.stringify({ propKey, args })
 
 					return cache.has(key)
 						? cache.get(key)
