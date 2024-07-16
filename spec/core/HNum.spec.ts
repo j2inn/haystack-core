@@ -7,6 +7,7 @@ import {
 	POSITIVE_INFINITY_ZINC,
 	NEGATIVE_INFINITY_ZINC,
 	NOT_A_NUMBER_ZINC,
+	DEFAULT_PRECISION,
 } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/HGrid'
@@ -174,6 +175,63 @@ describe('HNum', function (): void {
 
 		it('returns NaN for not a number', function (): void {
 			expect(HNum.make(Number.NaN).toString()).toBe('NaN')
+		})
+
+		it('returns the number with U.S. locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'en-us')).toBe(
+				'1,000.5'
+			)
+		})
+
+		it('returns the number with Great Britain locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'en-gb')).toBe(
+				'1,000.5'
+			)
+		})
+
+		it('returns the number with Italys locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'it-it')).toBe(
+				'1.000,5'
+			)
+		})
+
+		it('returns the number with Frances locale formatting', () => {
+			// Handle escaped space.
+			const formattedNumber = HNum.make(1000.5)
+				.toString(DEFAULT_PRECISION, 'fr-fr')
+				.replace(/\s/g, ' ')
+
+			expect(formattedNumber).toBe('1 000,5')
+		})
+
+		it('returns the number with Germanys locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'de-de')).toBe(
+				'1.000,5'
+			)
+		})
+
+		it('returns the number with Spains locale formatting', () => {
+			expect(
+				HNum.make(10000.5).toString(DEFAULT_PRECISION, 'es-es')
+			).toBe('10.000,5')
+		})
+
+		it('returns the number with Netherlands locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'nl-nl')).toBe(
+				'1.000,5'
+			)
+		})
+
+		it('returns the number with Netherlands (Belgium) locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'nl-be')).toBe(
+				'1.000,5'
+			)
+		})
+
+		it('returns the number with Chinas locale formatting', () => {
+			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'zh-cn')).toBe(
+				'1,000.5'
+			)
 		})
 	}) // #toString()
 

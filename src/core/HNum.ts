@@ -208,7 +208,10 @@ export class HNum implements HVal {
 	 * @param precision Optional precision. Default is 1 decimal place.
 	 * @returns A string representation of the value.
 	 */
-	public toString(precision: number = DEFAULT_PRECISION): string {
+	public toString(
+		precision: number = DEFAULT_PRECISION,
+		locale?: string
+	): string {
 		if (this.value === Number.POSITIVE_INFINITY) {
 			return POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
@@ -216,7 +219,7 @@ export class HNum implements HVal {
 		} else if (isNaN(this.value)) {
 			return NOT_A_NUMBER_ZINC
 		} else {
-			const value = this.value.toLocaleString(/*locale*/ undefined, {
+			const value = this.value.toLocaleString(locale, {
 				style: 'decimal',
 				maximumFractionDigits: precision,
 				minimumFractionDigits: precision,
