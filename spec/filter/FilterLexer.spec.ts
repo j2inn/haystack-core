@@ -734,7 +734,7 @@ describe('FilterLexer', function (): void {
 
 				const value = lexer.nextToken()
 				expect(value.type).toBe(TokenType.number)
-				expect(value.toString()).toBe('1.0')
+				expect(value.toString()).toBe('1')
 
 				expect(TokenType[lexer.nextToken().type]).toBe(
 					TokenType[TokenType.rightBrace]

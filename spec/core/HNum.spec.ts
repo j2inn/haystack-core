@@ -141,6 +141,14 @@ describe('HNum', function (): void {
 	}) //#unit()
 
 	describe('#toString()', function (): void {
+		it('returns the integer encoded as a string', function (): void {
+			expect(HNum.make(34).toString()).toBe('34')
+		})
+
+		it('returns the integer encoded as a string with precision', function (): void {
+			expect(HNum.make(34).toString(4)).toBe('34')
+		})
+
 		it('returns the number encoded as a string', function (): void {
 			expect(HNum.make(34.6).toString()).toBe('34.6')
 		})

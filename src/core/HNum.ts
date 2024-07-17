@@ -206,6 +206,7 @@ export class HNum implements HVal {
 	 * Return the number as a readable string.
 	 *
 	 * @param precision Optional precision. Default is 1 decimal place.
+	 * @param locale Optional locale (i.e. en-US).
 	 * @returns A string representation of the value.
 	 */
 	public toString(
@@ -222,7 +223,7 @@ export class HNum implements HVal {
 			const value = this.value.toLocaleString(locale, {
 				style: 'decimal',
 				maximumFractionDigits: precision,
-				minimumFractionDigits: precision,
+				minimumFractionDigits: 0,
 			})
 
 			return this.#unitSymbol ? value + this.#unitSymbol : value
