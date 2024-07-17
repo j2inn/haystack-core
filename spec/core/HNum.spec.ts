@@ -186,60 +186,84 @@ describe('HNum', function (): void {
 		})
 
 		it('returns the number with U.S. locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'en-us')).toBe(
-				'1,000.5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'en-us',
+				})
+			).toBe('1,000.5')
 		})
 
 		it('returns the number with Great Britain locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'en-gb')).toBe(
-				'1,000.5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'en-gb',
+				})
+			).toBe('1,000.5')
 		})
 
 		it('returns the number with Italys locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'it-it')).toBe(
-				'1.000,5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'it-it',
+				})
+			).toBe('1.000,5')
 		})
 
 		it('returns the number with Frances locale formatting', () => {
 			// Handle escaped space.
 			const formattedNumber = HNum.make(1000.5)
-				.toString(DEFAULT_PRECISION, 'fr-fr')
+				.toString({ precision: DEFAULT_PRECISION, locale: 'fr-fr' })
 				.replace(/\s/g, ' ')
 
 			expect(formattedNumber).toBe('1 000,5')
 		})
 
 		it('returns the number with Germanys locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'de-de')).toBe(
-				'1.000,5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'de-de',
+				})
+			).toBe('1.000,5')
 		})
 
 		it('returns the number with Spains locale formatting', () => {
 			expect(
-				HNum.make(10000.5).toString(DEFAULT_PRECISION, 'es-es')
+				HNum.make(10000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'es-es',
+				})
 			).toBe('10.000,5')
 		})
 
 		it('returns the number with Netherlands locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'nl-nl')).toBe(
-				'1.000,5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'nl-nl',
+				})
+			).toBe('1.000,5')
 		})
 
 		it('returns the number with Netherlands (Belgium) locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'nl-be')).toBe(
-				'1.000,5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'nl-be',
+				})
+			).toBe('1.000,5')
 		})
 
 		it('returns the number with Chinas locale formatting', () => {
-			expect(HNum.make(1000.5).toString(DEFAULT_PRECISION, 'zh-cn')).toBe(
-				'1,000.5'
-			)
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'zh-cn',
+				})
+			).toBe('1,000.5')
 		})
 	}) // #toString()
 
