@@ -181,7 +181,7 @@ describe('HDict', function (): void {
 		it('returns a human readable string', function (): void {
 			dict.set('nullVal', null)
 			expect(dict.toString()).toBe(
-				'{foo: foovalue, goo: 99.0, soo, nullVal: null}'
+				'{foo: foovalue, goo: 99, soo, nullVal: null}'
 			)
 		})
 	}) // #toString()

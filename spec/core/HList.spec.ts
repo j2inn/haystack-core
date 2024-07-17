@@ -570,7 +570,7 @@ describe('HList', function (): void {
 	describe('#toString()', function (): void {
 		it('returns a human readable string', function (): void {
 			list.push(null)
-			expect(list.toString()).toBe('[foovalue, 99.0, ✔, null]')
+			expect(list.toString()).toBe('[foovalue, 99, ✔, null]')
 		})
 	}) // #toString()
 

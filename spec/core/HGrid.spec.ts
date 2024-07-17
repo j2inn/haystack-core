@@ -469,7 +469,7 @@ type,val
 			it('returns a human readable string', function (): void {
 				grid.add({ test: 'me', number: 4, boo: true })
 				expect(grid.toString()).toEqual(
-					'[{foo: foo}, {test: me, number: 4.0, boo: true}]'
+					'[{foo: foo}, {test: me, number: 4, boo: true}]'
 				)
 			})
 		}) // #toString()

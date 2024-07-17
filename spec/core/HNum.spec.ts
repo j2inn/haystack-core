@@ -7,6 +7,7 @@ import {
 	POSITIVE_INFINITY_ZINC,
 	NEGATIVE_INFINITY_ZINC,
 	NOT_A_NUMBER_ZINC,
+	DEFAULT_PRECISION,
 } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/HGrid'
@@ -140,6 +141,14 @@ describe('HNum', function (): void {
 	}) //#unit()
 
 	describe('#toString()', function (): void {
+		it('returns the integer encoded as a string', function (): void {
+			expect(HNum.make(34).toString()).toBe('34')
+		})
+
+		it('returns the integer encoded as a string with precision', function (): void {
+			expect(HNum.make(34).toString(4)).toBe('34')
+		})
+
 		it('returns the number encoded as a string', function (): void {
 			expect(HNum.make(34.6).toString()).toBe('34.6')
 		})
@@ -174,6 +183,87 @@ describe('HNum', function (): void {
 
 		it('returns NaN for not a number', function (): void {
 			expect(HNum.make(Number.NaN).toString()).toBe('NaN')
+		})
+
+		it('returns the number with U.S. locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'en-us',
+				})
+			).toBe('1,000.5')
+		})
+
+		it('returns the number with Great Britain locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'en-gb',
+				})
+			).toBe('1,000.5')
+		})
+
+		it('returns the number with Italys locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'it-it',
+				})
+			).toBe('1.000,5')
+		})
+
+		it('returns the number with Frances locale formatting', () => {
+			// Handle escaped space.
+			const formattedNumber = HNum.make(1000.5)
+				.toString({ precision: DEFAULT_PRECISION, locale: 'fr-fr' })
+				.replace(/\s/g, ' ')
+
+			expect(formattedNumber).toBe('1 000,5')
+		})
+
+		it('returns the number with Germanys locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'de-de',
+				})
+			).toBe('1.000,5')
+		})
+
+		it('returns the number with Spains locale formatting', () => {
+			expect(
+				HNum.make(10000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'es-es',
+				})
+			).toBe('10.000,5')
+		})
+
+		it('returns the number with Netherlands locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'nl-nl',
+				})
+			).toBe('1.000,5')
+		})
+
+		it('returns the number with Netherlands (Belgium) locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'nl-be',
+				})
+			).toBe('1.000,5')
+		})
+
+		it('returns the number with Chinas locale formatting', () => {
+			expect(
+				HNum.make(1000.5).toString({
+					precision: DEFAULT_PRECISION,
+					locale: 'zh-cn',
+				})
+			).toBe('1,000.5')
 		})
 	}) // #toString()
 

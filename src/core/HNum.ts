@@ -33,6 +33,21 @@ export const NEGATIVE_INFINITY_ZINC = '-INF'
 export const NOT_A_NUMBER_ZINC = 'NaN'
 
 /**
+ * Number formatting options.
+ */
+export interface NumberFormatOptions {
+	/**
+	 * The precision to use.
+	 */
+	precision: number
+
+	/**
+	 * The locale to use (i.e en-US).
+	 */
+	locale?: string
+}
+
+/**
  * Haystack number with units.
  */
 export class HNum implements HVal {
@@ -205,10 +220,21 @@ export class HNum implements HVal {
 	/**
 	 * Return the number as a readable string.
 	 *
-	 * @param precision Optional precision. Default is 1 decimal place.
+	 * @param params The number format options. Can also be a number for precision
+	 * to support backwards compatibility.
 	 * @returns A string representation of the value.
 	 */
-	public toString(precision: number = DEFAULT_PRECISION): string {
+	public toString(options?: NumberFormatOptions | number): string {
+		let precision = DEFAULT_PRECISION
+		let locale: string | undefined
+
+		if (typeof options === 'number') {
+			precision = options
+		} else if (options) {
+			precision = options.precision
+			locale = options.locale
+		}
+
 		if (this.value === Number.POSITIVE_INFINITY) {
 			return POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
@@ -216,10 +242,10 @@ export class HNum implements HVal {
 		} else if (isNaN(this.value)) {
 			return NOT_A_NUMBER_ZINC
 		} else {
-			const value = this.value.toLocaleString(/*locale*/ undefined, {
+			const value = this.value.toLocaleString(locale, {
 				style: 'decimal',
 				maximumFractionDigits: precision,
-				minimumFractionDigits: precision,
+				minimumFractionDigits: 0,
 			})
 
 			return this.#unitSymbol ? value + this.#unitSymbol : value
