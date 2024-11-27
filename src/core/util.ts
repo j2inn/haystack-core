@@ -577,7 +577,7 @@ export function addContainmentRefs(
 		namespace.findContainmentRef(namespace.reflect(parent).type.defName)
 			?.defName ?? ''
 
-	if (refName && !dict.has(refName)) {
+	if (refName && !dict.has(refName) && parent.has('id')) {
 		dict.set(refName, parent.get('id') as HRef)
 	}
 
