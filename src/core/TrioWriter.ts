@@ -105,7 +105,7 @@ export class TrioWriter {
 					trio += item.text ? `// ${item.text}` : '//'
 					break
 				case ItemType.Dict:
-					trio += this.toTrioDict(item.dict || HDict.make())
+					trio += TrioWriter.toTrioDict(item.dict || HDict.make())
 					trio += '\n---'
 					break
 			}
@@ -120,7 +120,7 @@ export class TrioWriter {
 	 * @param dict The dict to encode.
 	 * @returns The trio encoded dict.
 	 */
-	private toTrioDict(dict: HDict): string {
+	public static toTrioDict(dict: HDict): string {
 		return dict.keys
 			.map((name: string): string => {
 				const value = dict.get(name)

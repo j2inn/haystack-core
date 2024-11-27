@@ -43,6 +43,7 @@ import { HSymbol } from './HSymbol'
 import { HList } from './HList'
 import { HGrid } from './HGrid'
 import { Scanner } from '../util/Scanner'
+import { HNamespace } from './HNamespace'
 
 /**
  * Make the haystack value based on the supplied data.
@@ -525,4 +526,60 @@ export function disKey(
 ): string | undefined {
 	const [, pod, disKey] = /^([^:]+)::([^:]+)$/.exec(key.trim()) ?? []
 	return pod && disKey ? i18n(pod, disKey) : undefined
+}
+
+/**
+ * Add the containment refs to a record.
+ *
+ * This ensures all the containment refs are set up accordingly to the project haystack
+ * specification as well as additional refs that are defined in the defs namespace.
+ *
+ * - https://project-haystack.org/doc/docHaystack/Equips
+ * - https://project-haystack.org/doc/docHaystack/Points
+ * - https://project-haystack.org/doc/docHaystack/Spaces
+ *
+ * @param dict The new record.
+ * @param parent The parent record.
+ * @param namespace The defs namespace.
+ * @returns The primary containment ref name.
+ */
+export function addContainmentRefs(
+	dict: HDict,
+	parent: HDict,
+	namespace: HNamespace
+): string {
+	const siteRef = parent.has('site')
+		? parent.get<HRef>('id')
+		: parent.get<HRef>('siteRef')
+
+	if (siteRef) {
+		dict.set('siteRef', siteRef)
+	}
+
+	const equipRef = parent.has('equip')
+		? parent.get<HRef>('id')
+		: parent.get<HRef>('equipRef')
+
+	if (equipRef) {
+		dict.set('equipRef', equipRef)
+	}
+
+	const spaceRef =
+		parent.has('space') || parent.has('floor')
+			? parent.get<HRef>('id')
+			: parent.get<HRef>('spaceRef')
+
+	if (spaceRef) {
+		dict.set('spaceRef', spaceRef)
+	}
+
+	const refName =
+		namespace.findContainmentRef(namespace.reflect(parent).type.defName)
+			?.defName ?? ''
+
+	if (refName && !dict.has(refName) && parent.has('id')) {
+		dict.set(refName, parent.get('id') as HRef)
+	}
+
+	return refName
 }

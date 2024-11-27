@@ -1647,4 +1647,30 @@ export class HNamespace {
 
 		return dict
 	}
+
+	/**
+	 * Return all the containment refs available.
+	 *
+	 * @returns A list of all the containment refs.
+	 */
+	@memoize()
+	public getContainmentRefs(): HDict[] {
+		return this.allSubTypesOf('ref').filter((def) => def.has('containedBy'))
+	}
+
+	/**
+	 * Return the first containment ref def that matches the specified name.
+	 *
+	 * Please note, this will filter out any defs that are marked as deprecated.
+	 *
+	 * @param name The name of the def to search the ref for.
+	 * @returns The containment ref def.
+	 */
+	public findContainmentRef(name: string | HSymbol): HDict | undefined {
+		return this.getContainmentRefs().find(
+			(def) =>
+				!def.has('deprecated') &&
+				this.fits(name, def.get('containedBy') as HSymbol)
+		)
+	}
 }

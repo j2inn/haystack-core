@@ -129,6 +129,19 @@ describe('TrioWriter', function (): void {
 		})
 	}) // #toTrio()
 
+	describe('.toTrioDict()', function (): void {
+		it('writes a dict file to trio', function (): void {
+			const trio = TrioWriter.toTrioDict(makeDict())
+
+			expect(trio).toBe(
+				'marker\n' +
+					'str: "A string"\n' +
+					'list: [T]\n' +
+					'dict: {foo:"bar"}'
+			)
+		})
+	}) // .toTrioDict()
+
 	describe('#toString()', function (): void {
 		it('calls #toTrio()', function (): void {
 			jest.spyOn(writer, 'toTrio').mockReturnValue('')
