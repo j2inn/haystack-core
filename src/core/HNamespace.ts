@@ -1659,18 +1659,18 @@ export class HNamespace {
 	}
 
 	/**
-	 * Return all the containment refs for the specified def.
+	 * Return the first containment ref def that matches the specified name.
 	 *
 	 * Please note, this will filter out any defs that are marked as deprecated.
 	 *
 	 * @param name The name of the def to search the ref for.
-	 * @returns The containment defs.
+	 * @returns The containment ref def.
 	 */
-	public findContainmentRefs(name: string | HSymbol): HDict[] {
+	public findContainmentRef(name: string | HSymbol): HDict | undefined {
 		return this.getContainmentRefs().filter(
 			(def) =>
 				!def.has('deprecated') &&
 				this.fits(name, def.get('containedBy') as HSymbol)
-		)
+		)[0]
 	}
 }

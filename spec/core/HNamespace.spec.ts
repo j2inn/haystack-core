@@ -1938,11 +1938,9 @@ describe('HNamespace', function (): void {
 		})
 	}) // #getContainmentRefs()
 
-	describe('#findContainmentRefs()', function (): void {
-		it('returns a list of all the containment refs for a def', function (): void {
-			expect(
-				defs.findContainmentRefs('site').map((def) => def.defName)
-			).toEqual(['siteRef'])
+	describe('#findContainmentRef()', function (): void {
+		it('returns the containment ref for a def', function (): void {
+			expect(defs.findContainmentRef('site')?.defName).toEqual('siteRef')
 		})
-	}) // #findContainmentRefs()
+	}) // #findContainmentRef()
 })

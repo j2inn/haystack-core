@@ -573,13 +573,13 @@ export function addContainmentRefs(
 		dict.set('spaceRef', spaceRef)
 	}
 
-	const refName = namespace.findContainmentRefs(
-		namespace.reflect(parent).type.defName
-	)?.[0]?.defName
+	const refName =
+		namespace.findContainmentRef(namespace.reflect(parent).type.defName)
+			?.defName ?? ''
 
 	if (refName && !dict.has(refName)) {
 		dict.set(refName, parent.get('id') as HRef)
 	}
 
-	return refName ?? ''
+	return refName
 }
