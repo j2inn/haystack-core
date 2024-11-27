@@ -1926,4 +1926,23 @@ describe('HNamespace', function (): void {
 			expect(tags).toEqual(['vav', 'equip'])
 		})
 	}) // #newDict()
+
+	describe('#getContainmentRefs()', function (): void {
+		it('returns a list of all the containment refs for a dict', function (): void {
+			expect(
+				defs
+					.getContainmentRefs()
+					.map((def) => def.defName)
+					.sort()
+			).toEqual(['equipRef', 'siteRef', 'spaceRef'])
+		})
+	}) // #getContainmentRefs()
+
+	describe('#findContainmentRefs()', function (): void {
+		it('returns a list of all the containment refs for a def', function (): void {
+			expect(
+				defs.findContainmentRefs('site').map((def) => def.defName)
+			).toEqual(['siteRef'])
+		})
+	}) // #findContainmentRefs()
 })

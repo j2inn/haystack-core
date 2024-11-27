@@ -12,6 +12,7 @@ import {
 	disKey,
 	makeDefaultValue,
 	toKind,
+	addContainmentRefs,
 } from '../../src/core/util'
 import { Kind } from '../../src/core/Kind'
 import { HBool } from '../../src/core/HBool'
@@ -32,6 +33,9 @@ import { HDict } from '../../src/core/HDict'
 import { HVal } from '../../src/core/HVal'
 import { HNa } from '../../src/core/HNa'
 import { HGrid } from '../../src/core/HGrid'
+import { HNamespace } from '../../src/core/HNamespace'
+import { ZincReader } from '../../src/core/ZincReader'
+import { readFile } from './file'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
@@ -763,4 +767,78 @@ describe('util', function (): void {
 			expect(disKey('pod:key', i18n)).toBeUndefined()
 		})
 	}) // disKey()
+
+	describe('addContainmentRefs()', () => {
+		let defs: HNamespace
+
+		beforeAll(() => {
+			const zinc = readFile('./defsWithFeatures.zinc')
+			const grid = ZincReader.readValue(zinc) as HGrid
+			defs = new HNamespace(grid)
+		})
+
+		it('adds a siteRef to a floor', () => {
+			const dict = new HDict()
+
+			const refName = addContainmentRefs(
+				dict,
+				new HDict({
+					id: HRef.make('site'),
+					site: HMarker.make(),
+				}),
+				defs
+			)
+
+			expect(refName).toBe('siteRef')
+
+			expect(dict.toJSON()).toEqual({
+				siteRef: { _kind: Kind.Ref, val: 'site' },
+			})
+		})
+
+		it('adds a siteRef and an equipRef to a floor', () => {
+			const dict = new HDict()
+
+			const refName = addContainmentRefs(
+				dict,
+				new HDict({
+					id: HRef.make('equip'),
+					siteRef: HRef.make('site'),
+					equip: HMarker.make(),
+				}),
+				defs
+			)
+
+			expect(refName).toBe('equipRef')
+
+			expect(dict.toJSON()).toEqual({
+				siteRef: { _kind: Kind.Ref, val: 'site' },
+				equipRef: { _kind: Kind.Ref, val: 'equip' },
+			})
+		})
+
+		it('adds a siteRef, equipRef and a spaceRef to a floor', () => {
+			const dict = new HDict()
+
+			const refName = addContainmentRefs(
+				dict,
+				new HDict({
+					id: HRef.make('floor'),
+					siteRef: HRef.make('site'),
+					equipRef: HRef.make('equip'),
+					space: HMarker.make(),
+					floor: HMarker.make(),
+				}),
+				defs
+			)
+
+			expect(refName).toBe('spaceRef')
+
+			expect(dict.toJSON()).toEqual({
+				siteRef: { _kind: Kind.Ref, val: 'site' },
+				equipRef: { _kind: Kind.Ref, val: 'equip' },
+				spaceRef: { _kind: Kind.Ref, val: 'floor' },
+			})
+		})
+	}) // addContainmentRefs()
 })
