@@ -1667,10 +1667,10 @@ export class HNamespace {
 	 * @returns The containment ref def.
 	 */
 	public findContainmentRef(name: string | HSymbol): HDict | undefined {
-		return this.getContainmentRefs().filter(
+		return this.getContainmentRefs().find(
 			(def) =>
 				!def.has('deprecated') &&
 				this.fits(name, def.get('containedBy') as HSymbol)
-		)[0]
+		)
 	}
 }
