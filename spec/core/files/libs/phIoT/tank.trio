@@ -9,7 +9,6 @@
 --------------------------------------------------------------------------
 def: ^tank
 is: ^equip
-stores: ^substance
 wikipedia: `https://en.wikipedia.org/wiki/Storage_tank`
 childrenFlatten: [^substance]
 doc: "Tank used to store a substance for temporary holding"
@@ -18,5 +17,11 @@ children: [
   {temp sensor point},
   {pressure sensor point},
   ]
+--------------------------------------------------------------------------
+def: ^tankSubstance
+is: ^choice
+of: ^substance
+tagOn: ^tank
+doc: "Substance stored by a tank"
 --------------------------------------------------------------------------
 

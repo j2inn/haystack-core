@@ -5,6 +5,8 @@
 // History:
 //   22 Feb 2011  Brian Frank  Creation
 //    9 Jan 2018  Brian Frank  New design
+//   26 Jun 2024  Rick Jennings  Updates from proposal in forum topic 1109
+//   11 Jul 2024  Rick Jennings  Updates from EVSE WG 982
 //
 
 --------------------------------------------------------------------------
@@ -29,6 +31,10 @@ def: ^blowdown
 is: ^marker
 doc: "Removal from container or pipe"
 --------------------------------------------------------------------------
+def: ^cable
+is: ^equip
+doc: "An assembly of one or more insulated conductors."
+--------------------------------------------------------------------------
 def: ^centrifugal
 is: ^marker
 wikipedia: `https://en.wikipedia.org/wiki/Centrifugal_compressor`
@@ -38,9 +44,21 @@ def: ^cold
 is: ^marker
 doc: "Having low degree of heat"
 --------------------------------------------------------------------------
+def: ^compressor
+is: ^marker
+doc:
+  Device for mechanically increasing the pressure of a gas or refrigerant
+  vapor by reducing its volume.
+--------------------------------------------------------------------------
 def: ^condenser
 is: ^marker
 doc: "Device or related to process of condensation"
+--------------------------------------------------------------------------
+def: ^conditioning
+is: ^marker
+doc:
+  Related to cleaning, heating, cooling, humidifying, dehumidifying,
+  ventilating or circulating  air. 
 --------------------------------------------------------------------------
 def: ^controls
 is: ^marker
@@ -83,9 +101,20 @@ def: ^demand
 is: ^marker
 doc: "Rate required for a process."
 --------------------------------------------------------------------------
+def: ^design
+is: ^marker
+doc:
+  Data related to intended design and operating conditions.  This
+  includes sizing and other data specified by design engineers and
+  engineered drawings.  Also see `rated`.
+--------------------------------------------------------------------------
 def: ^dessicantDehumidifier
 is: ^marker
 doc: "Decreases humidity from air using a substance which absorbs moisture."
+--------------------------------------------------------------------------
+def: ^dispenser
+is: ^marker
+doc: "Equipment that releases a specific amount of a substance."
 --------------------------------------------------------------------------
 def: ^diverting
 is: ^marker
@@ -149,7 +178,10 @@ doc:
 --------------------------------------------------------------------------
 def: ^ground
 is: ^marker
-doc: "Related to the surface of the earth"
+doc:
+  Related to the surface of the earth.  Used to indicate electrical
+  current being measured on an electrical ground conductor when applied to
+  a point entity that has the `elec` and `current` tags.
 --------------------------------------------------------------------------
 def: ^heat
 is: ^marker
@@ -160,6 +192,15 @@ doc:
 def: ^heatingOnly
 is: ^marker
 doc: "Equipment without cooling"
+--------------------------------------------------------------------------
+def: ^heatPump
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Heat_pump`
+doc:
+  Equipment that employs a vapor compression cycle with a reversing
+  valve to provide heating or cooling. For vapor compression heating
+  without a reversing valve, such as for a heat pump water heater,
+  see `dxHeating` which should be used.
 --------------------------------------------------------------------------
 def: ^heatWheel
 is: ^marker
@@ -227,6 +268,12 @@ def: ^makeup
 is: ^marker
 doc: "Restore something missed or lost"
 --------------------------------------------------------------------------
+def: ^mech
+is: ^marker
+doc:
+  Associated with a machine or its mechanical force, torque, power, or energy.
+  This is often opposed to `elec` electrical energy.
+--------------------------------------------------------------------------
 def: ^mixing
 is: ^marker
 doc:
@@ -247,6 +294,27 @@ def: ^parallel
 is: ^marker
 doc: "Circuit with multiple paths of flow"
 --------------------------------------------------------------------------
+def: ^port
+is: ^marker
+doc: "A gateway or opening used to transfer a substance."
+--------------------------------------------------------------------------
+def: ^powerConverter
+is: ^marker
+doc:
+  Converts one electrical waveform to another using power electronic
+  circuitry.  Involves the use of one or more power modules.
+
+  May convert:
+   - `ac` to `dc`
+   - `ac` to `ac`
+   - `dc` to `dc`
+   - `dc` to `ac`
+
+  Note:  An AC/AC power converter performs the same task as a power
+  transformer but using power electronics.  Similarly, a DC/DC power
+  converter transforms an input DC voltage to an output DC voltage at
+  another level.
+--------------------------------------------------------------------------
 def: ^purge
 is: ^marker
 doc:
@@ -254,13 +322,19 @@ doc:
   Most commonly it indicates purging water or air by using a filter or by
   letting out a certain amount of the substance at a high flow rate.
 --------------------------------------------------------------------------
+def: ^rated
+is: ^marker
+doc:
+  Data specified by a manufacturer or rating organization.  Typically this
+  information is from the equipment data plate or cut sheet.  Also see `design`.
+--------------------------------------------------------------------------
 def: ^reactive
 is: ^marker
 doc: "Relating to reactance"
 --------------------------------------------------------------------------
 def: ^reheat
 is: ^marker
-doc: "Command point for `reheats` process"
+doc: "Command point for reheating process"
 --------------------------------------------------------------------------
 def: ^reciprocal
 is: ^marker
@@ -289,6 +363,13 @@ doc:
 def: ^series
 is: ^marker
 doc: "Circuit with single path of flow"
+--------------------------------------------------------------------------
+def: ^serviceFactor
+is: ^marker
+doc:
+  Ratio of the maximum continuous output capacity at which a machine or
+  system may operate without damage to the machine or system’s nominal
+  output capacity.
 --------------------------------------------------------------------------
 def: ^stage
 is: ^int
@@ -339,4 +420,3 @@ def: ^zone
 is: ^marker
 doc: "Related to spaces from a system perspective"
 --------------------------------------------------------------------------
-

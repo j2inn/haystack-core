@@ -9,7 +9,6 @@
 --------------------------------------------------------------------------
 def: ^coolingTower
 is: [^equip, ^elec-input]
-cools: ^condenser-water
 wikipedia: `https://en.wikipedia.org/wiki/Cooling_tower`
 doc: "Equipment to transfer waste heat into the atmosphere"
 children: [
@@ -26,19 +25,15 @@ children: [
 --------------------------------------------------------------------------
 def: ^condenserLoop
 is: ^choice
-of: ^condenserLoopType
-doc: "Open or closed loop for condenser working fluid"
---------------------------------------------------------------------------
-def: ^condenserLoopType
-is: ^marker
+tagOn: ^chilled-water-plant
 doc: "Open or closed loop for condenser working fluid"
 --------------------------------------------------------------------------
 def: ^condenserOpenLoop
-is: ^condenserLoopType
+is: ^condenserLoop
 doc: "Uses working fluid itself for evaporation into the atmosphere"
 --------------------------------------------------------------------------
 def: ^condenserClosedLoop
-is: ^condenserLoopType
+is: ^condenserLoop
 doc: "Working fluid is kept separate from fluid used for heat transfer into the atmosphere"
 --------------------------------------------------------------------------
 

@@ -5,6 +5,8 @@
 // History:
 //   22 Feb 2011  Brian Frank  Creation
 //   28 Dec 2018  Brian Frank  New design
+//   26 Jun 2024  Rick Jennings  Updates from proposal in forum topic 1109
+//   11 Jul 2024  Rick Jennings  Updates from EVSE WG 982
 //
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,14 +36,30 @@ doc: "Direct current electricity"
 --------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
-// Phase
+// Electrical quantity measurement locations
 //////////////////////////////////////////////////////////////////////////
 
 --------------------------------------------------------------------------
 def: ^phase
 is: ^str
 wikipedia: `https://en.wikipedia.org/wiki/Three-phase_electric_power`
-doc: "Phase measurement in a three-phase electrical system"
+doc:
+  Phase measurement in a three-phase electrical system.  Phase is
+  deprecated in favor of more explicit tags:
+  - `lineVolt`
+  - `phaseVolt`
+  - `lineCurrent`
+  - `phaseCurrent`
+  - `linePower`
+  - `phasePower`
+  - `linePf`
+  - `phasePf`
+  - `lineEnergy`
+  - `phaseEnergy`
+  - `lineAvg`
+  - `phaseAvg`
+  - `neutral`
+  - `ground`
 enum:
   - A: line-to-neutral measurement
   - B: line-to-neutral measurement
@@ -50,6 +68,163 @@ enum:
   - BC: line-to-line measurement
   - CA: line-to-line measurement
   - N: neutral current
+--------------------------------------------------------------------------
+def: ^elecLine
+is: ^str
+doc:
+  Single-phase line measurement of an electric quantity in an AC electric
+  power system.
+enum:
+  - L1: line 1 measurement
+  - L2: line 2 measurement
+  - L3: line 3 measurement
+--------------------------------------------------------------------------
+def: ^elecLineToLine
+is: ^str
+doc:
+  Single-phase electric quantity measured line-to-line in an AC electric
+  power system.
+enum:
+  - L1-L2: line 1 to line 2 measurement
+  - L2-L3: line 2 to line 3 measurement
+  - L3-L1: line 3 to line 1 measurement
+--------------------------------------------------------------------------
+def: ^elecLineToNeutral
+is: ^str
+doc:
+  Single-phase electric quantity measured line-to-neutral in an AC
+  electric power system.
+enum:
+  - L1-N: line 1 to neutral measurement
+  - L2-N: line 2 to neutral measurement
+  - L3-N: line 3 to neutral measurement
+--------------------------------------------------------------------------
+def: ^lineVolt
+is: ^elecLineToLine
+doc:
+  Single-phase voltage measured line-to-line in an AC electric power
+  system.  May also be referred to as a line voltage measurement.
+--------------------------------------------------------------------------
+def: ^phaseVolt
+is: ^elecLineToNeutral
+doc:
+  Single-phase voltage measured line-to-neutral in an AC electric power
+  system.  May also be referred to as a phase voltage measurement.
+--------------------------------------------------------------------------
+def: ^lineCurrent
+is: ^elecLine
+doc:
+  Single-phase line current measured in an AC electric power system.
+--------------------------------------------------------------------------
+def: ^phaseCurrent
+is: ^elecLineToLine
+doc:
+  Single-phase current measured line-to-line in an AC electric power
+  system.  May also be referred to as a phase current measurement.
+--------------------------------------------------------------------------
+def: ^linePower
+is: ^elecLineToLine
+doc:
+  Single-phase power measured line-to-line in an AC electric power system.
+  May also be referred to as a line power measurement.
+--------------------------------------------------------------------------
+def: ^phasePower
+is: ^elecLine
+doc:
+  Single-phase power measured line-to-neutral in an AC electric power
+  system.  May also be referred to as a phase power measurement.
+--------------------------------------------------------------------------
+def: ^linePf
+is: ^elecLineToLine
+doc:
+  Single-phase power factor measured line-to-line in an AC electric power
+  system.
+--------------------------------------------------------------------------
+def: ^phasePf
+is: ^elecLine
+doc:
+  Single-phase power factor measured line-to-neutral in an AC electric
+  power system.  Neutral might not be referenced, but implied.
+--------------------------------------------------------------------------
+def: ^lineEnergy
+is: ^elecLineToLine
+doc:
+  Single-phase energy measured line-to-line in an AC electric power
+  system.
+--------------------------------------------------------------------------
+def: ^phaseEnergy
+is: ^elecLine
+doc:
+  Single-phase energy measured line-to-neutral in an AC electric power
+  system.  Neutral might not be referenced, but implied.
+--------------------------------------------------------------------------
+def: ^lineAvg
+is: ^marker
+doc:
+  Line average of single-phase electrical quantity measurements in an AC
+  electric power system.
+
+  When applied to a point entity that has the `elec` and `volt` tags,
+  indicates the average of all measurements defined in `lineVolt`.
+
+  When applied to a point entity that has the `elec` and `current` tags,
+  indicates the average of all measurements defined in `lineCurrent`.
+
+  When applied to a point entity that has the `elec` and `power` tags,
+  indicates the average of all measurements defined in `linePower`.
+
+  When applied to a point entity that has the `elec` and `pf` tags,
+  indicates the average of all measurements defined in `linePf`.
+
+  When applied to a point entity that has the `elec` and `energy` tags,
+  indicates the average of all measurements defined in `lineEnergy`.
+--------------------------------------------------------------------------
+def: ^phaseAvg
+is: ^marker
+doc:
+  Phase average of single-phase electrical quantity measurements in an AC
+  electric power system.
+
+  When applied to a point entity that has the `elec` and `volt` tags,
+  indicates the average of all measurements defined in `phaseVolt`.
+
+  When applied to a point entity that has the `elec` and `current` tags,
+  indicates the average of all measurements defined in `phaseCurrent`.
+
+  When applied to a point entity that has the `elec` and `power` tags,
+  indicates the average of all measurements defined in `phasePower`.
+
+  When applied to a point entity that has the `elec` and `pf` tags,
+  indicates the average of all measurements defined in `phasePf`.
+
+  When applied to a point entity that has the `elec` and `energy` tags,
+  indicates the average of all measurements defined in `phaseEnergy`.
+--------------------------------------------------------------------------
+def: ^neutral
+is: ^marker
+doc:
+  Used to indicate electrical current being measured on an electrical
+  neutral conductor when applied to a point entity that has the `elec` and
+  `current` tags.
+--------------------------------------------------------------------------
+def: ^phaseCount
+is: ^choice
+tagOn: [^ac-elec-meter, ^motor]
+doc:
+  Number of phases for an AC electrical power system or
+  connected equipment: single-phase or three-phase.
+--------------------------------------------------------------------------
+def: ^singlePhase
+is: ^phaseCount
+doc:
+  Single-phase AC electrical power. Power is provided by a
+  single AC voltage source.
+--------------------------------------------------------------------------
+def: ^threePhase
+is: ^phaseCount
+doc:
+  Three-phase AC electrical power. Power is provided by three AC voltage
+  sources, each separated from the others by a 120-degree phase angle.
 --------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,8 +242,32 @@ is: ^quantity
 quantityOf: ^ac-elec
 prefUnit: ["pf"]
 doc:
-  Electrical power factor; unitless number between 0.0 and 1.0 which is ratio
-  of active to apparent power in an AC power system.
+  Electric power factor; which is the ratio of active power to apparent
+  power in an AC electric power system.  Measured with numbers in the range
+  of -1.0 to 1.0 or 0.0 to 1.0 with a special unit called 'pf', which is
+  effectively unitless and used for data visualization.
+--------------------------------------------------------------------------
+def: ^pfScope
+is: ^choice
+doc: "Power factor scope"
+--------------------------------------------------------------------------
+def: ^pfTrue
+is: ^pfScope
+doc:
+  True power factor, which includes effects of harmonic distortion.
+  Power factor is assumed to be true power factor when `pfScope` is not
+  defined.  However, it is recommended to specify a scope for power
+  factor to help avoid misinterpretation of data.
+--------------------------------------------------------------------------
+def: ^pfDisplacement
+is: ^pfScope
+doc:
+  Displacement power factor, which excludes effects of harmonic
+  distortion.
+--------------------------------------------------------------------------
+def: ^pfDistortion
+is: ^pfScope
+doc: "Distortion power factor"
 --------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,13 +342,13 @@ def: ^current-imbalance
 is: ^quantity
 quantityOf: ^ac-elec
 prefUnit: ["%"]
-doc: "Current phase imbalance in a multiphase AC system"
+doc: "AC current imbalance"
 --------------------------------------------------------------------------
 def: ^current-thd
 is: ^quantity
 quantityOf: ^ac-elec
 prefUnit: ["%"]
-doc: "Total harmonic current distortion"
+doc: "Total harmonic distortion (THD) of current"
 --------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
@@ -173,6 +372,27 @@ def: ^volt-imbalance
 is: ^quantity
 quantityOf: ^ac-elec
 prefUnit: ["%"]
-doc: "AC voltage phase imbalance"
+doc: "AC voltage imbalance"
+--------------------------------------------------------------------------
+def: ^volt-thd
+is: ^quantity
+quantityOf: ^ac-elec
+prefUnit: ["%"]
+doc: "Total harmonic distortion (THD) of voltage"
 --------------------------------------------------------------------------
 
+//////////////////////////////////////////////////////////////////////////
+// Other
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^stateOfCharge
+is: ^quantity
+wikipedia: `https://en.wikipedia.org/wiki/State_of_charge`
+quantityOf: ^dc-elec
+prefUnit: ["%"]
+doc:
+  State of charge (SoC) of an electric `battery`.  Uses a percentage in
+  the range of 0% to 100%, where no charge is indicated as 0% and full
+  charge is indicated as 100%.
+--------------------------------------------------------------------------

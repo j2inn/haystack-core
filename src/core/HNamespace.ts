@@ -732,7 +732,7 @@ export class HNamespace {
 		}
 		// If the assocation isn't computed then just get the associated defs.
 		// For instance, this will return here if the association is 'tagOn'.
-		if (!assocDef.has('computed')) {
+		if (!assocDef.has('computedFromReciprocal')) {
 			return (
 				this.byName(parent)
 					?.get<HList<HSymbol | null>>(String(association))

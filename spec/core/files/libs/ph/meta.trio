@@ -37,17 +37,17 @@ doc:
   See [Protos chapter]`docHaystack::Protos` for more details.
 --------------------------------------------------------------------------
 def: ^choice
-is: ^symbol
+is: ^marker
 docTaxonomy
 doc:
   Choice specifies an exclusive marker selection.
   See [Choices]`docHaystack::Choices` chapter.
 --------------------------------------------------------------------------
-def: ^computed
+def: ^computedFromReciprocal
 is: ^marker
 doc:
-  Indicates a definition which is computed.  Computed defs cannot be
-  used as tags themselves.
+  Indicates a relationship that is computed from its reciprocal.
+  Computed defs cannot be used as tags themselves.
 --------------------------------------------------------------------------
 def: ^def
 is: ^symbol
@@ -107,16 +107,17 @@ doc:
   under the [taxonomies]`docHaystack::Docs#taxonomies` section.
 --------------------------------------------------------------------------
 def: ^enum
-is: [^str, ^dict]
+is: ^val
 tagOn: ^def
 doc:
   Defines an eumeration of string key names.  The range may also be applied
-  to format a Bool ordered as "false,true".  The string value of this tag
-  may be formatted in one of four ways:
+  to format a Bool ordered as "false,true".  The value of this tag may be
+  formatted in one of five ways:
    - dict of dicts keyed by name and Dict values for meta such as 'doc' tag
    - comma separated names on one line
    - names separated by a "\n" newline character
    - markdown unordered list formatted as a series of "- name: description\n"
+   - ref to a Xeto 'sys::Enum' spec
 
   Enum names *should* follow valid tag naming rules (start with lowercase
   ASCII letter and contain only ASCII letters and numbers).  However in
@@ -129,7 +130,9 @@ doc: "Feature namespace of definitions formatted as 'feature:name'"
 --------------------------------------------------------------------------
 def: ^lib
 is: ^feature
-doc: "Library module of symbolic definitions"
+doc:
+  Library module of symbolic definitions.
+  See `docHaystack::Namespaces#libs` chapter.
 --------------------------------------------------------------------------
 def: ^depends
 is: ^list
@@ -184,6 +187,4 @@ is: ^uri
 tagOn: ^def
 doc: "Hyperlink to the subject's page on Wikipedia"
 --------------------------------------------------------------------------
-
-
 

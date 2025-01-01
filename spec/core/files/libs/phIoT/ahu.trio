@@ -10,17 +10,6 @@
 --------------------------------------------------------------------------
 def: ^airHandlingEquip
 is: [^equip, ^air-output, ^elec-input]
-airVolumeAdjustability: ^airVolumeAdjustabilityType
-ahuZoneDelivery: ^ahuZoneDeliveryType
-cools: ^air
-coolingProcess: ^coolingProcessType
-dehumidifies: ^air
-ductConfig: ^ductConfigType
-ductDeck: ^ductDeckType
-heats: ^air
-heatingProcess: ^heatingProcessType
-humidifies: ^air
-ventilates: ^air
 wikipedia: `https://en.wikipedia.org/wiki/Air_handler`
 doc:
   HVAC equipment that conditions and delivers air via one or more fans.
@@ -92,16 +81,6 @@ doc:
   or ventilating the air. Unit heaters are examples of FCUs.
   See `docHaystack::AHUs` chapter.
 --------------------------------------------------------------------------
-def: ^heatPump
-is: ^airHandlingEquip
-coolingProcess: ^dxCooling
-heatingProcess: ^dxHeating
-wikipedia: `https://en.wikipedia.org/wiki/Heat_pump`
-doc:
-  Heat pump: An air handling equipment which employs a vapor compression
-  cycle with a reversing valve to provide heating or cooling to a space.
-  See `docHaystack::AHUs` chapter.
---------------------------------------------------------------------------
 def: ^unitVent
 is: ^fcu
 doc:
@@ -122,21 +101,17 @@ doc:
 --------------------------------------------------------------------------
 def: ^airVolumeAdjustability
 is: ^choice
-of: ^airVolumeAdjustabilityType
-doc: "Ability of air handling equip to adjust volume of air flow"
---------------------------------------------------------------------------
-def: ^airVolumeAdjustabilityType
-is: ^marker
+tagOn: ^airHandlingEquip
 doc: "Ability of air handling equip to adjust volume of air flow"
 --------------------------------------------------------------------------
 def: ^constantAirVolume
-is: ^airVolumeAdjustabilityType
+is: ^airVolumeAdjustability
 doc:
   Delivers a constant volume of air flow.  Typically this means
   equipment with a single speed fan.
 --------------------------------------------------------------------------
 def: ^variableAirVolume
-is: ^airVolumeAdjustabilityType
+is: ^airVolumeAdjustability
 doc:
   Delivers a variable volume of air flow.   Most variable volume systems
   are powered by a VFD fan. However other techniques such as inlet vanes
@@ -150,27 +125,23 @@ doc:
 --------------------------------------------------------------------------
 def: ^ahuZoneDelivery
 is: ^choice
-of: ^ahuZoneDeliveryType
-doc: "AHU delivery method of conditioned air to the zone"
---------------------------------------------------------------------------
-def: ^ahuZoneDeliveryType
-is: ^marker
+tagOn: ^airHandlingEquip
 doc: "AHU delivery method of conditioned air to the zone"
 --------------------------------------------------------------------------
 def: ^directZone
-is: ^ahuZoneDeliveryType
+is: ^ahuZoneDelivery
 doc: "AHU supplies air directly to the zone"
 --------------------------------------------------------------------------
 def: ^vavZone
-is: ^ahuZoneDeliveryType
+is: ^ahuZoneDelivery
 doc: "AHU supplies air to VAV terminal units"
 --------------------------------------------------------------------------
 def: ^chilledBeamZone
-is: ^ahuZoneDeliveryType
+is: ^ahuZoneDelivery
 doc: "AHU supplies air to chilled beam terminal units"
 --------------------------------------------------------------------------
 def: ^multiZone
-is: ^ahuZoneDeliveryType
+is: ^ahuZoneDelivery
 doc: "AHU discharge air is split into a duct per zone"
 --------------------------------------------------------------------------
 
@@ -181,7 +152,6 @@ doc: "AHU discharge air is split into a duct per zone"
 --------------------------------------------------------------------------
 def: ^humidifier-equip
 is: ^equip
-humidifies: ^air
 wikipedia: `https://en.wikipedia.org/wiki/Humidifier`
 doc: "Equipment which adds moisture to air to increase humidity"
 childrenFlatten: []

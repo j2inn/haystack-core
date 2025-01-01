@@ -19,8 +19,6 @@ children: [
 --------------------------------------------------------------------------
 def: ^chilled-water-plant
 is: [^plant, ^chilled-water-output]
-produces: ^chilled-water
-condenserLoop: ^condenserLoopType
 doc:
   Plant used to generate chilled water for cooling.
   See `docHaystack::Plants`.
@@ -36,6 +34,7 @@ children: [
   {chilled water delta flow point},
   {chilled water delta pressure point},
   {chilled water delta temp point},
+  {chilled water mixing valve cmd point},
 
   {condenser water bypass pipe equip},
   {condenser water delta flow sensor point},
@@ -45,7 +44,6 @@ children: [
 --------------------------------------------------------------------------
 def: ^hot-water-plant
 is: [^plant, ^hot-water-output]
-produces: ^hot-water
 doc:
   Plant used to generate hot water for heating.
   See `docHaystack::Plants`.
@@ -69,7 +67,6 @@ children: [
 --------------------------------------------------------------------------
 def: ^steam-plant
 is: [^plant, ^steam-output]
-produces: ^steam
 doc:
   Plant used to generate steam for heating.
   See `docHaystack::Plants`.

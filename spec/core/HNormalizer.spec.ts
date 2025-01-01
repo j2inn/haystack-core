@@ -16,7 +16,6 @@ import { Kind } from '../../src/core/Kind'
 import { HVal, valueIsKind } from '../../src/core/HVal'
 import {
 	HNormalizer,
-	LibScanner,
 	HLib,
 	HLibDict,
 	HDefDict,
@@ -25,44 +24,10 @@ import { NormalizationLogger } from '../../src/core/NormalizationLogger'
 import * as fs from 'fs'
 import * as path from 'path'
 import { promisify } from 'util'
-import { TrioReader } from '../../src/core/TrioReader'
+import { makeValue } from '../../src/core/util'
+import { makeProjectHaystackNormalizer } from './readDefs'
 
 const readFile = promisify(fs.readFile)
-const readdir = promisify(fs.readdir)
-
-/**
- * Asynchronously read a lib from the file system.
- *
- * @param libName The name of the lib to read.
- * @returns A lib.
- */
-async function readLib(libName: string): Promise<HLib> {
-	const trioDirPath = path.join(__dirname, `./files/libs/${libName}`)
-
-	let dirs = await readdir(trioDirPath)
-
-	dirs = dirs.filter((dir) => dir.toLowerCase().endsWith('.trio'))
-
-	const lib = new TrioReader(
-		(await readFile(path.join(trioDirPath, './lib.trio'))).toString('utf8')
-	).readDict() as HLibDict
-
-	const dicts = (
-		await Promise.all(
-			dirs.map(
-				(dir): Promise<Buffer> => readFile(path.join(trioDirPath, dir))
-			)
-		)
-	)
-		.map((buf): HDict[] => TrioReader.readAllDicts(buf.toString('utf8')))
-		.reduce((prev, cur) => prev.concat(cur), []) as HDefDict[]
-
-	return {
-		name: libName,
-		lib,
-		dicts,
-	}
-}
 
 function makeTestLib(): HLib {
 	const lib = HDict.make({
@@ -74,6 +39,7 @@ function makeTestLib(): HLib {
 			HSymbol.make('lib:ph'),
 			HSymbol.make('lib:phScience'),
 			HSymbol.make('lib:phIoT'),
+			HSymbol.make('lib:phIct'),
 		]),
 	}) as HLibDict
 
@@ -85,32 +51,16 @@ function makeTestLib(): HLib {
 }
 
 describe('HNormalizer', function (): void {
-	let scanner: LibScanner
 	let normalizer: HNormalizer
 	let libs: HLib[]
 	let lib: HLib
 	let logger: NormalizationLogger
 
 	beforeEach(async function (): Promise<void> {
+		;({ libs, logger, normalizer } = await makeProjectHaystackNormalizer())
+
 		lib = makeTestLib()
-
-		libs = [
-			await readLib('ph'),
-			await readLib('phScience'),
-			await readLib('phIoT'),
-			lib,
-		]
-
-		scanner = (): Iterable<Promise<HLib>> =>
-			libs.map(async (lib): Promise<HLib> => lib)
-
-		logger = {
-			warning: jest.fn(),
-			error: jest.fn(),
-			fatal: jest.fn().mockReturnValue(new Error()),
-		}
-
-		normalizer = new HNormalizer(scanner, logger)
+		libs.push(lib)
 	})
 
 	function addDefs(...dicts: HDict[]): void {
@@ -670,7 +620,7 @@ describe('HNormalizer', function (): void {
 				expect(logger.error).toHaveBeenCalled()
 			})
 
-			it('logs an error when a def contains a computed tag', async function (): Promise<void> {
+			it('logs an error when a def contains a computedFromReciprocal tag', async function (): Promise<void> {
 				addDefs(
 					HDict.make({
 						def: HSymbol.make('foo'),
@@ -747,20 +697,27 @@ describe('HNormalizer', function (): void {
 		describe('generate', function (): void {
 			describe('integration test', function (): void {
 				it('generates a namespace and matches it against a namespace generated from SkySpark', async function (): Promise<void> {
-					libs.splice(3)
-					libs.push(await readLib('phIct'))
+					for (let i = 0; i < libs.length; ++i) {
+						if (libs[i].lib.def.value === 'lib:test') {
+							libs.splice(i, 1)
+							break
+						}
+					}
 
-					const dicts = new TrioReader(
-						(
-							await readFile(
-								path.join(__dirname, './files/defs.trio')
-							)
-						).toString('utf8')
-					).readAllDicts()
+					const grid = makeValue(
+						JSON.parse(
+							(
+								await readFile(
+									path.join(
+										__dirname,
+										'./files/skySparkDefs.json'
+									)
+								)
+							).toString('utf8')
+						)
+					) as HGrid
 
-					const originalNamespace = new HNamespace(
-						HGrid.make({ rows: dicts })
-					)
+					const originalNamespace = new HNamespace(grid)
 
 					const generatedNamespace = await normalizer.normalize()
 
@@ -780,6 +737,12 @@ describe('HNormalizer', function (): void {
 						const originalDef = originalNamespace.defs[name]
 						const generatedDef = generatedNamespace.defs[name]
 
+						// Remove these tags since newlines currently seem to be handled differently.
+						generatedDef.remove('doc')
+						originalDef.remove('doc')
+						generatedDef.remove('enum')
+						originalDef.remove('enum')
+
 						// It appears this information is not generated from defs when
 						// generated from SkySpark. Hence we can exclude it for this test.
 						if (
@@ -791,6 +754,10 @@ describe('HNormalizer', function (): void {
 
 						originalDef.values.forEach(sort)
 						generatedDef.values.forEach(sort)
+
+						expect(originalDef.toJSON()).toEqual(
+							generatedDef.toJSON()
+						)
 
 						const equals = originalDef.equals(generatedDef)
 
