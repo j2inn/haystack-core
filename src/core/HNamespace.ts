@@ -591,14 +591,8 @@ export class HNamespace {
 	 * @returns The choices for a def.
 	 */
 	public choicesFor(name: string | HSymbol): HDict[] {
-		let choices: HDict[] | undefined
-
-		const ofVal = this.byName(name)?.get('of')
-		if (ofVal) {
-			choices = this.subTypesOf(String(ofVal))
-		}
-
-		return choices ?? []
+		// Look for all the direct sub-types of a choice to find the actual choices.
+		return this.isChoice(name) ? this.subTypesOf(name) : []
 	}
 
 	/**
@@ -611,12 +605,19 @@ export class HNamespace {
 		const defs = this.defs
 
 		for (const name in defs) {
-			if (this.byName(name)?.has('of')) {
+			if (this.isChoice(name)) {
 				choices[name] = this.choicesFor(name)
 			}
 		}
 
 		return choices
+	}
+
+	private isChoice(name: string | HSymbol): boolean {
+		// Look for a direct super-type of choice for the choice def.
+		return !!this.superTypesOf(name).find(
+			(superType) => superType.defName === 'choice'
+		)
 	}
 
 	/**

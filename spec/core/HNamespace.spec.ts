@@ -382,17 +382,19 @@ describe('HNamespace', function (): void {
 		})
 	}) // #allSuperTypesOf()
 
-	xdescribe('#choicesFor()', function (): void {
+	describe('#choicesFor()', function (): void {
 		it('returns the choices for a def using a name', function (): void {
 			expect(defs.choicesFor('ductSection')).toEqual(
 				defs.byAllNames(
 					'discharge',
-					'exhaust',
-					'flue',
+					'economizer',
 					'inlet',
+					'flue',
+					'exhaust',
 					'mixed',
 					'outside',
-					'return'
+					'return',
+					'ventilation'
 				)
 			)
 		})
@@ -401,12 +403,14 @@ describe('HNamespace', function (): void {
 			expect(defs.choicesFor(HSymbol.make('ductSection'))).toEqual(
 				defs.byAllNames(
 					'discharge',
-					'exhaust',
-					'flue',
+					'economizer',
 					'inlet',
+					'flue',
+					'exhaust',
 					'mixed',
 					'outside',
-					'return'
+					'return',
+					'ventilation'
 				)
 			)
 		})
@@ -428,61 +432,32 @@ describe('HNamespace', function (): void {
 		})
 	}) // #choicesFor()
 
-	xdescribe('#choices', function (): void {
+	describe('#choices', function (): void {
 		it('returns all the choices in the namespace', function (): void {
 			expect(Object.keys(defs.choices)).toEqual([
-				'ahuRef',
+				'airVolumeAdjustability',
 				'ahuZoneDelivery',
-				'association',
-				'calendarRef',
-				'childrenFlatten',
-				'chilledWaterPlantRef',
+				'atesDesign',
 				'chillerMechanism',
-				'connTuningRef',
-				'conveys',
-				'coolingProcess',
-				'cools',
-				'dehumidifies',
-				'depends',
-				'ductConfig',
-				'ductDeck',
-				'ductSection',
-				'equipFunction',
-				'equipRef',
-				'haystackConnRef',
-				'heatingProcess',
-				'heats',
-				'hotWaterPlantRef',
-				'humidifies',
-				'is',
-				'linter',
-				'meterScope',
-				'moves',
+				'pipeFluid',
 				'pipeSection',
-				'pointFunction',
-				'pointQuantity',
+				'plantLoop',
+				'ductSection',
+				'ductDeck',
+				'ductConfig',
+				'condenserLoop',
+				'phaseCount',
+				'pfScope',
+				'meterScope',
 				'pointSubject',
-				'prefUnit',
-				'processUses',
-				'produces',
-				'quantities',
-				'quantityOf',
-				'regulates',
-				'reheats',
-				'ruleType',
-				'scheduleRef',
-				'siteRef',
-				'spaceRef',
-				'steamPlantRef',
-				'stores',
-				'submeterOf',
-				'tagOn',
-				'tags',
-				'traitOn',
-				'vavAirCircuit',
+				'pointQuantity',
+				'pointFunction',
+				'heatingProcess',
+				'coolingProcess',
+				'simScenario',
+				'tankSubstance',
 				'vavModulation',
-				'ventilates',
-				'weatherRef',
+				'vavAirCircuit',
 			])
 		})
 	}) // #choices
