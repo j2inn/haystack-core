@@ -18,6 +18,7 @@ import '../matchers'
 import '../customMatchers'
 import { makeProjectHaystackNormalizer } from '../readDefs'
 import { valueIsKind } from '../../src/core/HVal'
+import * as fs from 'fs'
 
 describe('HNamespace', function (): void {
 	let defs: HNamespace
@@ -27,6 +28,8 @@ describe('HNamespace', function (): void {
 		const { normalizer } = await makeProjectHaystackNormalizer()
 		const ns = await normalizer.normalize()
 		origGrid = ns.grid
+
+		fs.writeFileSync('./myGrid.zinc', origGrid.toZinc())
 	})
 
 	beforeEach(() => {
@@ -432,30 +435,30 @@ describe('HNamespace', function (): void {
 
 	describe('#choices', function (): void {
 		it('returns all the choices in the namespace', function (): void {
-			expect(Object.keys(defs.choices)).toEqual([
-				'airVolumeAdjustability',
+			expect(Object.keys(defs.choices).sort()).toEqual([
 				'ahuZoneDelivery',
+				'airVolumeAdjustability',
 				'atesDesign',
 				'chillerMechanism',
+				'condenserLoop',
+				'coolingProcess',
+				'ductConfig',
+				'ductDeck',
+				'ductSection',
+				'heatingProcess',
+				'meterScope',
+				'pfScope',
+				'phaseCount',
 				'pipeFluid',
 				'pipeSection',
 				'plantLoop',
-				'ductSection',
-				'ductDeck',
-				'ductConfig',
-				'condenserLoop',
-				'phaseCount',
-				'pfScope',
-				'meterScope',
-				'pointSubject',
-				'pointQuantity',
 				'pointFunction',
-				'heatingProcess',
-				'coolingProcess',
+				'pointQuantity',
+				'pointSubject',
 				'simScenario',
 				'tankSubstance',
-				'vavModulation',
 				'vavAirCircuit',
+				'vavModulation',
 			])
 		})
 	}) // #choices
