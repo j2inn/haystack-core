@@ -42,7 +42,7 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 
 		it('convert an inputs electricity into its ref', function (): void {
 			const filter = 'elecRef'
-			const visitor = parseAndGenerate('inputs-elec?')
+			const visitor = parseAndGenerate('inputs? ^elec')
 			expect(visitor.filter).toBe(filter)
 			expect(visitor.requery).toBe(false)
 		})
@@ -53,7 +53,7 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 				' condenserWaterRef or domesticWaterRef or fuelOilRef or gasolineRef ' +
 				'or hotWaterRef or makeupWaterRef)'
 
-			const visitor = parseAndGenerate('inputs-liquid?')
+			const visitor = parseAndGenerate('inputs? ^liquid')
 			expect(visitor.filter).toBe(filter)
 			expect(visitor.requery).toBe(false)
 		})

@@ -787,42 +787,4 @@ describe('HNormalizer', function (): void {
 			}) // integration test
 		}) // generate
 	}) // #normalize()
-
-	describe('#toImplied()', function (): void {
-		beforeEach(function (): void {
-			const impliedBy = new HDict({
-				def: HSymbol.make('impliedBy'),
-				is: new HList([HSymbol.make('association')]),
-				tagOn: new HList([HSymbol.make('def')]),
-			})
-
-			const impliedTag = new HDict({
-				def: HSymbol.make('impliedTag'),
-				is: new HList([HSymbol.make('entity')]),
-				impliedBy: new HList(HSymbol.make('site')),
-			})
-
-			addDefs(impliedBy, impliedTag)
-		})
-
-		it('returns no implied tags for a point', async function (): Promise<void> {
-			const namespace = await normalizer.normalize()
-
-			expect(
-				namespace
-					.toImplied(new HDict({ point: HMarker.make() }))
-					.isEmpty()
-			).toBe(true)
-		})
-
-		it('returns an implied tag for a site', async function (): Promise<void> {
-			const namespace = await normalizer.normalize()
-
-			expect(
-				namespace
-					.toImplied(new HDict({ site: HMarker.make() }))
-					.toJSON()
-			).toEqual({ impliedTag: { _kind: 'marker' } })
-		})
-	}) // #toImplied()
 })

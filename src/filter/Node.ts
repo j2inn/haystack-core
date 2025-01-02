@@ -606,12 +606,34 @@ export class IsANode extends LeafNode {
 	}
 }
 
+function toRelationshipTokens(
+	rel: TokenRelationship,
+	term?: TokenValue,
+	ref?: TokenValue
+): Token[] {
+	const tokens: Token[] = [rel]
+
+	if (term) {
+		tokens.push(term)
+	}
+
+	if (ref) {
+		tokens.push(ref)
+	}
+
+	return tokens
+}
+
 /**
  * A relationship node.
  */
 export class RelationshipNode extends LeafNode {
-	public constructor(rel: TokenRelationship, ref?: TokenValue) {
-		super(ref ? [rel, ref] : [rel])
+	public constructor(
+		rel: TokenRelationship,
+		term?: TokenValue,
+		ref?: TokenValue
+	) {
+		super(toRelationshipTokens(rel, term, ref))
 	}
 
 	public get type(): NodeType {
@@ -626,16 +648,24 @@ export class RelationshipNode extends LeafNode {
 		this.$tokens[0] = val
 	}
 
+	public get term(): TokenValue | undefined {
+		return this.$tokens.find((t) => t.type === TokenType.symbol) as
+			| TokenValue
+			| undefined
+	}
+
+	public set term(term: TokenValue | undefined) {
+		this.$tokens = toRelationshipTokens(this.rel, term, this.ref)
+	}
+
 	public get ref(): TokenValue | undefined {
-		return this.$tokens[1] as TokenValue
+		return this.$tokens.find((t) => t.type === TokenType.ref) as
+			| TokenValue
+			| undefined
 	}
 
 	public set ref(ref: TokenValue | undefined) {
-		if (ref) {
-			this.$tokens[1] = ref
-		} else {
-			delete this.$tokens[1]
-		}
+		this.$tokens = toRelationshipTokens(this.rel, this.term, ref)
 	}
 
 	public accept(visitor: Visitor): void {
@@ -644,7 +674,7 @@ export class RelationshipNode extends LeafNode {
 
 	public eval(context: EvalContext): boolean {
 		const relName = this.rel.relationship
-		const relTerm = this.rel.term
+		const relTerm = this.term?.value as HSymbol
 		const ref = this.ref?.value as HRef
 
 		return !!context?.namespace?.hasRelationship({

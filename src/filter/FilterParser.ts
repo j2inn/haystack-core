@@ -322,9 +322,19 @@ export class FilterParser {
 		const rel = this.current as TokenRelationship
 		this.match(TokenType.rel)
 
+		let term: TokenValue | undefined
 		let ref: TokenValue | undefined
 
-		// A relationship can be followed by a ref so see if this exists.
+		// A relationship can be followed by a term so see if this exists.
+		if (
+			isTokenValue(this.current) &&
+			valueIsKind(this.current.value, Kind.Symbol)
+		) {
+			term = this.current as TokenValue
+			this.match(TokenType.symbol)
+		}
+
+		// A relationship (and optional term) can be followed by a ref so see if this exists.
 		if (
 			isTokenValue(this.current) &&
 			valueIsKind(this.current.value, Kind.Ref)
@@ -333,7 +343,7 @@ export class FilterParser {
 			this.match(TokenType.ref)
 		}
 
-		return new RelationshipNode(rel, ref)
+		return new RelationshipNode(rel, term, ref)
 	}
 
 	private wildcard(): WildcardEqualsNode {

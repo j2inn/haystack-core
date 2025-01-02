@@ -130,20 +130,20 @@ describe('HFilterBuilder', function (): void {
 
 		it('encodes a string term', function (): void {
 			expect(builder.relationship('inputs', 'air').build()).toBe(
-				'inputs-air?'
+				'inputs? ^air'
 			)
 		})
 
 		it('encodes a symbol term', function (): void {
 			expect(
 				builder.relationship('inputs', HSymbol.make('air')).build()
-			).toBe('inputs-air?')
+			).toBe('inputs? ^air')
 		})
 
 		it('encodes a ref with a term', function (): void {
 			expect(
 				builder.relationship('inputs', 'air', HRef.make('foo')).build()
-			).toBe('inputs-air? @foo')
+			).toBe('inputs? ^air @foo')
 		})
 
 		it('encodes a ref with no term', function (): void {
