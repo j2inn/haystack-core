@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 /*
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */

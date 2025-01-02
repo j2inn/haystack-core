@@ -49,7 +49,7 @@ export type JsonV3Val =
 	| JsonV3Remove
 	| null
 
-export interface JsonV3List extends Array<JsonV3Val> {}
+export type JsonV3List = Array<JsonV3Val>
 
 export interface JsonV3Dict {
 	[prop: string]: JsonV3Val

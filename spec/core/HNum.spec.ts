@@ -76,12 +76,13 @@ describe('HNum', function (): void {
 		})
 
 		it('throws an error when the value is not a special number string value', function (): void {
-			expect((): void => {
-				HNum.make({
-					_kind: Kind.Number,
-					val: 'somethingThatIsNotInfNegInfOrNaN',
-				}).value
-			}).toThrow()
+			expect(
+				() =>
+					HNum.make({
+						_kind: Kind.Number,
+						val: 'somethingThatIsNotInfNegInfOrNaN',
+					}).value
+			).toThrow()
 		})
 
 		it('returns positive infinity', function (): void {
