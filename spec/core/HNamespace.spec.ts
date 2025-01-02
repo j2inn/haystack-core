@@ -13,9 +13,7 @@ import { HList } from '../../src/core/HList'
 import { HMarker } from '../../src/core/HMarker'
 import { HNum } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'
-import { TrioReader } from '../../src/core/TrioReader'
 import '../../src/core/Array'
-import { readFile } from './file'
 import '../matchers'
 import '../customMatchers'
 import { makeProjectHaystackNormalizer } from './readDefs'
@@ -1433,14 +1431,14 @@ describe('HNamespace', function (): void {
 	}) // #toGrid()
 
 	describe('#timezones()', function (): void {
-		let grid: HGrid
-
-		beforeEach(function (): void {
-			grid = new TrioReader(readFile('./defs.trio')).readGrid()
-			defs = new HNamespace(grid)
-		})
-
 		it('returns a list of timezones', function (): void {
+			defs.grid.add(
+				new HDict({
+					def: 'tz',
+					enum: 'Abidjan',
+				})
+			)
+
 			const tz = defs.timezones[0]
 
 			expect(tz?.value).toBe('Abidjan')
@@ -1448,13 +1446,6 @@ describe('HNamespace', function (): void {
 	}) // #timezones()
 
 	describe('#hasRelationship()', function (): void {
-		let grid: HGrid
-
-		beforeEach(function (): void {
-			grid = new TrioReader(readFile('./defs.trio')).readGrid()
-			defs = new HNamespace(grid)
-		})
-
 		it('returns true when a record has a `hotWaterRef`', function (): void {
 			const subject = HDict.make({
 				ahu: HMarker.make(),

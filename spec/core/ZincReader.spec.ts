@@ -1357,12 +1357,6 @@ describe('ZincReader', function (): void {
 			expect(grid instanceof HGrid).toBe(true)
 		}
 
-		it('read zinc defs', function (): void {
-			console.log()
-			readTest('defs.zinc')
-			readTest('defs.json')
-		})
-
 		it('read sites', function (): void {
 			console.log()
 			readTest('sites.zinc')

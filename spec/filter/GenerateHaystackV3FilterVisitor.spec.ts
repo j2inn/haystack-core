@@ -4,15 +4,18 @@
 
 import { HFilter } from '../../src/filter/HFilter'
 import { GenerateHaystackFilterV3Visitor } from '../../src/filter/GenerateHaystackFilterV3Visitor'
-import { readFile } from '../core/file'
-import { TrioReader } from '../../src/core/TrioReader'
+import { makeProjectHaystackNormalizer } from '../core/readDefs'
 import { HNamespace } from '../../src/core/HNamespace'
 
 describe('GenerateHaystackFilterV3Visitor', function (): void {
-	function parseAndGenerate(filter: string): GenerateHaystackFilterV3Visitor {
-		const grid = new TrioReader(readFile('./defs.trio')).readGrid()
-		const namespace = new HNamespace(grid)
+	let namespace: HNamespace
 
+	beforeAll(async () => {
+		const { normalizer } = await makeProjectHaystackNormalizer()
+		namespace = await normalizer.normalize()
+	})
+
+	function parseAndGenerate(filter: string): GenerateHaystackFilterV3Visitor {
 		const visitor = new GenerateHaystackFilterV3Visitor(namespace)
 		HFilter.parse(filter).accept(visitor)
 		return visitor
@@ -21,8 +24,8 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 	describe('#visitIsA()', function (): void {
 		it('convert an `is a` query into its subtypes', function (): void {
 			const filter =
-				'((air and output) or airHandlingEquip or ahu or doas or mau or rtu or fcu' +
-				' or crac or unitVent or heatPump or airTerminalUnit or cav or vav)'
+				'((air and output) or airHandlingEquip or ahu or doas or mau or rtu or fcu or unitVent' +
+				' or crac or (vrf and indoorUnit and fcu) or airTerminalUnit or cav or vav)'
 
 			expect(parseAndGenerate('^air-output').filter).toBe(filter)
 		})
@@ -31,9 +34,9 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 	describe('#visitRelationship()', function (): void {
 		it('convert an inputs into its refs', function (): void {
 			const filter =
-				'(airRef or blowdownWaterRef or chilledWaterRef or condensateRef or condenserWaterRef ' +
-				'or domesticWaterRef or elecRef or fuelOilRef or gasolineRef or hotWaterRef or makeupWaterRef' +
-				' or naturalGasRef or refrigRef or steamRef)'
+				'(airRef or blowdownWaterRef or condensateRef or chilledWaterRef or condenserWaterRef ' +
+				'or domesticWaterRef or elecRef or fuelOilRef or hotWaterRef or gasolineRef ' +
+				'or makeupWaterRef or naturalGasRef or refrigRef or steamRef)'
 
 			const visitor = parseAndGenerate('inputs?')
 			expect(visitor.filter).toBe(filter)
@@ -49,9 +52,8 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 
 		it('convert an inputs liquid into its refs', function (): void {
 			const filter =
-				'(blowdownWaterRef or chilledWaterRef or condensateRef or' +
-				' condenserWaterRef or domesticWaterRef or fuelOilRef or gasolineRef ' +
-				'or hotWaterRef or makeupWaterRef)'
+				'(blowdownWaterRef or condensateRef or chilledWaterRef or condenserWaterRef ' +
+				'or domesticWaterRef or fuelOilRef or hotWaterRef or gasolineRef or makeupWaterRef)'
 
 			const visitor = parseAndGenerate('inputs? ^liquid')
 			expect(visitor.filter).toBe(filter)
@@ -60,9 +62,9 @@ describe('GenerateHaystackFilterV3Visitor', function (): void {
 
 		it('convert an inputs with a ref into its refs that requires a requery', function (): void {
 			const filter =
-				'(airRef or blowdownWaterRef or chilledWaterRef or condensateRef or condenserWaterRef ' +
-				'or domesticWaterRef or elecRef or fuelOilRef or gasolineRef or hotWaterRef or makeupWaterRef' +
-				' or naturalGasRef or refrigRef or steamRef)'
+				'(airRef or blowdownWaterRef or condensateRef or chilledWaterRef or condenserWaterRef' +
+				' or domesticWaterRef or elecRef or fuelOilRef or hotWaterRef or gasolineRef' +
+				' or makeupWaterRef or naturalGasRef or refrigRef or steamRef)'
 
 			const visitor = parseAndGenerate('inputs? @foo')
 			expect(visitor.filter).toBe(filter)
