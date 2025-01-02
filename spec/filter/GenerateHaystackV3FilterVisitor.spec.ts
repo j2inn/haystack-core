@@ -4,7 +4,7 @@
 
 import { HFilter } from '../../src/filter/HFilter'
 import { GenerateHaystackFilterV3Visitor } from '../../src/filter/GenerateHaystackFilterV3Visitor'
-import { makeProjectHaystackNormalizer } from '../core/readDefs'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 import { HNamespace } from '../../src/core/HNamespace'
 
 describe('GenerateHaystackFilterV3Visitor', function (): void {

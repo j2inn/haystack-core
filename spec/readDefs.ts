@@ -2,19 +2,19 @@
  * Copyright (c) 2024, J2 Innovations. All Rights Reserved
  */
 
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../src/core/HDict'
 import {
 	HLib,
 	HLibDict,
 	HDefDict,
 	HNormalizer,
 	LibScanner,
-} from '../../src/core/HNormalizer'
+} from '../src/core/HNormalizer'
 import * as path from 'path'
 import * as fs from 'fs'
-import { TrioReader } from '../../src/core/TrioReader'
+import { TrioReader } from '../src/core/TrioReader'
 import { promisify } from 'util'
-import { NormalizationLogger } from '../../src/core/NormalizationLogger'
+import { NormalizationLogger } from '../src/core/NormalizationLogger'
 
 const readFile = promisify(fs.readFile)
 const readdir = promisify(fs.readdir)

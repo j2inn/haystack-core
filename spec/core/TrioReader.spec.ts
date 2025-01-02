@@ -17,7 +17,7 @@ import { HList } from '../../src/core/HList'
 import { Kind } from '../../src/core/Kind'
 import '../matchers'
 import '../customMatchers'
-import { readFile } from './file'
+import { readFile } from '../file'
 
 describe('TrioReader', function (): void {
 	let trioColls: string

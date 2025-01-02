@@ -16,7 +16,7 @@ import { Kind } from '../../src/core/Kind'
 import '../../src/core/Array'
 import '../matchers'
 import '../customMatchers'
-import { makeProjectHaystackNormalizer } from './readDefs'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 import { valueIsKind } from '../../src/core/HVal'
 
 describe('HNamespace', function (): void {

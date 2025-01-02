@@ -40,7 +40,7 @@ import { HSymbol } from '../../src/core/HSymbol'
 import { HMarker } from '../../src/core/HMarker'
 import { TrioReader } from '../../src/core/TrioReader'
 import { TokenRelationship } from '../../src/filter/TokenRelationship'
-import { makeProjectHaystackNormalizer } from '../core/readDefs'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 
 const {
 	equals,

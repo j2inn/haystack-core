@@ -34,7 +34,7 @@ import { HVal } from '../../src/core/HVal'
 import { HNa } from '../../src/core/HNa'
 import { HGrid } from '../../src/core/HGrid'
 import { HNamespace } from '../../src/core/HNamespace'
-import { makeProjectHaystackNormalizer } from './readDefs'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {

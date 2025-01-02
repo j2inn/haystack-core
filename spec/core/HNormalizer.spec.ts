@@ -25,7 +25,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { promisify } from 'util'
 import { makeValue } from '../../src/core/util'
-import { makeProjectHaystackNormalizer } from './readDefs'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 
 const readFile = promisify(fs.readFile)
 
@@ -710,7 +710,7 @@ describe('HNormalizer', function (): void {
 								await readFile(
 									path.join(
 										__dirname,
-										'./files/skySparkDefs.json'
+										'../files/skySparkDefs.json'
 									)
 								)
 							).toString('utf8')
