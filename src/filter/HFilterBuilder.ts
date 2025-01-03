@@ -111,7 +111,7 @@ export class HFilterBuilder {
 	 * @returns The builder instance.
 	 */
 	public is(name: string | HSymbol): this {
-		this.add(HSymbol.make(name).toZinc())
+		this.add(HSymbol.make(name).toFilter())
 		return this
 	}
 
@@ -131,14 +131,14 @@ export class HFilterBuilder {
 	): this {
 		let rel = HSymbol.make(name).value
 
-		if (term) {
-			rel += `-${HSymbol.make(term).value}`
-		}
-
 		rel += '?'
 
+		if (term) {
+			rel += ` ${HSymbol.make(term).toFilter()}`
+		}
+
 		if (ref) {
-			rel += ` ${HRef.make(ref).toZinc()}`
+			rel += ` ${HRef.make(ref).toFilter()}`
 		}
 
 		this.add(rel)

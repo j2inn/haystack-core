@@ -2,8 +2,6 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
-/* eslint @typescript-eslint/no-empty-interface: "off" */
-
 /**
  * Haystack JSON format types.
  *
@@ -83,7 +81,7 @@ export type HaysonVal =
 	| HaysonGrid
 	| null
 
-export interface HaysonList extends Array<HaysonVal> {}
+export type HaysonList = Array<HaysonVal>
 
 export interface HaysonDict {
 	[prop: string]: HaysonVal

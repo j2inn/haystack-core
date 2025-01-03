@@ -73,6 +73,10 @@ export class GenerateHaystackFilterVisitor implements Visitor {
 	public visitRelationship(node: RelationshipNode): void {
 		this.append(node.rel.toFilter())
 
+		if (node.term) {
+			this.append(node.term.toFilter())
+		}
+
 		if (node.ref) {
 			this.append(node.ref.toFilter())
 		}

@@ -1,0 +1,276 @@
+//
+// Copyright (c) 2018, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   23 Dec 2018  Brian Frank  Creation
+//
+
+//////////////////////////////////////////////////////////////////////////
+// Quantity
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^quantity
+is: ^marker
+docTaxonomy
+doc: "Measurable property of a substance or phenomenon"
+--------------------------------------------------------------------------
+def: ^quantityOf
+is: ^association
+of: ^phenomenon
+reciprocalOf: ^quantities
+doc: "Associates quantity as measurement of a phenomenon"
+--------------------------------------------------------------------------
+def: ^quantities
+is: ^association
+reciprocalOf: ^quantityOf
+computedFromReciprocal
+docAssociations
+doc: "Quantities used to measure this phenomenon"
+--------------------------------------------------------------------------
+def: ^prefUnit
+is: ^list
+of: ^unit
+doc: "Defines a preferred unit to be used with a quantity"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Substances
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^concentration
+is: ^quantity
+quantityOf: ^substance
+wikipedia: `https://en.wikipedia.org/wiki/Concentration`
+doc: "Abundance of substance in the total volume of a mixture."
+--------------------------------------------------------------------------
+def: ^temp
+is: ^quantity
+quantityOf: ^substance
+doc: "Temperature - measure of hot and cold"
+wikipedia: `https://en.wikipedia.org/wiki/Temperature`
+prefUnit: ["°C", "°F"]
+--------------------------------------------------------------------------
+def: ^volume
+is: ^quantity
+quantityOf: ^substance
+doc: "Three dimensional space occupied by a substance"
+wikipedia: `https://en.wikipedia.org/wiki/Volume`
+prefUnit: ["m³", "ft³", "L", "gal"]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Fluids
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^pressure
+is: ^quantity
+quantityOf: ^fluid
+prefUnit: ["kPa", "psi"]
+wikipedia: `https://en.wikipedia.org/wiki/Pressure`
+doc: "Measure of force applied"
+--------------------------------------------------------------------------
+def: ^flow
+is: ^quantity
+quantityOf: ^fluid
+prefUnit: ["m³/s", "gal/min"]
+wikipedia: `https://en.wikipedia.org/wiki/Fluid_dynamics`
+doc: "Measure of volumetric flow of fluid"
+--------------------------------------------------------------------------
+def: ^level
+is: ^quantity
+quantityOf: ^fluid
+prefUnit: ["%"]
+doc:
+  Range from 0% to 100%.  When paired with a fluid this implies a fill
+  level where 0% is empty and 100% is full.
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Weather
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^atmospheric-pressure
+is: ^pressure
+quantityOf: ^weather
+prefUnit: ["millibar", "inHg"]
+doc: "Barometric pressure exerted by the weight of the atmosphere"
+--------------------------------------------------------------------------
+def: ^cloudage
+is: ^quantity
+quantityOf: ^weather
+prefUnit: ["%"]
+doc: "Percentage of sky obscured by clouds. This is also known as cloudiness, or cloud amount."
+--------------------------------------------------------------------------
+def: ^daytime
+is: ^quantity
+quantityOf: ^weather
+doc: "Time between sunrise and sunset"
+enum:
+  - nighttime: false indicates sun is below horizon
+  - daytime: true indicates sun is above horizon
+--------------------------------------------------------------------------
+def: ^precipitation
+is: ^quantity
+quantityOf: ^weather
+prefUnit: ["mm", "in"]
+doc: "Amount of atmospheric water vapor fallen including rain, sleet, snow, and hail"
+--------------------------------------------------------------------------
+def: ^solar-irradiance
+is: ^irradiance
+quantityOf: ^solar
+prefUnit: ["W/m²"]
+doc: "Energy received on surface of the earth from the sun"
+--------------------------------------------------------------------------
+def: ^weatherCond
+is: ^quantity
+quantityOf: ^weather
+doc: "Enumeration of weather conditions"
+enum:
+  unknown
+  clear
+  partlyCloudy
+  cloudy
+  showers
+  rain
+  thunderstorms
+  ice
+  flurries
+  snow
+--------------------------------------------------------------------------
+def: ^wind-speed
+is: ^speed
+quantityOf: ^wind
+doc: "Wind flow speed"
+--------------------------------------------------------------------------
+def: ^wind-direction
+is: ^direction
+quantityOf: ^wind
+doc: "Compass direction from which wind originates"
+--------------------------------------------------------------------------
+def: ^visibility
+is: ^quantity
+quantityOf: ^weather
+prefUnit: ["km", "mile"]
+doc: "Distance at which light can be clearly discerned"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Elec
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^elec-power
+is: ^power
+quantityOf: ^elec
+prefUnit: ["kW"]
+doc: "Electrical energy consumed per unit time"
+--------------------------------------------------------------------------
+def: ^elec-energy
+is: ^energy
+quantityOf: ^elec
+prefUnit: ["kWh"]
+doc: "Electrical energy consumed"
+--------------------------------------------------------------------------
+def: ^elec-volt
+is: ^quantity
+quantityOf: ^elec
+doc: "Electrical voltage, potential difference"
+--------------------------------------------------------------------------
+def: ^elec-current
+is: ^quantity
+quantityOf: ^elec
+doc: "Electrical current"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Lighting
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^illuminance
+is: ^quantity
+quantityOf: ^light
+prefUnit: ["lux", "footcandle", "phot"]
+wikipedia: `https://en.wikipedia.org/wiki/Illuminance`
+doc:
+  Luminous flux hitting the inside of the sphere at a specific point.
+
+  Also see [ies.org]`https://www.ies.org/definitions/illuminance/`
+--------------------------------------------------------------------------
+def: ^light-level
+is: ^level
+quantityOf: ^light
+doc:
+  Sensed or controlled dimming level of electrical lighting.
+  Level is measured as a percentage where 0% is off and 100%
+  is full brightness.
+--------------------------------------------------------------------------
+def: ^luminance
+is: ^quantity
+quantityOf: ^light
+prefUnit: ["candelas_per_square_meter", "candelas_per_square_foot"]
+wikipedia: `https://en.wikipedia.org/wiki/Luminance`
+doc:
+  Energy of light in a given direction.
+
+  Also see [ies.org]`https://www.ies.org/definitions/luminance/`
+--------------------------------------------------------------------------
+def: ^luminous-flux
+is: ^quantity
+quantityOf: ^light
+prefUnit: ["lumen"]
+wikipedia: `https://en.wikipedia.org/wiki/Luminous_flux`
+doc:
+  Total perceived light in all directions.
+
+  Also see [ies.org]`https://www.ies.org/definitions/luminous-flux/`
+--------------------------------------------------------------------------
+def: ^luminous-intensity
+is: ^quantity
+quantityOf: ^light
+prefUnit: ["candela"]
+wikipedia: `https://en.wikipedia.org/wiki/Luminous_intensity`
+doc:
+  Perceived light in a particular direction per unit solid angle.
+
+  Also see [ies.org]`https://www.ies.org/definitions/luminous-intensity/`
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Generics
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^direction
+is: ^quantity
+prefUnit: ["deg"]
+doc: "Compass direction measured in degrees: North: 0° = 360°, East: 90°, South: 180°, West: 270°"
+--------------------------------------------------------------------------
+def: ^energy
+is: ^quantity
+doc: "Measure of ability to do work"
+--------------------------------------------------------------------------
+def: ^freq
+is: ^quantity
+prefUnit: ["Hz"]
+doc: "Occurrences per unit time"
+--------------------------------------------------------------------------
+def: ^irradiance
+is: ^quantity
+doc: "Energy received at a surface by area"
+--------------------------------------------------------------------------
+def: ^power
+is: ^quantity
+doc: "Energy consumed per unit time"
+--------------------------------------------------------------------------
+def: ^speed
+is: ^quantity
+prefUnit: ["km/h", "mph"]
+doc: "Distance per unit time"
+--------------------------------------------------------------------------
+

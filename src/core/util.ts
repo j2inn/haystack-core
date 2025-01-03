@@ -351,11 +351,6 @@ export function isValidTagName(name: string): boolean {
 }
 
 /**
- * The implied by tag name.
- */
-export const IMPLIED_BY = 'impliedBy'
-
-/**
  * A function used for accessing localized display strings.
  *
  * Return undefined if the translated value can't be found.

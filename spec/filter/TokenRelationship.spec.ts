@@ -9,7 +9,7 @@ describe('TokenRelationship', function (): void {
 	let token: TokenRelationship
 
 	beforeEach(function (): void {
-		token = new TokenRelationship('inputs', 'air')
+		token = new TokenRelationship('inputs')
 	})
 
 	describe('#equals()', function (): void {
@@ -17,16 +17,8 @@ describe('TokenRelationship', function (): void {
 			expect(token.equals(token)).toBe(true)
 		})
 
-		it('returns false when the terms are different', function (): void {
-			expect(token.equals(new TokenRelationship('inputs', ''))).toBe(
-				false
-			)
-		})
-
 		it('returns false when the relationship is different', function (): void {
-			expect(token.equals(new TokenRelationship('outputs', 'term'))).toBe(
-				false
-			)
+			expect(token.equals(new TokenRelationship('outputs'))).toBe(false)
 		})
 
 		it('returns false when the token is different', function (): void {
@@ -36,19 +28,13 @@ describe('TokenRelationship', function (): void {
 
 	describe('#toString()', function (): void {
 		it('returns the filter', function (): void {
-			expect(token.toString()).toBe('inputs-air?')
+			expect(token.toString()).toBe('inputs?')
 		})
 	}) // #toString()
 
 	describe('#toFilter()', function (): void {
-		it('returns a filter with a relationship and term', function (): void {
-			expect(token.toFilter()).toBe('inputs-air?')
-		})
-
 		it('returns a filter with a relationship', function (): void {
-			expect(new TokenRelationship('inputs', '').toFilter()).toBe(
-				'inputs?'
-			)
+			expect(token.toFilter()).toBe('inputs?')
 		})
 	}) // #toFilter()
 
@@ -57,7 +43,6 @@ describe('TokenRelationship', function (): void {
 			expect(token.toJSON()).toEqual({
 				type: 'rel',
 				relationship: 'inputs',
-				term: 'air',
 			})
 		})
 	}) // #toJSON()

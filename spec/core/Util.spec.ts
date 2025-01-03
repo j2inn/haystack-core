@@ -34,8 +34,7 @@ import { HVal } from '../../src/core/HVal'
 import { HNa } from '../../src/core/HNa'
 import { HGrid } from '../../src/core/HGrid'
 import { HNamespace } from '../../src/core/HNamespace'
-import { ZincReader } from '../../src/core/ZincReader'
-import { readFile } from './file'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
@@ -771,10 +770,9 @@ describe('util', function (): void {
 	describe('addContainmentRefs()', () => {
 		let defs: HNamespace
 
-		beforeAll(() => {
-			const zinc = readFile('./defsWithFeatures.zinc')
-			const grid = ZincReader.readValue(zinc) as HGrid
-			defs = new HNamespace(grid)
+		beforeAll(async () => {
+			const { normalizer } = await makeProjectHaystackNormalizer()
+			defs = await normalizer.normalize()
 		})
 
 		it('adds a siteRef to a floor', () => {

@@ -74,7 +74,7 @@ export class GenerateHaystackFilterV3Visitor extends GenerateHaystackFilterVisit
 
 	public visitRelationship(node: RelationshipNode): void {
 		const relationship = node.rel.relationship
-		const term = node.rel.term
+		const term = node.term?.value as HSymbol | undefined
 		const ref = node.ref
 
 		// If there's a reference this means transitive and reciprocal queries.

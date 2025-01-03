@@ -1,0 +1,111 @@
+//
+// Copyright (c) 2011, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   22 Feb 2011  Brian Frank  Creation
+//   24 Apr 2019  Brian Frank  New design
+//
+
+--------------------------------------------------------------------------
+def: ^motor
+is: [^equip, ^elec-input]
+wikipedia: `https://en.wikipedia.org/wiki/Electric_motor`
+doc:
+  Equipment that converts electrical energy into mechanical energy.
+  See `docHaystack::Motors` chapter.
+children: [
+  // Primary on/off command (on is true, off is false)
+  {run cmd point},
+
+  // Secondary on/off command (enabled is true, disabled is false)
+  {enable cmd point},
+
+  // Run status sensor.  True indicates on and false off.
+  {run sensor point},
+
+  // Enable status sensor.  True indicates enabled and false disabled.
+  {enable sensor point},
+
+  // Boolean alarm condition.  True indicates an alarm condition.
+  {alarm sensor point},
+
+  // Speed command as percentage where 0% is off, 100% if full speed
+  {vfd speed cmd point},
+
+  // Speed command as a frequency in Hz
+  {vfd freq cmd point},
+
+  // Speed status as percentage where 0% is off, 100% if full speed
+  {vfd speed sensor point},
+
+  // Speed status as frequency in Hz
+  {vfd freq sensor point},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// VFD
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^vfd
+is: ^marker
+tagOn: [^motor]
+wikipedia: `https://en.wikipedia.org/wiki/Variable-frequency_drive`
+doc:
+  Variable-frequency drive.
+  See `docHaystack::Motors` chapter.
+--------------------------------------------------------------------------
+def: ^vfd-speed
+is: ^quantity
+prefUnit: ["%"]
+doc:
+  VFD speed measured in "%"; 0% is off and 100% is the fastest speed.
+--------------------------------------------------------------------------
+def: ^vfd-freq
+is: ^quantity
+prefUnit: ["Hz"]
+doc:
+  VFD frequency measured in "Hz".
+--------------------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////////
+// Fan
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^fan
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Fan_(machine)`
+doc: Fan equipment or control point
+--------------------------------------------------------------------------
+def: ^fan-motor
+is: ^motor
+wikipedia: `https://en.wikipedia.org/wiki/Fan_(machine)`
+childrenFlatten: [^ductSection, ^fan]
+doc:
+  Motor used with a fan to create air flow.
+  See `docHaystack::Motors` chapter.
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Pump
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^pump
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Pump`
+doc: "Pump equipment or control point"
+--------------------------------------------------------------------------
+def: ^pump-motor
+is: ^motor
+wikipedia: `https://en.wikipedia.org/wiki/Pump`
+childrenFlatten: [^fluid, ^pipeSection, ^pump]
+doc:
+  Motor used with a pump to move fluid.
+  See `docHaystack::Motors` chapter.
+--------------------------------------------------------------------------
+

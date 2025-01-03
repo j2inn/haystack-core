@@ -79,7 +79,7 @@ export function defaultIsValidTimeZone(timezone: string): boolean {
 	try {
 		new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format()
 		return true
-	} catch (err) {
+	} catch {
 		return false
 	}
 }

@@ -9,6 +9,7 @@ import { HNum } from '../../src/core/HNum'
 import { TokenPaths } from '../../src/filter/TokenPaths'
 import { Scanner } from '../../src/util/Scanner'
 import { TokenRelationship } from '../../src/filter/TokenRelationship'
+import { HSymbol } from '../../src/core/HSymbol'
 
 describe('FilterLexer', function (): void {
 	function makeLexer(input: string): FilterLexer {
@@ -322,14 +323,20 @@ describe('FilterLexer', function (): void {
 			})
 		}) // ref
 
-		describe('def', function (): void {
-			it('parse def', function (): void {
+		describe('symbol', function (): void {
+			it('parse symbol', function (): void {
 				const token = makeLexer('^test').nextToken()
 				expect(token.type).toBe(TokenType.symbol)
 				expect(token.toString()).toBe('test')
 			})
 
-			it('parse mutiplie refs', function (): void {
+			it('parse symbol conjunct', function (): void {
+				const token = makeLexer('^test-me').nextToken()
+				expect(token.type).toBe(TokenType.symbol)
+				expect(token.toString()).toBe('test-me')
+			})
+
+			it('parse multiple symbols', function (): void {
 				const lexer = makeLexer('^test ^foo')
 
 				const token0 = lexer.nextToken()
@@ -347,12 +354,12 @@ describe('FilterLexer', function (): void {
 				expect(lexer.nextToken().type).toBe(TokenType.leftBrace)
 			})
 
-			it('throws an error for an empty def', function (): void {
+			it('throws an error for an empty symbol', function (): void {
 				expect((): void => {
 					makeLexer('^(').nextToken()
 				}).toThrow()
 			})
-		}) // def
+		}) // symbol
 
 		describe('numberDateTime', function (): void {
 			describe('number', function (): void {
@@ -848,28 +855,35 @@ describe('FilterLexer', function (): void {
 			})
 
 			it('parses a relationship term', function (): void {
-				const lexer = makeLexer('inputs-air?')
+				const lexer = makeLexer('inputs? ^air')
 				const token = lexer.nextToken() as TokenRelationship
 				expect(token.relationship).toBe('inputs')
-				expect(token.term).toBe('air')
+
+				const nextToken = lexer.nextToken() as TokenValue
+				expect(nextToken.type).toBe(TokenType.symbol)
+
+				const symbol = nextToken.value as HSymbol
+
+				expect(symbol.value).toBe('air')
+			})
+
+			it('parses a relationship term with conjunct', function (): void {
+				const lexer = makeLexer('inputs? ^air-test')
+				const token = lexer.nextToken() as TokenRelationship
+				expect(token.relationship).toBe('inputs')
+
+				const nextToken = lexer.nextToken() as TokenValue
+				expect(nextToken.type).toBe(TokenType.symbol)
+
+				const symbol = nextToken.value as HSymbol
+
+				expect(symbol.value).toBe('air-test')
 			})
 
 			it('advances to the next token after a relationship and term', function (): void {
-				const lexer = makeLexer('inputs-air? @ahu')
+				const lexer = makeLexer('inputs? ^air @ahu')
 				lexer.nextToken()
-				expect(lexer.nextToken().type).toBe(TokenType.ref)
-			})
-
-			it('parses a conjunct relationship term', function (): void {
-				const lexer = makeLexer('inputs-air-output?')
-				const token = lexer.nextToken() as TokenRelationship
-				expect(token.relationship).toBe('inputs')
-				expect(token.term).toBe('air-output')
-			})
-
-			it('advances to the next token after a relationship and conjunct term', function (): void {
-				const lexer = makeLexer('inputs-air-output? @ahu')
-				lexer.nextToken()
+				expect(lexer.nextToken().type).toBe(TokenType.symbol)
 				expect(lexer.nextToken().type).toBe(TokenType.ref)
 			})
 		}) // relationship

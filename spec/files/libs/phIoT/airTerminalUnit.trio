@@ -1,0 +1,24 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   25 Apr 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^airTerminalUnit
+is: [^equip, ^air-input, ^air-output, ^elec-input]
+doc:
+  Equipment in air distribution systems which terminate at the space.
+  Terminal units receive air from `airHandlingEquip` which have the
+  primarily responsibility to condition air.  Terminal units are primarily
+  responsible for delivery of air to the space and tempering the temperature.
+children: [
+  {thermostat equip},
+  {discharge duct equip},
+  {inlet duct equip},
+  {thermostat equip},
+  ]
+--------------------------------------------------------------------------
+

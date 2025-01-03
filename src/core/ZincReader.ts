@@ -580,7 +580,7 @@ export class ZincReader {
 
 		try {
 			return HDateTime.make(dateTime)
-		} catch (err) {
+		} catch {
 			throw new LocalizedError({
 				message: `Invalid date ${dateTime}`,
 				lex: 'lexerInvalidDate',

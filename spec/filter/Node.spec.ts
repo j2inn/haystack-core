@@ -38,10 +38,9 @@ import { HDict } from '../../src/core/HDict'
 import { HaysonDict } from '../../src/core/hayson'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HMarker } from '../../src/core/HMarker'
-import { HNamespace } from '../../src/core/HNamespace'
 import { TrioReader } from '../../src/core/TrioReader'
-import { readFile } from '../core/file'
 import { TokenRelationship } from '../../src/filter/TokenRelationship'
+import { makeProjectHaystackNormalizer } from '../readDefs'
 
 const {
 	equals,
@@ -644,13 +643,13 @@ describe('Node', function (): void {
 	describe('IsANode', function (): void {
 		let isa: IsANode
 
-		beforeEach(function (): void {
+		beforeEach(async () => {
 			isa = new IsANode(
 				new TokenValue(TokenType.symbol, HSymbol.make('air-output'))
 			)
 
-			const grid = new TrioReader(readFile('./defs.trio')).readGrid()
-			const namespace = new HNamespace(grid)
+			const { normalizer } = await makeProjectHaystackNormalizer()
+			const namespace = await normalizer.normalize()
 
 			context = {
 				dict: HDict.make({
@@ -676,11 +675,14 @@ describe('Node', function (): void {
 	describe('RelationshipNode', function (): void {
 		let rel: RelationshipNode
 
-		beforeEach(function (): void {
-			rel = new RelationshipNode(new TokenRelationship('inputs', 'air'))
+		beforeEach(async () => {
+			rel = new RelationshipNode(
+				new TokenRelationship('inputs'),
+				new TokenValue(TokenType.symbol, HSymbol.make('air'))
+			)
 
-			const grid = new TrioReader(readFile('./defs.trio')).readGrid()
-			const namespace = new HNamespace(grid)
+			const { normalizer } = await makeProjectHaystackNormalizer()
+			const namespace = await normalizer.normalize()
 
 			context = {
 				dict: HDict.make({

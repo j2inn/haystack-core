@@ -248,8 +248,6 @@ export class FilterLexer {
 		let paths: string[] | undefined
 
 		let relationship = ''
-		let term = ''
-		let endRelationship = false
 
 		while (!this.scanner.isEof()) {
 			this.scanner.consume()
@@ -260,31 +258,8 @@ export class FilterLexer {
 				this.scanner.is('_')
 			) {
 				str += this.scanner.current
-			} else if (
-				this.scanner.is('?') ||
-				(this.scanner.is('-') &&
-					(Scanner.isLetter(this.scanner.next) ||
-						Scanner.isDigit(this.scanner.next) ||
-						this.scanner.next === '_'))
-			) {
-				if (this.scanner.is('?')) {
-					if (!relationship) {
-						relationship = str
-					} else {
-						term = str
-					}
-
-					this.scanner.consume()
-					endRelationship = true
-					break
-				} else {
-					if (!relationship) {
-						relationship = str
-						str = ''
-					} else {
-						str += this.scanner.current
-					}
-				}
+			} else if (this.scanner.is('?')) {
+				relationship = str
 			} else if (
 				this.scanner.current === '-' &&
 				this.scanner.next === '>'
@@ -317,16 +292,7 @@ export class FilterLexer {
 		let token: Token
 
 		if (relationship) {
-			if (!endRelationship) {
-				throw new LocalizedError({
-					message: `Invalid relationship. Missing ?`,
-					lex: 'lexerInvalidRelationship',
-					args: { arg: str },
-					index: this.scanner.index,
-				})
-			}
-
-			token = new TokenRelationship(relationship, term)
+			token = new TokenRelationship(relationship)
 		} else {
 			if (paths) {
 				if (str) {
