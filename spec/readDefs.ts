@@ -10,14 +10,10 @@ import {
 	HNormalizer,
 	LibScanner,
 } from '../src/core/HNormalizer'
-import * as path from 'path'
-import * as fs from 'fs'
+import * as path from 'node:path'
+import { readFile, readdir } from 'node:fs/promises'
 import { TrioReader } from '../src/core/TrioReader'
-import { promisify } from 'util'
 import { NormalizationLogger } from '../src/core/NormalizationLogger'
-
-const readFile = promisify(fs.readFile)
-const readdir = promisify(fs.readdir)
 
 /*
  * Please note, the defs for SkySpark are created via `bin/defc -output json /Users/garethjohnson/work/j2repos/haystack/haystack-defs`
@@ -64,7 +60,7 @@ export async function readLib(libName: string): Promise<HLib> {
 
 	let dirs = await readdir(trioDirPath)
 
-	dirs = dirs.filter((dir) => dir.toLowerCase().endsWith('.trio'))
+	dirs = dirs.filter((dir) => path.extname(dir).toLowerCase() === '.trio')
 
 	const lib = new TrioReader(
 		(await readFile(path.join(trioDirPath, './lib.trio'))).toString('utf8')

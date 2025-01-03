@@ -18,7 +18,6 @@ import '../matchers'
 import '../customMatchers'
 import { makeProjectHaystackNormalizer } from '../readDefs'
 import { valueIsKind } from '../../src/core/HVal'
-import * as fs from 'fs'
 
 describe('HNamespace', function (): void {
 	let defs: HNamespace
@@ -28,8 +27,6 @@ describe('HNamespace', function (): void {
 		const { normalizer } = await makeProjectHaystackNormalizer()
 		const ns = await normalizer.normalize()
 		origGrid = ns.grid
-
-		fs.writeFileSync('./myGrid.zinc', origGrid.toZinc())
 	})
 
 	beforeEach(() => {
