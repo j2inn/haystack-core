@@ -6,7 +6,7 @@ import { HSymbol } from '../../src/core/HSymbol'
 import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/HGrid'
 import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import '../matchers'
 import '../customMatchers'
 

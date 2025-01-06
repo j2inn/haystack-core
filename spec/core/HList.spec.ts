@@ -14,7 +14,7 @@ import { HRemove } from '../../src/core/HRemove'
 import { HFilter } from '../../src/filter/HFilter'
 import '../matchers'
 import '../customMatchers'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import { HGrid } from '../../src/core/HGrid'
 import { HaysonList } from '../../src/core/hayson'
 

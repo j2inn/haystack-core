@@ -3,7 +3,7 @@
  */
 
 import { HBool } from './HBool'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { HGrid } from './HGrid'
 import { HNum } from './HNum'
 import { HStr } from './HStr'

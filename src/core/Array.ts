@@ -12,7 +12,7 @@
 
 import { HGrid } from './HGrid'
 import { HList } from './HList'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { HVal } from './HVal'
 import { makeValue } from './util'
 import { HaysonVal, HaysonDict } from './hayson'

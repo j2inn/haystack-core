@@ -14,7 +14,7 @@ import {
 } from '../../src/core/HVal'
 import { HBool } from '../../src/core/HBool'
 import { Kind } from '../../src/core/Kind'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 
 describe('HVal', function (): void {
 	describe('.isHVal()', function (): void {

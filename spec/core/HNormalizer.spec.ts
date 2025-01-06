@@ -5,7 +5,7 @@
 import { HSymbol } from '../../src/core/HSymbol'
 import { HUri } from '../../src/core/HUri'
 import { HStr } from '../../src/core/HStr'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import { HList } from '../../src/core/HList'
 import { HMarker } from '../../src/core/HMarker'
 import { HNamespace } from '../../src/core/HNamespace'

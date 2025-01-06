@@ -6,7 +6,7 @@ import { HSymbol } from '../core/HSymbol'
 import { HNamespace } from '../core/HNamespace'
 import { GenerateHaystackFilterVisitor } from './GenerateHaystackFilterVisitor'
 import { IsANode, RelationshipNode, WildcardEqualsNode } from './Node'
-import { HDict } from '../core/HDict'
+import { HDict } from '../core/dict/HDict'
 
 /**
  * The depth of the wildcard equality search.

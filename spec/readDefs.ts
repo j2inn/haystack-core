@@ -2,7 +2,7 @@
  * Copyright (c) 2024, J2 Innovations. All Rights Reserved
  */
 
-import { HDict } from '../src/core/HDict'
+import { HDict } from '../src/core/dict/HDict'
 import {
 	HLib,
 	HLibDict,

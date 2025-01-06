@@ -3,7 +3,8 @@
  */
 
 import { Scanner } from '../util/Scanner'
-import { HDict, HValObj } from './HDict'
+import { HDict } from './dict/HDict'
+import { HValObj } from './dict/HValObj'
 import { ZincReader } from './ZincReader'
 import { LocalizedError } from '../util/LocalizedError'
 import { HMarker } from './HMarker'

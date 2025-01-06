@@ -4,16 +4,16 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { EvalContext } from '../filter/EvalContext'
-import { HFilter } from '../filter/HFilter'
-import { Node } from '../filter/Node'
-import { HaysonDict, HaysonVal } from './hayson'
-import { HDateTime } from './HDateTime'
-import { HGrid } from './HGrid'
-import { HList } from './HList'
-import { HMarker } from './HMarker'
-import { HNamespace, Reflection } from './HNamespace'
-import { HRemove } from './HRemove'
+import { EvalContext } from '../../filter/EvalContext'
+import { HFilter } from '../../filter/HFilter'
+import { Node } from '../../filter/Node'
+import { HaysonDict, HaysonVal } from '../hayson'
+import { HDateTime } from '../HDateTime'
+import { HGrid } from '../HGrid'
+import { HList } from '../HList'
+import { HMarker } from '../HMarker'
+import { HNamespace, Reflection } from '../HNamespace'
+import { HRemove } from '../HRemove'
 import {
 	AXON_NULL,
 	HVal,
@@ -23,17 +23,14 @@ import {
 	valueEquals,
 	valueIsKind,
 	ZINC_NULL,
-} from './HVal'
-import { JsonV3Dict, JsonV3Val } from './jsonv3'
-import { Kind } from './Kind'
-import { makeValue, dictToDis, LocalizedCallback } from './util'
-
-/**
- * An object composed of haystack values.
- */
-export interface HValObj {
-	[prop: string]: OptionalHVal
-}
+} from '../HVal'
+import { JsonV3Dict, JsonV3Val } from '../jsonv3'
+import { Kind } from '../Kind'
+import { makeValue, dictToDis, LocalizedCallback } from '../util'
+import { DictJsonStore } from './DictJsonStore'
+import { DictObjStore } from './DictObjStore'
+import { DictStore, isDictStore } from './DictStore'
+import { HValObj } from './HValObj'
 
 /**
  * A haystack value row used for iteration.
@@ -41,100 +38,6 @@ export interface HValObj {
 export interface HValRow {
 	name: string
 	value: OptionalHVal
-}
-
-/**
- * Inner backing data store for a dict.
- */
-export interface DictStore {
-	/**
-	 * Returns a haystack value from the dict or undefined
-	 * if it can't be found.
-	 *
-	 * @param name The name of the value to find.
-	 * @return The value, null or undefined if it can't be found.
-	 */
-	get(name: string): OptionalHVal | undefined
-
-	/**
-	 * Set a haystack value.
-	 *
-	 * @param name The name to set.
-	 * @param value The haystack value to set.
-	 */
-	set(name: string, value: OptionalHVal): void
-
-	/**
-	 * Removes a property from the dict.
-	 *
-	 * @param name The property name.
-	 */
-	remove(name: string): void
-
-	/**
-	 * Clear all entries from the dict.
-	 */
-	clear(): void
-
-	/**
-	 * @returns All keys used in the dict.
-	 */
-	getKeys(): string[]
-
-	/**
-	 * @returns The underlying object being managed by the store.
-	 */
-	toObj(): HValObj
-}
-
-/**
- * Type guard to check whether the store is a dict or not.
- *
- * @param store The dict store.
- * @returns true if the object is a dict store.
- */
-function isDictStore(store: unknown): store is DictStore {
-	return !!(store && typeof (store as any).getKeys === 'function')
-}
-
-/**
- * Implementation of a store with the backing data being held
- * in an object.
- */
-export class DictObjStore implements DictStore {
-	readonly #values: HValObj
-
-	public constructor(values: HValObj) {
-		this.#values = values
-	}
-
-	public get(name: string): OptionalHVal | undefined {
-		return this.#values[name]
-	}
-
-	public set(name: string, value: OptionalHVal): void {
-		this.#values[name] = value
-	}
-
-	public remove(name: string): void {
-		delete this.#values[name]
-	}
-
-	public clear(): void {
-		// Don't overwrite this object completely just in case it's had an
-		// observable installed on it.
-		Object.keys(this.#values).forEach((key: string): void => {
-			delete this.#values[key]
-		})
-	}
-
-	public getKeys(): string[] {
-		return Object.keys(this.#values)
-	}
-
-	public toObj(): HValObj {
-		return this.#values
-	}
 }
 
 /**
@@ -243,40 +146,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 			| OptionalHVal
 			| DictStore
 	) {
-		if (isDictStore(values)) {
-			this.$store = values
-		} else {
-			let vals: HValObj = {}
-
-			if (isHVal(values) || values === null) {
-				if (valueIsKind<HDict>(values, Kind.Dict)) {
-					vals = values.toObj()
-				} else if (valueIsKind<HGrid>(values, Kind.Grid)) {
-					for (let i = 0; i < values.length; ++i) {
-						vals[`row${i}`] = values.get(i) as OptionalHVal
-					}
-				} else {
-					vals = { val: values }
-				}
-			} else if (values) {
-				const hvalObj = values
-
-				for (const prop in hvalObj) {
-					const obj = hvalObj[prop]
-
-					if (
-						obj !== undefined &&
-						typeof obj !== 'function' &&
-						typeof obj !== 'symbol'
-					) {
-						vals[prop] = makeValue(obj)
-					}
-				}
-			}
-
-			this.$store = new DictObjStore(vals)
-		}
-
+		this.$store = isDictStore(values) ? values : new DictObjStore(values)
 		return this.makeProxy()
 	}
 
@@ -335,12 +205,21 @@ export class HDict implements HVal, Iterable<HValRow> {
 	/**
 	 * Make a dict based upon the specified value store.
 	 *
-	 * @private
 	 * @param store The data store for the dict.
 	 * @returns A dict.
 	 */
 	public static makeFromStore(store: DictStore): HDict {
 		return new HDict(store)
+	}
+
+	/**
+	 * Make a dict based upon some JSON.
+	 *
+	 * @param json The JSON to create the dict from.
+	 * @returns A dict.
+	 */
+	public static makeFromJson(json: HaysonDict): HDict {
+		return HDict.makeFromStore(new DictJsonStore(json))
 	}
 
 	/**
@@ -442,7 +321,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns True if the value exists in the dict.
 	 */
 	public has(name: string): boolean {
-		return this.get(name) !== undefined
+		return this.$store.has(name)
 	}
 
 	/**
@@ -631,13 +510,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns A JSON reprentation of the object.
 	 */
 	public toJSON(): HaysonDict {
-		const obj: HaysonDict = {}
-
-		for (const key of this.keys) {
-			obj[key] = this.get(key)?.toJSON() ?? null
-		}
-
-		return obj
+		return this.$store.toJSON()
 	}
 
 	/**

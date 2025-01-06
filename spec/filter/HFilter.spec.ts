@@ -6,7 +6,7 @@ import { EvalContext } from '../../src/filter/EvalContext'
 import { HFilter } from '../../src/filter/HFilter'
 import { HStr } from '../../src/core/HStr'
 import { HBool } from '../../src/core/HBool'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 
 describe('HFilter', function (): void {
 	let haystackFilter: HFilter

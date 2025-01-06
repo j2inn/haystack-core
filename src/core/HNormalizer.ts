@@ -2,7 +2,7 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { HGrid } from './HGrid'
 import { HList } from './HList'
 import { HNamespace } from './HNamespace'

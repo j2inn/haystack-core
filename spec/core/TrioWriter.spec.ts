@@ -3,7 +3,7 @@
  */
 
 import { TrioWriter } from '../../src/core/TrioWriter'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
 import { HBool } from '../../src/core/HBool'

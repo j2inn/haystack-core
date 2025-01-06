@@ -14,7 +14,9 @@ import {
 	OptionalHVal,
 	ZINC_NULL,
 } from './HVal'
-import { HDict, DictStore, HValObj } from './HDict'
+import { HDict } from './dict/HDict'
+import { HValObj } from './dict/HValObj'
+import { DictStore } from './dict/DictStore'
 import { Kind } from './Kind'
 import { HaysonGrid, HaysonDict } from './hayson'
 import { HStr } from './HStr'
@@ -169,6 +171,10 @@ class GridRowDictStore<DictVal extends HDict> implements DictStore {
 		return this.$cells.get(name)
 	}
 
+	public has(name: string): boolean {
+		return this.$cells.has(name)
+	}
+
 	public set(name: string, value: OptionalHVal): void {
 		// The column to the grid if it's missing.
 		if (!this.$grid.hasColumn(name)) {
@@ -192,6 +198,10 @@ class GridRowDictStore<DictVal extends HDict> implements DictStore {
 
 	public toObj(): HValObj {
 		return this.$cells.toObj()
+	}
+
+	public toJSON(): HaysonDict {
+		return this.$cells.toJSON()
 	}
 }
 

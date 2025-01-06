@@ -10,7 +10,7 @@ import {
 	GridColumn,
 	GRID_VERSION_NAME,
 } from '../../src/core/HGrid'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import { HStr } from '../../src/core/HStr'
 import { Kind } from '../../src/core/Kind'
 import { HNum } from '../../src/core/HNum'

@@ -16,7 +16,7 @@ import { HaysonRemove } from './hayson'
 import { Node } from '../filter/Node'
 import { HGrid } from './HGrid'
 import { HList } from './HList'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3Remove } from './jsonv3'
 

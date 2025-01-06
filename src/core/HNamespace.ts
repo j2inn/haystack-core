@@ -3,7 +3,7 @@
  */
 
 import { HGrid } from './HGrid'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { HStr } from './HStr'
 import { HList } from './HList'
 import { HSymbol } from './HSymbol'

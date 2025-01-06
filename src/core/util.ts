@@ -17,7 +17,7 @@ import { HRef } from './HRef'
 import { HStr } from './HStr'
 import { HTime } from './HTime'
 import { HUri } from './HUri'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import {
 	HaysonDict,
 	HaysonVal,
@@ -111,7 +111,7 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 			return HUri.make(obj as HaysonUri)
 		case Kind.Dict:
 		case undefined:
-			return HDict.make(obj as HaysonDict)
+			return HDict.makeFromJson(obj as HaysonDict)
 		case Kind.Grid:
 			return HGrid.make(obj as HaysonGrid)
 		default:

@@ -4,7 +4,7 @@
 
 import { valueIsKind, ZINC_NULL } from './HVal'
 import { Kind } from './Kind'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { HGrid } from './HGrid'
 import { HMarker } from './HMarker'
 

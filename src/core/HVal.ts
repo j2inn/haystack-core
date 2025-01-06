@@ -8,7 +8,7 @@ import { HFilter } from '../filter/HFilter'
 import { Node } from '../filter/Node'
 import { HList } from './HList'
 import { HGrid } from './HGrid'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3Val } from './jsonv3'
 
