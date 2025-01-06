@@ -5,7 +5,7 @@
 import { DictObjStore } from '../../../src/core/dict/DictObjStore'
 import { HMarker } from '../../../src/core/HMarker'
 import { HStr } from '../../../src/core/HStr'
-import { HGrid } from '../../../src/core/HGrid'
+import { HGrid } from '../../../src/core/grid/HGrid'
 import { HDict } from '../../../src/core/dict/HDict'
 import { Kind } from '../../../src/core/Kind'
 

@@ -9,7 +9,6 @@ import { HValObj } from './HValObj'
 /**
  * Inner backing data store for a dict.
  */
-
 export interface DictStore {
 	/**
 	 * Returns a haystack value from the dict or undefined

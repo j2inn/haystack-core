@@ -11,7 +11,7 @@ import {
 	valueMatches,
 } from './HVal'
 import { Node } from '../filter/Node'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { HList } from './HList'
 import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'

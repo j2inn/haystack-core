@@ -3,7 +3,7 @@
  */
 
 import { HNamespace, Reflection } from '../../src/core/HNamespace'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HDict } from '../../src/core/dict/HDict'
 import { HSymbol } from '../../src/core/HSymbol'
 import { ZincReader } from '../../src/core/ZincReader'

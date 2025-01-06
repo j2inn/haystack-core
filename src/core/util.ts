@@ -41,7 +41,7 @@ import { HCoord } from './HCoord'
 import { HXStr } from './HXStr'
 import { HSymbol } from './HSymbol'
 import { HList } from './HList'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { Scanner } from '../util/Scanner'
 import { HNamespace } from './HNamespace'
 

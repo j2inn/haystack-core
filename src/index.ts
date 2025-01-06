@@ -36,7 +36,6 @@ export * from './core/HCoord'
 export * from './core/HDate'
 export * from './core/HDateTime'
 export * from './core/HSymbol'
-export * from './core/HGrid'
 export * from './core/HList'
 export * from './core/HMarker'
 export * from './core/HNa'
@@ -62,6 +61,13 @@ export * from './core/UnitDimensions'
 export * from './core/HSpan'
 export * from './core/jsonv3'
 export * from './core/EnumTag'
+
+// Core grid
+export * from './core/grid/GridColumn'
+export * from './core/grid/GridObj'
+export * from './core/grid/GridObjStore'
+export * from './core/grid/GridStore'
+export * from './core/grid/HGrid'
 
 // Core dict
 export * from './core/dict/DictJsonStore'

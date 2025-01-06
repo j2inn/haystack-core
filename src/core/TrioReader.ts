@@ -10,7 +10,7 @@ import { LocalizedError } from '../util/LocalizedError'
 import { HMarker } from './HMarker'
 import { HStr } from './HStr'
 import { HVal, valueIsKind } from './HVal'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { HList } from './HList'
 import { Kind } from './Kind'
 

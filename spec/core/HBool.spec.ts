@@ -3,7 +3,7 @@
  */
 
 import { HBool } from '../../src/core/HBool'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { Kind } from '../../src/core/Kind'

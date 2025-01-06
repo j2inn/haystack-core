@@ -4,25 +4,26 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
+import { HGrid } from '../../../src/core/grid/HGrid'
+import { GridColumn } from '../../../src/core/grid/GridColumn'
+import { HDict } from '../../../src/core/dict/HDict'
+import { HStr } from '../../../src/core/HStr'
+import { Kind } from '../../../src/core/Kind'
+import { HNum } from '../../../src/core/HNum'
+import { HMarker } from '../../../src/core/HMarker'
+import { HList } from '../../../src/core/HList'
+import { HRef } from '../../../src/core/HRef'
+import { HFilter } from '../../../src/filter/HFilter'
+import { HaysonDict } from '../../../src/core/hayson'
+import { HBool } from '../../../src/core/HBool'
+import { ZincReader } from '../../../src/core/ZincReader'
 import {
-	HGrid,
 	DEFAULT_GRID_VERSION,
-	GridColumn,
 	GRID_VERSION_NAME,
-} from '../../src/core/HGrid'
-import { HDict } from '../../src/core/dict/HDict'
-import { HStr } from '../../src/core/HStr'
-import { Kind } from '../../src/core/Kind'
-import { HNum } from '../../src/core/HNum'
-import { HMarker } from '../../src/core/HMarker'
-import { HList } from '../../src/core/HList'
-import { HRef } from '../../src/core/HRef'
-import { HFilter } from '../../src/filter/HFilter'
-import { HaysonDict } from '../../src/core/hayson'
-import '../matchers'
-import '../customMatchers'
-import { HBool } from '../../src/core/HBool'
-import { ZincReader } from '../../src/core/ZincReader'
+} from '../../../src/core/grid/GridStore'
+
+import '../../matchers'
+import '../../customMatchers'
 
 describe('HGrid', function (): void {
 	let grid: HGrid

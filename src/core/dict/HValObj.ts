@@ -8,7 +8,6 @@ import { OptionalHVal } from '../HVal'
 /**
  * An object composed of haystack values.
  */
-
 export interface HValObj {
 	[prop: string]: OptionalHVal
 }

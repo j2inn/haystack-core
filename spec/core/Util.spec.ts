@@ -32,7 +32,7 @@ import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { HVal } from '../../src/core/HVal'
 import { HNa } from '../../src/core/HNa'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HNamespace } from '../../src/core/HNamespace'
 import { makeProjectHaystackNormalizer } from '../readDefs'
 

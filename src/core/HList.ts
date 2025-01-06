@@ -22,7 +22,7 @@ import { Node } from '../filter/Node'
 import { HDict } from './dict/HDict'
 import { makeValue } from './util'
 import { HNum } from './HNum'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3List, JsonV3Val } from './jsonv3'
 

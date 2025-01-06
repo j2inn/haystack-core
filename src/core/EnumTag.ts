@@ -4,7 +4,7 @@
 
 import { HBool } from './HBool'
 import { HDict } from './dict/HDict'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { HNum } from './HNum'
 import { HStr } from './HStr'
 import { valueIsKind } from './HVal'

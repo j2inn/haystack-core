@@ -5,7 +5,7 @@
 import '../../src/core/Array'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HStr } from '../../src/core/HStr'
 import { HBool } from '../../src/core/HBool'
 import { HNum } from '../../src/core/HNum'

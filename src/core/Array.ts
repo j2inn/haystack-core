@@ -10,7 +10,7 @@
  * @module
  */
 
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 import { HList } from './HList'
 import { HDict } from './dict/HDict'
 import { HVal } from './HVal'

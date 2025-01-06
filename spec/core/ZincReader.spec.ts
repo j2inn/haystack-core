@@ -20,7 +20,7 @@ import { HXStr } from '../../src/core/HXStr'
 import { HDict } from '../../src/core/dict/HDict'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HList } from '../../src/core/HList'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HVal } from '../../src/core/HVal'
 import { readFile } from '../file'
 

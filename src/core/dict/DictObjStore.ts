@@ -3,7 +3,7 @@
  */
 
 import { HaysonVal, HaysonDict } from '../hayson'
-import { HGrid } from '../HGrid'
+import { HGrid } from '../grid/HGrid'
 import { OptionalHVal, isHVal, valueIsKind } from '../HVal'
 import { Kind } from '../Kind'
 import { makeValue } from '../util'

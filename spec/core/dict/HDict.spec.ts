@@ -12,16 +12,17 @@ import { HStr } from '../../../src/core/HStr'
 import { HMarker } from '../../../src/core/HMarker'
 import { HBool } from '../../../src/core/HBool'
 import { HList } from '../../../src/core/HList'
-import { HGrid } from '../../../src/core/HGrid'
+import { HGrid } from '../../../src/core/grid/HGrid'
 import { HVal } from '../../../src/core/HVal'
 import { HSymbol } from '../../../src/core/HSymbol'
 import { HNamespace } from '../../../src/core/HNamespace'
 import { HRef } from '../../../src/core/HRef'
 import { HaysonDict } from '../../../src/core/hayson'
 import { HFilter } from '../../../src/filter/HFilter'
+import { HDateTime } from '../../../src/core/HDateTime'
+
 import '../../matchers'
 import '../../customMatchers'
-import { HDateTime } from '../../../src/core/HDateTime'
 
 describe('HDict', function (): void {
 	let dict: HDict

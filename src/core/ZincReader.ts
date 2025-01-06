@@ -23,7 +23,7 @@ import { HDict } from './dict/HDict'
 import { HValObj } from './dict/HValObj'
 import { HSymbol } from './HSymbol'
 import { HList } from './HList'
-import { HGrid } from './HGrid'
+import { HGrid } from './grid/HGrid'
 
 /**
  * A Zinc reader.

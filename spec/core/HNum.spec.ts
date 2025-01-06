@@ -10,7 +10,7 @@ import {
 	DEFAULT_PRECISION,
 } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { HUnit } from '../../src/core/HUnit'

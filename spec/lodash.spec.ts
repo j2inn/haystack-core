@@ -4,7 +4,7 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HGrid } from '../src/core/HGrid'
+import { HGrid } from '../src/core/grid/HGrid'
 import { forEach, fill } from 'lodash'
 import './matchers'
 import './customMatchers'

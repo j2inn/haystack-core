@@ -11,7 +11,7 @@ import { HMarker } from '../../src/core/HMarker'
 import { HNamespace } from '../../src/core/HNamespace'
 import { HNum } from '../../src/core/HNum'
 import { HBool } from '../../src/core/HBool'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { Kind } from '../../src/core/Kind'
 import { HVal, valueIsKind } from '../../src/core/HVal'
 import {
