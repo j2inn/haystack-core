@@ -1283,6 +1283,41 @@ export class HGrid<DictVal extends HDict = HDict>
 	}
 
 	/**
+	 * Return the first row dict that matches the filter or undefined if nothing is found.
+	 *
+	 * ```typescript
+	 * const dict = grid.find('site'))
+	 * ```
+	 *
+	 * @param filter The haystack filter or AST node.
+	 * @param cx Optional haystack filter evaluation context.
+	 * @returns The first row dict that matches the filter.
+	 */
+	public find(
+		filter: string | Node,
+		cx?: Partial<EvalContext>
+	): DictVal | undefined {
+		let result: DictVal | undefined
+
+		this.runFilter(
+			filter,
+			(match: boolean, row: DictVal): boolean => {
+				if (match) {
+					result = row
+
+					// Stop iterating since we have one match.
+					return false
+				}
+
+				// Keep iterating.
+				return true
+			},
+			cx
+		)
+		return result
+	}
+
+	/**
 	 * Returns true if the haystack filter matches the value.
 	 *
 	 * This is the same as the `any` method.

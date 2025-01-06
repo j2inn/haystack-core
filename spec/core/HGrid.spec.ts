@@ -1324,6 +1324,27 @@ type,val
 			})
 		}) // #any()
 
+		describe('#find()', function (): void {
+			it('returns the row dict for a match', function (): void {
+				expect(grid.find('foo')?.toJSON()).toEqual({ foo: 'foo' })
+			})
+
+			it('returns true for a match when using a node', function (): void {
+				const node = HFilter.parse('foo')
+				expect(grid.find(node)?.toJSON()).toEqual({ foo: 'foo' })
+			})
+
+			it('returns false when there is not a match', function (): void {
+				expect(grid.find('food')).toBeUndefined()
+			})
+
+			it('throws an error when the filter is invalid', function (): void {
+				expect((): void => {
+					grid.find('foo = true')
+				}).toThrow()
+			})
+		}) // #find()
+
 		describe('#matches()', function (): void {
 			it('returns true for a match', function (): void {
 				expect(grid.matches('foo')).toBe(true)
