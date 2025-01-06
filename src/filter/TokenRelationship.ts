@@ -21,11 +21,6 @@ export class TokenRelationship implements Token {
 	public readonly relationship: string
 
 	/**
-	 * The relationship term.
-	 */
-	public readonly term: string
-
-	/**
 	 * Flag used to identify a token relationship object.
 	 */
 	public readonly _isATokenRelationship = true
@@ -36,9 +31,8 @@ export class TokenRelationship implements Token {
 	 * @param relationship The relationship.
 	 * @param term The relationship term.
 	 */
-	public constructor(relationship: string, term: string) {
+	public constructor(relationship: string) {
 		this.relationship = relationship
-		this.term = term
 	}
 
 	/**
@@ -71,10 +65,6 @@ export class TokenRelationship implements Token {
 			return false
 		}
 
-		if (this.term !== token.term) {
-			return false
-		}
-
 		return true
 	}
 
@@ -89,7 +79,7 @@ export class TokenRelationship implements Token {
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
 	public toFilter(): string {
-		return `${this.relationship}${this.term ? `-${this.term}` : ''}?`
+		return `${this.relationship}?`
 	}
 
 	/**
@@ -102,7 +92,6 @@ export class TokenRelationship implements Token {
 		return {
 			type: TokenType[this.type],
 			relationship: this.relationship,
-			term: this.term,
 		}
 	}
 }

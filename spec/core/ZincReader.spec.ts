@@ -22,7 +22,7 @@ import { HSymbol } from '../../src/core/HSymbol'
 import { HList } from '../../src/core/HList'
 import { HGrid } from '../../src/core/HGrid'
 import { HVal } from '../../src/core/HVal'
-import { readFile } from './file'
+import { readFile } from '../file'
 
 describe('ZincReader', function (): void {
 	function makeReader(input: string): ZincReader {
@@ -1356,12 +1356,6 @@ describe('ZincReader', function (): void {
 
 			expect(grid instanceof HGrid).toBe(true)
 		}
-
-		it('read zinc defs', function (): void {
-			console.log()
-			readTest('defs.zinc')
-			readTest('defs.json')
-		})
 
 		it('read sites', function (): void {
 			console.log()

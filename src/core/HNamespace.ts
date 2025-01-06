@@ -13,7 +13,7 @@ import { ZincReader } from './ZincReader'
 import { valueIsKind, OptionalHVal } from './HVal'
 import { HMarker } from './HMarker'
 import { HRef } from './HRef'
-import { IMPLIED_BY, makeDefaultValue } from './util'
+import { makeDefaultValue } from './util'
 import { LocalizedError } from '../util/LocalizedError'
 
 export interface Defs {
@@ -591,14 +591,8 @@ export class HNamespace {
 	 * @returns The choices for a def.
 	 */
 	public choicesFor(name: string | HSymbol): HDict[] {
-		let choices: HDict[] | undefined
-
-		const ofVal = this.byName(name)?.get('of')
-		if (ofVal) {
-			choices = this.subTypesOf(String(ofVal))
-		}
-
-		return choices ?? []
+		// Look for all the direct sub-types of a choice to find the actual choices.
+		return this.isChoice(name) ? this.subTypesOf(name) : []
 	}
 
 	/**
@@ -611,12 +605,19 @@ export class HNamespace {
 		const defs = this.defs
 
 		for (const name in defs) {
-			if (this.byName(name)?.has('of')) {
+			if (this.isChoice(name)) {
 				choices[name] = this.choicesFor(name)
 			}
 		}
 
 		return choices
+	}
+
+	private isChoice(name: string | HSymbol): boolean {
+		// Look for a direct super-type of choice for the choice def.
+		return !!this.superTypesOf(name).find(
+			(superType) => superType.defName === 'choice'
+		)
 	}
 
 	/**
@@ -732,7 +733,7 @@ export class HNamespace {
 		}
 		// If the assocation isn't computed then just get the associated defs.
 		// For instance, this will return here if the association is 'tagOn'.
-		if (!assocDef.has('computed')) {
+		if (!assocDef.has('computedFromReciprocal')) {
 			return (
 				this.byName(parent)
 					?.get<HList<HSymbol | null>>(String(association))
@@ -1382,86 +1383,6 @@ export class HNamespace {
 		}
 
 		return false
-	}
-
-	/**
-	 * Returns a new dict with any implied tags that don't already exist on the dict.
-	 *
-	 * @param dict The dict to look up the implied tags on.
-	 * @returns An implied tag dict.
-	 */
-	public toImplied(dict: HDict): HDict {
-		const impliedDict = new HDict()
-		const impliedDefs = this.impliedDefs
-
-		for (const key of dict.keys) {
-			const defs = impliedDefs[key]
-
-			if (defs && defs.length) {
-				for (const def of defs) {
-					// Check the dict doesn't already have the implied tag.
-					if (!dict.has(def.defName)) {
-						// Test to see if dict has all the tags necessary for the implied tag.
-						const impliedBy = def.get<HList<HSymbol>>(IMPLIED_BY)
-
-						if (impliedBy && this.isImpliedMatch(dict, impliedBy)) {
-							const value = dict.get(impliedBy[0]?.value)
-
-							if (value && !impliedDict.has(def.defName)) {
-								impliedDict.set(def.defName, value.newCopy())
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return impliedDict
-	}
-
-	/**
-	 * Return true if the dict has all of the tags.
-	 *
-	 * @param dict The dict to test.
-	 * @param impliedBy A list of tag names to test.
-	 * @returns True if the dict has all of the tags.
-	 */
-	private isImpliedMatch(dict: HDict, impliedBy: HList<HSymbol>): boolean {
-		let matches = !impliedBy.isEmpty()
-
-		for (const tag of impliedBy) {
-			if (!dict.has(tag.value)) {
-				matches = false
-				break
-			}
-		}
-
-		return matches
-	}
-
-	/**
-	 * @returns A map of a tags to defs that have implied rules.
-	 * This map is used to quickly look up tags that are connected with any implied rules.
-	 */
-	@memoize()
-	private get impliedDefs(): NameToDefs {
-		const impliedDefs: NameToDefs = {}
-
-		for (const name of Object.keys(this.defs)) {
-			const def = this.byName(name) as HDict
-			const implied = def?.get(IMPLIED_BY)
-
-			if (valueIsKind<HList<HSymbol>>(implied, Kind.List)) {
-				for (const symbol of implied) {
-					const dicts: HDict[] = (impliedDefs[symbol.value] =
-						impliedDefs[symbol.value] ?? [])
-
-					dicts.push(def)
-				}
-			}
-		}
-
-		return impliedDefs
 	}
 
 	/**

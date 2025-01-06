@@ -1,0 +1,97 @@
+//
+// Copyright (c) 2021, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   31 Mon 2021  Brian Frank  Creation
+//
+
+//////////////////////////////////////////////////////////////////////////
+// Feature
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^op
+is: ^feature
+doc:
+  Operation for HTTP API.
+  See `docHaystack::Ops` chapter.
+--------------------------------------------------------------------------
+def: ^noSideEffects
+is: ^marker
+wikipedia: `https://en.wikipedia.org/wiki/Side_effect_(computer_science)`
+doc:
+  Marks a function or operation as having no side effects.  The function
+  may or may not be *pure* in that calling it multiple times with the
+  same arguments always evaluates to the same result.
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Ops
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^op:about
+noSideEffects
+doc:
+  Query basic information about the server.
+  See `docHaystack::Ops#about` chapter.
+--------------------------------------------------------------------------
+def: ^op:close
+doc:
+  Close the current session and cancel the auth bearer token.
+  See `docHaystack::Ops#close` chapter.
+--------------------------------------------------------------------------
+def: ^op:defs
+noSideEffects
+doc:
+  Query the definitions in the current namespace.
+  See `docHaystack::Ops#defs` chapter.
+--------------------------------------------------------------------------
+def: ^op:filetypes
+noSideEffects
+doc:
+  Query the filetype defs in the current namespace.
+  See `docHaystack::Ops#filetypes` chapter.
+--------------------------------------------------------------------------
+def: ^op:libs
+noSideEffects
+doc:
+  Query the lib defs in the current namespace.
+  See `docHaystack::Ops#libs` chapter.
+--------------------------------------------------------------------------
+def: ^op:read
+noSideEffects
+doc:
+  Query the a set of entity records by id or by filter.
+  See `docHaystack::Ops#read` chapter.
+--------------------------------------------------------------------------
+def: ^op:ops
+noSideEffects
+doc:
+  Query the op defs in the current namespace.
+  See `docHaystack::Ops#ops` chapter.
+--------------------------------------------------------------------------
+def: ^op:nav
+noSideEffects
+doc:
+  Query the navigation tree for discovery.
+  See `docHaystack::Ops#nav` chapter.
+--------------------------------------------------------------------------
+def: ^op:watchPoll
+doc:
+  Poll a watch subscription.
+  See `docHaystack::Ops#watchPoll` chapter.
+--------------------------------------------------------------------------
+def: ^op:watchSub
+doc:
+  Subscribe to entity data.
+  See `docHaystack::Ops#watchSub` chapter.
+--------------------------------------------------------------------------
+def: ^op:watchUnsub
+doc:
+  Unsubscribe to entity data.
+  See `docHaystack::Ops#watchUnsub` chapter.
+--------------------------------------------------------------------------
+
+

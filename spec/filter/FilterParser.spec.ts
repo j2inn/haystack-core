@@ -813,7 +813,7 @@ describe('FilterParser', function (): void {
 		}) // parses '^foo'
 
 		it("parses 'inputs?'", function (): void {
-			tokens = [new TokenRelationship('inputs', '')]
+			tokens = [new TokenRelationship('inputs')]
 
 			expect(parseToJson()).toEqual({
 				type: 'condOr',
@@ -827,7 +827,6 @@ describe('FilterParser', function (): void {
 									{
 										type: 'rel',
 										relationship: 'inputs',
-										term: '',
 									},
 								],
 							},
@@ -836,31 +835,6 @@ describe('FilterParser', function (): void {
 				],
 			})
 		}) // parses 'inputs?'
-
-		it("parses 'inputs-air-output?'", function (): void {
-			tokens = [new TokenRelationship('inputs', 'air-output')]
-
-			expect(parseToJson()).toEqual({
-				type: 'condOr',
-				nodes: [
-					{
-						type: 'condAnd',
-						nodes: [
-							{
-								type: 'rel',
-								tokens: [
-									{
-										type: 'rel',
-										relationship: 'inputs',
-										term: 'air-output',
-									},
-								],
-							},
-						],
-					},
-				],
-			})
-		}) // parses 'inputs-air-output?'
 
 		it("parses 'equipRef *== @ahu'", function (): void {
 			tokens = [

@@ -17,7 +17,7 @@ import { HList } from '../../src/core/HList'
 import { Kind } from '../../src/core/Kind'
 import '../matchers'
 import '../customMatchers'
-import { readFile } from './file'
+import { readFile } from '../file'
 
 describe('TrioReader', function (): void {
 	let trioColls: string
@@ -354,12 +354,6 @@ describe('TrioReader', function (): void {
 			).readAllDicts()
 
 			expect(dicts.length).toBe(1282)
-		})
-
-		it('reads `defs.trio`', function (): void {
-			const dicts = new TrioReader(readFile('defs.trio')).readAllDicts()
-
-			expect(dicts.length).toBe(610)
 		})
 	})
 

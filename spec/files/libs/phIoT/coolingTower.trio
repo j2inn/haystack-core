@@ -1,0 +1,39 @@
+//
+// Copyright (c) 2019, Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   21 Jan 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^coolingTower
+is: [^equip, ^elec-input]
+wikipedia: `https://en.wikipedia.org/wiki/Cooling_tower`
+doc: "Equipment to transfer waste heat into the atmosphere"
+children: [
+  {condenser water entering pipe equip},
+  {condenser water leaving pipe equip},
+  {fan motor equip},
+  ]
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Condenser Loop Type
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^condenserLoop
+is: ^choice
+tagOn: ^chilled-water-plant
+doc: "Open or closed loop for condenser working fluid"
+--------------------------------------------------------------------------
+def: ^condenserOpenLoop
+is: ^condenserLoop
+doc: "Uses working fluid itself for evaporation into the atmosphere"
+--------------------------------------------------------------------------
+def: ^condenserClosedLoop
+is: ^condenserLoop
+doc: "Working fluid is kept separate from fluid used for heat transfer into the atmosphere"
+--------------------------------------------------------------------------
+

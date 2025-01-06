@@ -986,8 +986,12 @@ export class HNormalizer {
 				// 2. Verify tag values match their def's declared types.
 				this.verifyValuesMatchDefTypes(tag, tagNode, tagValue, defName)
 
-				// 5. Verify no defs declare a computed tag.
-				this.verifyComputedIsNotDeclared(tag, tagNode, defName)
+				// 5. Verify no defs declare a computedFromReciprocal tag.
+				this.verifyComputedFromReciprocalIsNotDeclared(
+					tag,
+					tagNode,
+					defName
+				)
 
 				// 8. Verify relationship tags are only used on defs which subtype from ref.
 				if (!isDefRef && tagNode.extends('relationship')) {
@@ -1054,21 +1058,21 @@ export class HNormalizer {
 	}
 
 	/**
-	 * Verify a tag that is marked with the `computed` tag is not declared.
+	 * Verify a tag that is marked with the `computedFromReciprocal` tag is not declared.
 	 *
-	 * Defs with the `computed` tag can never be declared in a def.
+	 * Defs with the `computedFromReciprocal` tag can never be declared in a def.
 	 *
 	 * @param tag The tag name.
 	 * @param tagNode The tag def's tree node.
 	 * @param defName The name of def the tag is declared on.
 	 * @throws An error if the tag def has a computed tag.
 	 */
-	private verifyComputedIsNotDeclared(
+	private verifyComputedFromReciprocalIsNotDeclared(
 		tag: string,
 		tagNode: DefTreeNode,
 		defName: string
 	): void {
-		if (tagNode.def.has('computed')) {
+		if (tagNode.def.has('computedFromReciprocal')) {
 			this.error('noComputed', { defName, tag })
 		}
 	}

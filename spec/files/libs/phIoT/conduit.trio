@@ -1,0 +1,233 @@
+//
+// Copyright (c) 2019 Project-Haystack
+// Licensed under the Academic Free License version 3.0
+//
+// History:
+//   15 Jan 2019  Brian Frank  Creation
+//
+
+--------------------------------------------------------------------------
+def: ^conduit
+is: ^equip
+doc: "Duct, pipe, or cable to convey a substance or phenomenon"
+--------------------------------------------------------------------------
+def: ^pipe
+is: ^conduit
+wikipedia: `https://en.wikipedia.org/wiki/Pipe_(fluid_conveyance)`
+doc: "Conduit used to convey a fluid"
+childrenFlatten: [^fluid, ^pipeSection, ^plantLoop]
+children: [
+  {pump motor equip},
+  {valve actuator equip},
+  {flow sensor point},
+  {flow sp point},
+  {pressure sensor point},
+  {pressure sp point},
+  {temp sensor point},
+  {temp sp point},
+  ]
+--------------------------------------------------------------------------
+def: ^duct
+is: ^conduit
+wikipedia: `https://en.wikipedia.org/wiki/Duct_(flow)`
+doc: "Conduit used to convey air for HVAC"
+childrenFlatten: [^ductDeck, ^ductSection]
+children: [
+  {damper actuator equip},
+  {fan motor equip},
+  {coolingCoil equip},
+  {heatingCoil equip},
+  {air co2 concentration sensor point},
+  {air co2 concentration sp point},
+  {air dewPoint sensor point},
+  {air dewPoint sp point},
+  {air enthalpy sensor point},
+  {air enthalpy sp point},
+  {air flow sensor point},
+  {air flow sp point},
+  {air humidity sensor point},
+  {air humidity sp point},
+  {air pressure sensor point},
+  {air pressure sp point},
+  {air temp sensor point},
+  {air temp sp point},
+  ]
+--------------------------------------------------------------------------
+def: ^wire
+is: ^conduit
+doc: "Cabling used to convey electricity or data"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Pipe Conveys
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^pipeFluid
+is: ^choice
+of: ^fluid
+tagOn: [^pipe, ^valve-actuator, ^pump-motor]
+doc: "Type of fluid conveyed by piping"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Pipe Section
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^pipeSection
+is: ^choice
+tagOn: [^pipe, ^valve-actuator, ^pump-motor]
+doc: "Equipment section of piping"
+--------------------------------------------------------------------------
+def: ^bypass
+is: ^pipeSection
+doc: "Pipe used to bypass an equipment"
+--------------------------------------------------------------------------
+def: ^circ
+is: ^pipeSection
+doc: "Pipe used to circulate fluid through an equipment or system"
+--------------------------------------------------------------------------
+def: ^entering
+is: ^pipeSection
+doc: "Pipe conveys fluid into an equipment"
+--------------------------------------------------------------------------
+def: ^header
+is: ^pipeSection
+doc: "Pipe used as central connection or manifold for other piping runs."
+--------------------------------------------------------------------------
+def: ^leaving
+is: ^pipeSection
+doc: "Pipe conveys fluid out of an equipment"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Plant Loop
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^plantLoop
+is: ^choice
+tagOn: ^pipe
+doc: "Plant piping loop: primary, secondary, or tertiary"
+--------------------------------------------------------------------------
+def: ^primaryLoop
+is: ^plantLoop
+doc:
+  Pipework which circulates closest to the energy source.  In a central
+  plant, the primary loop indicates the pipes and equipment within the
+  central plant.  In context of heat exchangers between the primary
+  and secondary loops, this tag indicates the side closest to the plant.
+--------------------------------------------------------------------------
+def: ^secondaryLoop
+is: ^plantLoop
+doc:
+  Pipework which circulates closest to the building or end use. In a
+  central plant, the secondary loop indicates the pipes and equipment between
+  the central plant and the building.  In context of heat exchangers between
+  the primary and secondary loops, this tag indicates the side closest to
+  the building.
+--------------------------------------------------------------------------
+def: ^tertiaryLoop
+is: ^plantLoop
+doc: "Pipework which circulates within the building."
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Duct Section
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^ductSection
+is: ^choice
+tagOn: [^duct, ^damper-actuator, ^fan-motor]
+doc: "Equipment section of ductwork"
+--------------------------------------------------------------------------
+def: ^discharge
+is: ^ductSection
+doc: "Duct for air leaving an equipment"
+--------------------------------------------------------------------------
+def: ^economizer
+is: ^ductSection
+doc: "Duct to access fresh outside air only for economizing, not ventilation"
+--------------------------------------------------------------------------
+def: ^inlet
+is: ^ductSection
+doc: "Duct with air entering an equipment"
+--------------------------------------------------------------------------
+def: ^flue
+is: ^ductSection
+wikipedia: `https://en.wikipedia.org/wiki/Flue`
+doc: "Duct for exhausting combustion"
+--------------------------------------------------------------------------
+def: ^exhaust
+is: ^ductSection
+doc: "Duct used to expel air back outside"
+--------------------------------------------------------------------------
+def: ^mixed
+is: ^ductSection
+doc: "Duct where fresh outside air and return air is mixed together"
+--------------------------------------------------------------------------
+def: ^outside
+is: ^ductSection
+doc: "Duct to access fresh outside air for both ventilation and economizer."
+--------------------------------------------------------------------------
+def: ^return
+is: ^ductSection
+doc: "Duct returning air back to equipment"
+--------------------------------------------------------------------------
+def: ^ventilation
+is: ^ductSection
+doc: "Duct to access fresh outside air only for ventilation, not economizing"
+--------------------------------------------------------------------------
+
+
+//////////////////////////////////////////////////////////////////////////
+// Duct Deck
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^ductDeck
+is: ^choice
+tagOn: [^duct, ^airHandlingEquip]
+doc:
+  Cold, hot, or neutral deck. Can be applied to 'ahu' equip if the AHU
+  is part of a 'dualDuct' or 'tripleDuct' system but only serves a single
+  deck type.
+--------------------------------------------------------------------------
+def: ^coldDeck
+is: ^ductDeck
+doc: "Duct carries air for cooling"
+--------------------------------------------------------------------------
+def: ^hotDeck
+is: ^ductDeck
+doc: "Duct carries air for heating"
+--------------------------------------------------------------------------
+def: ^neutralDeck
+is: ^ductDeck
+doc: "Duct carries air which by-passes both heating and cooling coils"
+--------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////////////////
+// Duct Config
+//////////////////////////////////////////////////////////////////////////
+
+--------------------------------------------------------------------------
+def: ^ductConfig
+is: ^choice
+tagOn: [^airHandlingEquip, ^airTerminalUnit]
+doc: "Ductwork configuration"
+--------------------------------------------------------------------------
+def: ^singleDuct
+is: ^ductConfig
+doc: "One single duct"
+--------------------------------------------------------------------------
+def: ^dualDuct
+is: ^ductConfig
+doc: "Two ducts: combination of hotDeck, coldDeck, or neutralDeck"
+--------------------------------------------------------------------------
+def: ^tripleDuct
+is: ^ductConfig
+doc: "Three ducts: hotDeck, coldDeck, or neutralDeck"
+--------------------------------------------------------------------------
+

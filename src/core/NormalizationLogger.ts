@@ -104,7 +104,7 @@ const defaultNormalizationMessages: Record<string, string> = {
 	cannotFindDefNode: "Cannot find def node for '{{defName}}'",
 	tagIsNotKind: "Tag '{{defName}}.{{tag}}' should be '{{kind}}'",
 	noComputed:
-		"Cannot declare computed def '{{defName}}.{{tag}}'. It's illegal to declare the def '{{tag}}' in a def because it's marked as 'computed'",
+		"Cannot declare computedFromReciprocal def '{{defName}}.{{tag}}'. It's illegal to declare the def '{{tag}}' in a def because it's marked as 'computedFromReciprocal'",
 	noDefIndex: "No def named 'index' allowed",
 	tagInConjunctNotMarker:
 		"'{{tag}}' is not a marker in conjunct '{{defName}}'",

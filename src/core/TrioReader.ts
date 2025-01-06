@@ -292,7 +292,7 @@ export class TrioReader implements Iterable<HDict> {
 		try {
 			// Attempt to decode it as a zinc string.
 			hval = new ZincReader(line).readValue()
-		} catch (err) {
+		} catch {
 			// If it's not a valid haystack value then fallback to a haystack string
 			// if we're able too. Otherwise throw an error.
 			hval = HStr.make(line)
