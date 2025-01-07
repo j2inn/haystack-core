@@ -143,16 +143,6 @@ describe('HGrid', function (): void {
 		}) // #equals()
 	}) // GridColumn
 
-	describe('row', function (): void {
-		it('adds a new column when setting value that does not exist in the dict', function (): void {
-			expect(grid.getColumns().length).toBe(1)
-			const dict = grid.get(0) as HDict
-			dict.set('boo', true)
-			expect(grid.getColumns().length).toBe(2)
-			expect(grid.getColumns()[1].name).toBe('boo')
-		})
-	}) // row
-
 	describe('grid', function (): void {
 		describe('#constructor()', function (): void {
 			it('creates a grid', function (): void {
@@ -2240,5 +2230,20 @@ type,val
 				)
 			})
 		}) // #toDict()
+
+		describe('#refreshColumns()', function (): void {
+			it('adds any missing columns after a dict has been added', function (): void {
+				expect(grid.getColumns().length).toBe(1)
+				const dict = grid.get(0) as HDict
+				dict.set('boo', true)
+
+				expect(grid.getColumns().length).toBe(1)
+
+				grid.refreshColumns()
+
+				expect(grid.getColumns().length).toBe(2)
+				expect(grid.getColumns()[1].name).toBe('boo')
+			})
+		}) // #refreshColumns()
 	}) // grid
 })

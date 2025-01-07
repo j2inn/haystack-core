@@ -26,7 +26,6 @@ import { HRef } from '../HRef'
 import { EvalContext, EvalContextResolve } from '../../filter/EvalContext'
 import { JsonV3Dict, JsonV3Grid, JsonV3Val } from '../jsonv3'
 import { GridColumn, isGridColumn } from './GridColumn'
-import { GridRowDictStore } from './GridRowDictStore'
 import { GridObjStore } from './GridObjStore'
 import { GridJsonStore } from './GridJsonStore'
 import {
@@ -306,26 +305,20 @@ export class HGrid<DictVal extends HDict = HDict>
 				}
 			}
 
-			meta = meta ?? HDict.make()
-			columns = columns ?? []
-			rows = rows ?? []
-
 			this.$store = new GridObjStore(
 				version,
-				meta,
-				columns.map(
+				meta ?? HDict.make(),
+				(columns ?? []).map(
 					(column): GridColumn =>
 						new GridColumn(column.name, column.meta)
 				),
-				rows as DictVal[]
+				(rows ?? []) as DictVal[]
 			)
 
-			// If we're check each row then create the grid and add each dict.
-			// Adding in this way enforces error checking on each row.
-			const storeRows = this.$store.rows
-			this.$store.rows = []
-			for (const dict of storeRows) {
-				this.add(makeValue(dict) as DictVal)
+			// If there are no columns specified then manually
+			// refresh the columns based upon the dicts being added.
+			if (!columns?.length) {
+				this.refreshColumns()
 			}
 		}
 
@@ -1389,12 +1382,20 @@ export class HGrid<DictVal extends HDict = HDict>
 		}
 
 		this.checkRowIndexNum(index)
-		const row = this.makeRowDictFromValues(dict)
 
 		this.addMissingColumns(dict)
 
-		this.getRows()[index] = row
+		this.getRows()[index] = dict
 		return this
+	}
+
+	/**
+	 * Refreshes a grid's columns based upon the rows in the grid.
+	 */
+	public refreshColumns(): void {
+		for (const row of this.getRows()) {
+			this.addMissingColumns(row)
+		}
 	}
 
 	/**
@@ -1451,11 +1452,9 @@ export class HGrid<DictVal extends HDict = HDict>
 				throw new Error('Row is not a dict')
 			}
 
-			const dict = this.makeRowDictFromValues(row)
+			this.addMissingColumns(row)
 
-			this.addMissingColumns(dict)
-
-			this.getRows().push(dict)
+			this.getRows().push(row)
 		}
 
 		return this
@@ -1510,12 +1509,10 @@ export class HGrid<DictVal extends HDict = HDict>
 				throw new Error('Row is not a dict')
 			}
 
-			const dict = this.makeRowDictFromValues(row)
-
-			this.addMissingColumns(dict)
+			this.addMissingColumns(row)
 
 			// Insert into the array
-			this.getRows().splice(index++, 0, dict)
+			this.getRows().splice(index++, 0, row)
 		}
 
 		return this
@@ -1597,16 +1594,6 @@ export class HGrid<DictVal extends HDict = HDict>
 		}
 
 		return dicts
-	}
-
-	/**
-	 * Make a dict that can be used as a row in a dict.
-	 *
-	 * @param dict The dict to insert as a row into the grid.
-	 * @returns The row dict.
-	 */
-	private makeRowDictFromValues(dict: DictVal): DictVal {
-		return HDict.make(new GridRowDictStore(this, dict)) as DictVal
 	}
 
 	/**
