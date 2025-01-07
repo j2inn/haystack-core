@@ -64,7 +64,9 @@ export * from './core/EnumTag'
 
 // Core grid
 export * from './core/grid/GridColumn'
+export * from './core/grid/GridJsonStore'
 export * from './core/grid/GridObjStore'
+export * from './core/grid/GridRowDictStore'
 export * from './core/grid/GridStore'
 export * from './core/grid/HGrid'
 

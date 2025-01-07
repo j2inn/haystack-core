@@ -31,7 +31,7 @@ export class GridColumn {
 	 */
 	public constructor(name: string, meta?: HDict) {
 		this.name = name
-		this.meta = meta || HDict.make()
+		this.meta = meta ?? HDict.make()
 	}
 
 	/**

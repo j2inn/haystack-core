@@ -27,7 +27,6 @@ import {
 import { JsonV3Dict, JsonV3Val } from '../jsonv3'
 import { Kind } from '../Kind'
 import { makeValue, dictToDis, LocalizedCallback } from '../util'
-import { DictJsonStore } from './DictJsonStore'
 import { DictHValObjStore, toHValObj } from './DictHValObjStore'
 import { DictStore, isDictStore } from './DictStore'
 import { HValObj } from './HValObj'
@@ -224,26 +223,6 @@ export class HDict implements HVal, Iterable<HValRow> {
 		return (
 			valueIsKind<HDict>(values, Kind.Dict) ? values : new HDict(values)
 		) as T
-	}
-
-	/**
-	 * Make a dict based upon the specified value store.
-	 *
-	 * @param store The data store for the dict.
-	 * @returns A dict.
-	 */
-	public static makeFromStore(store: DictStore): HDict {
-		return new HDict(store)
-	}
-
-	/**
-	 * Make a dict based upon some JSON.
-	 *
-	 * @param json The JSON to create the dict from.
-	 * @returns A dict.
-	 */
-	public static makeFromJson(json: HaysonDict): HDict {
-		return HDict.makeFromStore(new DictJsonStore(json))
 	}
 
 	/**

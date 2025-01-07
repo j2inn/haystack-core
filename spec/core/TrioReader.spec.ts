@@ -50,6 +50,8 @@ describe('TrioReader', function (): void {
 			type: 'grid',
 			val: {
 				_kind: Kind.Grid,
+				meta: {},
+				cols: [{ name: 'b' }, { name: 'a' }],
 				rows: [{ b: 20, a: 10 }],
 			},
 		})
@@ -358,7 +360,7 @@ describe('TrioReader', function (): void {
 	})
 
 	describe('#readAllDicts()', function (): void {
-		it('returns an array of dicts', function (): void {
+		it('foobar', function (): void {
 			const dicts = new TrioReader(trioColls).readAllDicts()
 
 			expect(dicts.length).toBe(3)
@@ -371,6 +373,8 @@ describe('TrioReader', function (): void {
 	describe('.readAllDicts()', function (): void {
 		it('returns an array of dicts', function (): void {
 			const dicts = TrioReader.readAllDicts(trioColls)
+
+			trioDict2.toJSON()
 
 			expect(dicts.length).toBe(3)
 			expect(dicts[0]).toValEqual(trioDict0)

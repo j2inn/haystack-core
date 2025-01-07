@@ -195,8 +195,24 @@ describe('HGrid', function (): void {
 				).toEqual(grid)
 			})
 
+			it('creates a grid from a object with meta data', function (): void {
+				const metaGrid = new HGrid({
+					meta: {
+						boo: 'doo',
+					},
+					cols: [{ name: 'foo', meta: { this: 'that' } }],
+					rows: [{ foo: 'foo' }],
+				})
+
+				expect(metaGrid.meta.toJSON()).toEqual({ boo: 'doo' })
+				expect(metaGrid.getColumn(0)?.meta?.toJSON()).toEqual({
+					this: 'that',
+				})
+			})
+
 			it('creates a grid from a hayson object with meta data', function (): void {
 				const metaGrid = new HGrid({
+					_kind: Kind.Grid,
 					meta: {
 						boo: 'doo',
 					},

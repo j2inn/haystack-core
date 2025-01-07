@@ -28,7 +28,13 @@ import { JsonV3Dict, JsonV3Grid, JsonV3Val } from '../jsonv3'
 import { GridColumn, isGridColumn } from './GridColumn'
 import { GridRowDictStore } from './GridRowDictStore'
 import { GridObjStore } from './GridObjStore'
-import { DEFAULT_GRID_VERSION, GRID_VERSION_NAME, GridStore } from './GridStore'
+import { GridJsonStore } from './GridJsonStore'
+import {
+	DEFAULT_GRID_VERSION,
+	GRID_VERSION_NAME,
+	GridStore,
+	isGridStore,
+} from './GridStore'
 
 /**
  * Returns the zinc for the meta data.
@@ -67,10 +73,15 @@ export class GridDictIterator<DictVal extends HDict>
 }
 
 export interface GridParams<DictVal extends HDict = HDict> {
-	meta?: HDict
-	columns?: { name: string; meta?: HDict }[]
-	rows?: DictVal[]
+	meta?: HDict | HaysonDict
+	columns?: { name: string; meta?: HDict | HaysonDict }[]
+	cols?: { name: string; meta?: HDict | HaysonDict }[]
+	rows?: (DictVal | HaysonDict)[]
 	version?: string
+}
+
+function isHaysonGrid(value: unknown): value is HaysonGrid {
+	return (value as HaysonGrid)?._kind === Kind.Grid
 }
 
 /**
@@ -210,124 +221,110 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * ```
 	 *
 	 * @param value The values used to create a grid.
-	 * @param skipChecks This flag should be only used internally. If true then any error
-	 * checking on dicts is skipped. This is useful when we already know the dict being added
-	 * is valid.
 	 */
 	public constructor(
 		arg?:
 			| GridParams<DictVal>
 			| HaysonGrid
 			| HVal
-			| (HaysonDict | DictVal)[],
-		skipChecks = false
-	) {
-		let meta: HDict | undefined
-		let columns: { name: string; meta?: HDict }[] | undefined
-		let rows: DictVal[] | HaysonDict[] | undefined
-		let version = DEFAULT_GRID_VERSION
-
-		const value = arg as
-			| GridParams<DictVal>
-			| HaysonGrid
-			| HVal
 			| (HaysonDict | DictVal)[]
-			| undefined
-			| null
-
-		if (value === undefined) {
-			rows = []
-		} else if (isHVal(value) || value === null) {
-			if (valueIsKind<HGrid<DictVal>>(value, Kind.Grid)) {
-				meta = value.meta
-				columns = value.getColumns()
-				rows = value.getRows()
-				version = value.version
-			} else if (valueIsKind<HDict>(value, Kind.Dict)) {
-				rows = [value] as DictVal[]
-			} else {
-				rows = [HDict.make({ val: value }) as DictVal]
-			}
-		} else if (Array.isArray(value)) {
-			rows = value.map(
-				(dict: HaysonDict | DictVal): DictVal =>
-					HDict.make(dict) as DictVal
-			) as DictVal[]
+			| GridStore<DictVal>
+	) {
+		if (isHaysonGrid(arg)) {
+			this.$store = new GridJsonStore(arg)
+		} else if (isGridStore<DictVal>(arg)) {
+			this.$store = arg
 		} else {
-			// Covers grid objects (GridObj) and Hayson...
+			let meta: HDict | undefined
+			let columns: { name: string; meta?: HDict }[] | undefined
+			let rows: DictVal[] | undefined
+			let version = DEFAULT_GRID_VERSION
 
-			if (value.meta) {
-				meta = makeValue(value.meta) as HDict
+			const value = arg as
+				| GridParams<DictVal>
+				| HVal
+				| (HaysonDict | DictVal)[]
+				| undefined
+				| null
 
-				// Remove the version from the meta. This is used when decoding a Hayson based grid that
-				// adds the version number to the grid's meta data. We need to remove the version so
-				// comparisons (i.e. `equals`) still work as expected.
-				if (meta.has(GRID_VERSION_NAME)) {
+			if (value === undefined) {
+				rows = []
+			} else if (isHVal(value) || value === null) {
+				if (valueIsKind<HGrid<DictVal>>(value, Kind.Grid)) {
+					meta = value.meta
+					columns = value.getColumns()
+					rows = value.getRows()
+					version = value.version
+				} else if (valueIsKind<HDict>(value, Kind.Dict)) {
+					rows = [value] as DictVal[]
+				} else {
+					rows = [HDict.make({ val: value }) as DictVal]
+				}
+			} else if (Array.isArray(value)) {
+				rows = value.map(
+					(dict: HaysonDict | DictVal): DictVal =>
+						HDict.make(dict) as DictVal
+				) as DictVal[]
+			} else {
+				if (value.meta) {
+					meta = makeValue(value.meta) as HDict
+
+					// Remove the version from the meta. This is used when decoding a Hayson based grid that
+					// adds the version number to the grid's meta data. We need to remove the version so
+					// comparisons (i.e. `equals`) still work as expected.
+					if (meta.has(GRID_VERSION_NAME)) {
+						version =
+							meta.get<HStr>(GRID_VERSION_NAME)?.value ??
+							DEFAULT_GRID_VERSION
+
+						meta.remove(GRID_VERSION_NAME)
+					}
+				}
+
+				if (value.columns || value.cols) {
+					columns =
+						(value.columns ?? value.cols)?.map(
+							({ name, meta }) => ({
+								name,
+								meta: meta
+									? (makeValue(meta) as HDict)
+									: undefined,
+							})
+						) ?? []
+				}
+
+				if (value.rows) {
+					rows =
+						value.rows?.map((row) => makeValue(row) as DictVal) ??
+						[]
+				}
+
+				if (value.version) {
 					version =
-						meta.get<HStr>(GRID_VERSION_NAME)?.value ??
+						(value as GridParams<DictVal>).version ||
 						DEFAULT_GRID_VERSION
-
-					meta.remove(GRID_VERSION_NAME)
 				}
 			}
 
-			if ((value as GridParams).columns) {
-				columns = (value as GridParams).columns || []
-			} else if ((value as HaysonGrid).cols) {
-				const obj = value as HaysonGrid
+			meta = meta ?? HDict.make()
+			columns = columns ?? []
+			rows = rows ?? []
 
-				if (obj.cols) {
-					columns = obj.cols.map(
-						(
-							col
-						): {
-							name: string
-							meta?: HDict
-						} => ({
-							name: col.name,
-							meta: col.meta
-								? (makeValue(col.meta) as HDict)
-								: undefined,
-						})
-					)
-				}
-			}
+			this.$store = new GridObjStore(
+				version,
+				meta,
+				columns.map(
+					(column): GridColumn =>
+						new GridColumn(column.name, column.meta)
+				),
+				rows as DictVal[]
+			)
 
-			// Both HaysonGrid and GridObj share a rows iterator property.
-			if ((value as GridParams).rows) {
-				rows = (value as GridParams<DictVal>).rows || []
-			}
-
-			if ((value as GridParams).version) {
-				version =
-					(value as GridParams<DictVal>).version ||
-					DEFAULT_GRID_VERSION
-			}
-		}
-
-		meta = meta ?? HDict.make()
-		columns = columns ?? []
-		rows = rows ?? []
-
-		for (let i = 0; i < rows.length; ++i) {
-			rows[i] = makeValue(rows[i]) as DictVal
-		}
-
-		this.$store = new GridObjStore(
-			version,
-			meta,
-			columns.map(
-				(column): GridColumn => new GridColumn(column.name, column.meta)
-			),
-			rows as DictVal[]
-		)
-
-		// If we're check each row then create the grid and add each dict.
-		// Adding in this way enforces error checking on each row.
-		if (!skipChecks) {
-			const rows = this.$store.rows
+			// If we're check each row then create the grid and add each dict.
+			// Adding in this way enforces error checking on each row.
+			const storeRows = this.$store.rows
 			this.$store.rows = []
-			for (const dict of rows) {
+			for (const dict of storeRows) {
 				this.add(makeValue(dict) as DictVal)
 			}
 		}
@@ -383,22 +380,14 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * Makes a new grid.
 	 *
 	 * @param value The values used to create a grid.
-	 * @param skipChecks This flag should be only used internally. If true then any error
-	 * checking on dicts is skipped. This is useful when we already know the dict being added
-	 * is valid.
 	 * @returns A grid.
 	 */
 	public static make<DictVal extends HDict = HDict>(
-		arg?:
-			| GridParams<DictVal>
-			| HaysonGrid
-			| HVal
-			| (HaysonDict | DictVal)[],
-		skipChecks = false
+		arg?: GridParams<DictVal> | HaysonGrid | HVal | (HaysonDict | DictVal)[]
 	): HGrid<DictVal> {
 		return valueIsKind<HGrid<DictVal>>(arg, Kind.Grid)
 			? arg
-			: new HGrid(arg, skipChecks)
+			: new HGrid(arg)
 	}
 
 	/**
@@ -1617,7 +1606,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The row dict.
 	 */
 	private makeRowDictFromValues(dict: DictVal): DictVal {
-		return HDict.makeFromStore(new GridRowDictStore(this, dict)) as DictVal
+		return HDict.make(new GridRowDictStore(this, dict)) as DictVal
 	}
 
 	/**

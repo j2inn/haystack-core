@@ -44,6 +44,8 @@ import { HList } from './HList'
 import { HGrid } from './grid/HGrid'
 import { Scanner } from '../util/Scanner'
 import { HNamespace } from './HNamespace'
+import { DictJsonStore } from './dict/DictJsonStore'
+import { GridJsonStore } from './grid/GridJsonStore'
 
 /**
  * Make the haystack value based on the supplied data.
@@ -111,9 +113,9 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 			return HUri.make(obj as HaysonUri)
 		case Kind.Dict:
 		case undefined:
-			return HDict.makeFromJson(obj as HaysonDict)
+			return new HDict(new DictJsonStore(obj as HaysonDict))
 		case Kind.Grid:
-			return HGrid.make(obj as HaysonGrid)
+			return new HGrid(new GridJsonStore(obj as HaysonGrid))
 		default:
 			throw new Error('Could not resolve value from kind: ' + obj._kind)
 	}
