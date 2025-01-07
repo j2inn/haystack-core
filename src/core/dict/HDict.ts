@@ -772,21 +772,6 @@ export class HDict implements HVal, Iterable<HValRow> {
 	}
 
 	/**
-	 * Iterates through the dict to ensure we have a valid set of haystack values.
-	 *
-	 * As the dict's internals are directly exposed calling this method will ensure all the
-	 * values held in the dict are valid haystack values.
-	 */
-	public validate(): void {
-		for (const key of this.keys) {
-			const val = this.get(key)
-			if (val !== undefined && !isHVal(val)) {
-				this.set(key, makeValue(val))
-			}
-		}
-	}
-
-	/**
 	 * Merge multiple dicts into one.
 	 *
 	 * ```typescript

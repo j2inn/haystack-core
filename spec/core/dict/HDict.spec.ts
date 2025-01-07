@@ -577,22 +577,6 @@ describe('HDict', function (): void {
 		})
 	}) // #newCopy()
 
-	describe('#validate()', function (): void {
-		it('validates the dict to ensure we have a valid set of haystack values', function (): void {
-			const obj = dict.toObj() as unknown as { [prop: string]: number }
-
-			obj.goo = 100
-
-			dict.validate()
-
-			expect(obj).toEqual({
-				foo: HStr.make('foovalue'),
-				goo: HNum.make(100),
-				soo: HMarker.make(),
-			})
-		})
-	}) // #validate()
-
 	describe('#defName', function (): void {
 		it('returns the name of a def', function (): void {
 			expect(HDict.make({ def: HSymbol.make('foo') }).defName).toBe('foo')
