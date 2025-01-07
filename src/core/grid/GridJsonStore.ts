@@ -12,6 +12,7 @@ import {
 	GRID_STORE_SYMBOL,
 	GRID_VERSION_NAME,
 	GridStore,
+	gridToJson,
 } from './GridStore'
 
 /**
@@ -67,5 +68,9 @@ export class GridJsonStore<DictVal extends HDict>
 		this.rows = grid.rows
 			? grid.rows.map((row) => makeValue(row) as DictVal)
 			: []
+	}
+
+	public toJSON(): HaysonGrid {
+		return gridToJson(this)
 	}
 }

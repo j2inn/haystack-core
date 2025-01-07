@@ -3,6 +3,8 @@
  */
 
 import { HDict } from '../dict/HDict'
+import { HaysonDict, HaysonGrid } from '../hayson'
+import { Kind } from '../Kind'
 import { GridColumn } from './GridColumn'
 
 export const GRID_STORE_SYMBOL = Symbol.for('gridStore')
@@ -45,6 +47,11 @@ export interface GridStore<DictVal extends HDict> {
 	rows: DictVal[]
 
 	/**
+	 * @returns A JSON reprentation of the grid.
+	 */
+	toJSON(): HaysonGrid
+
+	/**
 	 * Indicates this is a grid store.
 	 */
 	[GRID_STORE_SYMBOL]: symbol
@@ -62,4 +69,34 @@ export function isGridStore<DictVal extends HDict>(
 	return !!(
 		(value as GridStore<DictVal>)?.[GRID_STORE_SYMBOL] === GRID_STORE_SYMBOL
 	)
+}
+
+/**
+ * Returns a JSON reprentation of a grid store.
+ *
+ * @param grid The grid store.
+ * @returns The JSON representation of the grid.
+ */
+export function gridToJson<DictVal extends HDict>(
+	grid: GridStore<DictVal>
+): HaysonGrid {
+	return {
+		_kind: Kind.Grid,
+		meta: {
+			[GRID_VERSION_NAME]: grid.version,
+			...grid.meta.toJSON(),
+		},
+		cols: grid.columns.map(
+			(
+				column: GridColumn
+			): {
+				name: string
+				meta: HaysonDict
+			} => ({
+				name: column.name,
+				meta: column.meta.toJSON(),
+			})
+		),
+		rows: grid.rows.map((row: DictVal): HaysonDict => row.toJSON()),
+	}
 }

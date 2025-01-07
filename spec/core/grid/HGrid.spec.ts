@@ -310,6 +310,7 @@ describe('HGrid', function (): void {
 		describe('#toJSON()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {
 				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
 
 				expect(grid.toJSON()).toEqual({
 					_kind: Kind.Grid,
@@ -332,38 +333,12 @@ describe('HGrid', function (): void {
 					],
 				})
 			})
-
-			it('lazily adds columns when generating JSON', function (): void {
-				grid.getRows().push(HDict.make({ boo: true }))
-
-				expect(grid.toJSON()).toEqual({
-					_kind: Kind.Grid,
-					meta: { ver: DEFAULT_GRID_VERSION },
-					cols: [
-						{
-							name: 'foo',
-							meta: {},
-						},
-						{
-							name: 'boo',
-							meta: {},
-						},
-					],
-					rows: [
-						{
-							foo: 'foo',
-						},
-						{
-							boo: true,
-						},
-					],
-				})
-			})
 		}) // #toJSON()
 
 		describe('#toJSONv3()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {
 				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
 
 				expect(grid.toJSONv3()).toEqual({
 					meta: { ver: DEFAULT_GRID_VERSION },
@@ -484,6 +459,7 @@ type,val
 		describe('#toZinc()', function (): void {
 			it('returns a zinc encoded grid', function (): void {
 				grid[0]?.set('goo', null)
+				grid.refreshColumns()
 				const zinc = 'ver:"3.0"\nfoo,goo\n"foo",N\n'
 				expect(grid.toZinc()).toEqual(zinc)
 			})
@@ -542,51 +518,6 @@ type,val
 					'siteName dis:"Sites",val dis:"Value" unit:"kW"\n' +
 					'"Site 1",356.214kW\n' +
 					'"Site 2",463.028kW\n'
-
-				expect(grid.toZinc()).toEqual(zinc)
-			})
-
-			it('lazily adds columns when rows is added to outside of grid object', function (): void {
-				grid = HGrid.make({
-					meta: HDict.make({
-						database: HStr.make('test'),
-						dis: HStr.make('Site Energy Summary'),
-					}),
-					columns: [
-						{
-							name: 'siteName',
-							meta: HDict.make({
-								dis: HStr.make('Sites'),
-							}),
-						},
-						{
-							name: 'val',
-							meta: HDict.make({
-								dis: HStr.make('Value'),
-								unit: HStr.make('kW'),
-							}),
-						},
-					],
-					rows: [
-						HDict.make({
-							siteName: HStr.make('Site 1'),
-							val: HNum.make(356.214, 'kW'),
-						}),
-						HDict.make({
-							siteName: HStr.make('Site 2'),
-							val: HNum.make(463.028, 'kW'),
-						}),
-					],
-				})
-
-				grid.getRows().push(HDict.make({ foo: true }))
-
-				const zinc =
-					'ver:"3.0" database:"test" dis:"Site Energy Summary"\n' +
-					'siteName dis:"Sites",val dis:"Value" unit:"kW",foo\n' +
-					'"Site 1",356.214kW,\n' +
-					'"Site 2",463.028kW,\n' +
-					',,T\n'
 
 				expect(grid.toZinc()).toEqual(zinc)
 			})

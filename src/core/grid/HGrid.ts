@@ -425,41 +425,13 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns A JSON reprentation of the object.
 	 */
 	public toJSON(): HaysonGrid {
-		const rows = this.getRows().map((row: DictVal): HaysonDict => {
-			this.addMissingColumns(row)
-			return row.toJSON()
-		})
-
-		return {
-			_kind: this.getKind(),
-			meta: {
-				[GRID_VERSION_NAME]: this.version,
-				...this.meta.toJSON(),
-			},
-			cols: this.$store.columns.map(
-				(
-					column: GridColumn
-				): {
-					name: string
-					meta: HaysonDict
-				} => ({
-					name: column.name,
-					meta: column.meta.toJSON(),
-				})
-			),
-			rows,
-		}
+		return this.$store.toJSON()
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
 	public toJSONv3(): JsonV3Grid {
-		const rows = this.getRows().map((row: DictVal): JsonV3Dict => {
-			this.addMissingColumns(row)
-			return row.toJSONv3()
-		})
-
 		return {
 			meta: {
 				[GRID_VERSION_NAME]: this.version,
@@ -476,7 +448,9 @@ export class HGrid<DictVal extends HDict = HDict>
 					...column.meta.toJSONv3(),
 				})
 			),
-			rows,
+			rows: this.getRows().map(
+				(row: DictVal): JsonV3Dict => row.toJSONv3()
+			),
 		}
 	}
 
@@ -500,12 +474,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The encoded zinc string.
 	 */
 	public toZinc(nested?: boolean): string {
-		// Check whether we need to add any missing columns. We need to do this
-		// as a developer could have adding a new dict to the grid's internal rows array.
-		// Therefore we need lazily make sure we have all the correct columns in place for
-		// the grid to be valid.
 		const rows = this.getRows()
-		rows.forEach((dict: DictVal): void => this.addMissingColumns(dict))
 
 		let zinc = nested ? '<<\n' : ''
 
