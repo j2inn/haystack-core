@@ -39,7 +39,7 @@ export function toHValObj(values: {
  * in an object.
  */
 export class DictHValObjStore implements DictStore {
-	readonly #values: HValObj
+	#values: HValObj
 
 	public constructor(values: HValObj) {
 		this.#values = values
@@ -62,11 +62,7 @@ export class DictHValObjStore implements DictStore {
 	}
 
 	public clear(): void {
-		// Don't overwrite this object completely just in case it's had an
-		// observable installed on it.
-		Object.keys(this.#values).forEach((key: string): void => {
-			delete this.#values[key]
-		})
+		this.#values = {}
 	}
 
 	public getKeys(): string[] {
