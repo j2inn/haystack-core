@@ -4,12 +4,12 @@
 
 import { HaysonDict } from '../hayson'
 import { OptionalHVal } from '../HVal'
-import { toHValObj } from './DictObjStore'
-import { DictStore } from './DictStore'
+import { toHValObj } from './DictHValObjStore'
+import { DICT_STORE_SYMBOL, DictStore } from './DictStore'
 import { HValObj, hvalObjToJson } from './HValObj'
 
 /**
- * A dict store that uses a backing JSON (Hayson) object to store the values.
+ * A dict store that uses a pure JSON (Hayson) object to store the values.
  *
  * This is designed to work as lazily and efficiently as possible.
  */
@@ -66,6 +66,8 @@ export class DictJsonStore implements DictStore {
 	public toJSON(): HaysonDict {
 		return this.#hvals ? hvalObjToJson(this.#hvals) : this.#values
 	}
+
+	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private getHvals(): HValObj {
 		if (!this.#hvals) {

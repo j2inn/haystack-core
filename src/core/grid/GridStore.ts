@@ -5,6 +5,8 @@
 import { HDict } from '../dict/HDict'
 import { GridColumn } from './GridColumn'
 
+export const GRID_STORE_SYMBOL = Symbol.for('gridStore')
+
 /**
  * The default grid version number.
  */
@@ -41,4 +43,23 @@ export interface GridStore<DictVal extends HDict> {
 	 * The store's rows.
 	 */
 	rows: DictVal[]
+
+	/**
+	 * Indicates this is a grid store.
+	 */
+	[GRID_STORE_SYMBOL]: symbol
+}
+
+/**
+ * Type guard to check whether the value is a grid store.
+ *
+ * @param store The grid store.
+ * @returns true if the object is a grid store.
+ */
+export function isGridStore<DictVal extends HDict>(
+	value: unknown
+): value is GridStore<DictVal> {
+	return !!(
+		(value as GridStore<DictVal>)?.[GRID_STORE_SYMBOL] === GRID_STORE_SYMBOL
+	)
 }

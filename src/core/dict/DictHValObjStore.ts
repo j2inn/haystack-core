@@ -3,12 +3,9 @@
  */
 
 import { HaysonVal, HaysonDict } from '../hayson'
-import { HGrid } from '../grid/HGrid'
-import { OptionalHVal, isHVal, valueIsKind } from '../HVal'
-import { Kind } from '../Kind'
+import { OptionalHVal } from '../HVal'
 import { makeValue } from '../util'
-import { DictStore } from './DictStore'
-import { HDict } from './HDict'
+import { DICT_STORE_SYMBOL, DictStore } from './DictStore'
 import { HValObj, hvalObjToJson } from './HValObj'
 
 /**
@@ -41,28 +38,11 @@ export function toHValObj(values: {
  * Implementation of a store with the backing data being held
  * in an object.
  */
-export class DictObjStore implements DictStore {
+export class DictHValObjStore implements DictStore {
 	readonly #values: HValObj
 
-	public constructor(
-		values?: { [prop: string]: OptionalHVal | HaysonVal } | OptionalHVal
-	) {
-		if (isHVal(values) || values === null) {
-			if (valueIsKind<HDict>(values, Kind.Dict)) {
-				this.#values = values.toObj()
-			} else if (valueIsKind<HGrid>(values, Kind.Grid)) {
-				this.#values = {}
-				for (let i = 0; i < values.length; ++i) {
-					this.#values[`row${i}`] = values.get(i) as OptionalHVal
-				}
-			} else {
-				this.#values = { val: values }
-			}
-		} else if (values) {
-			this.#values = toHValObj(values)
-		} else {
-			this.#values = {}
-		}
+	public constructor(values: HValObj) {
+		this.#values = values
 	}
 
 	public get(name: string): OptionalHVal | undefined {
@@ -100,4 +80,6 @@ export class DictObjStore implements DictStore {
 	public toJSON(): HaysonDict {
 		return hvalObjToJson(this.#values)
 	}
+
+	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 }

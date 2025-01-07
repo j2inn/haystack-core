@@ -11,6 +11,7 @@ import {
 	valueEquals,
 	OptionalHVal,
 	ZINC_NULL,
+	isHVal,
 } from '../HVal'
 import { HDict } from '../dict/HDict'
 import { HValObj } from '../dict/HValObj'
@@ -27,8 +28,7 @@ import { JsonV3Dict, JsonV3Grid, JsonV3Val } from '../jsonv3'
 import { GridColumn, isGridColumn } from './GridColumn'
 import { GridRowDictStore } from './GridRowDictStore'
 import { GridObjStore } from './GridObjStore'
-import { GRID_VERSION_NAME, GridStore } from './GridStore'
-import { GridObj } from './GridObj'
+import { DEFAULT_GRID_VERSION, GRID_VERSION_NAME, GridStore } from './GridStore'
 
 /**
  * Returns the zinc for the meta data.
@@ -64,6 +64,13 @@ export class GridDictIterator<DictVal extends HDict>
 			value: dict ? (dict as DictVal) : (HDict.make() as DictVal),
 		}
 	}
+}
+
+export interface GridParams<DictVal extends HDict = HDict> {
+	meta?: HDict
+	columns?: { name: string; meta?: HDict }[]
+	rows?: DictVal[]
+	version?: string
 }
 
 /**
@@ -141,7 +148,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * This is used to increase the performance of column name look ups.
 	 */
-	private readonly $columnNameCache: Record<string, number> = {};
+	private $columnNameCache: Record<string, number> | undefined;
 
 	/**
 	 * Numerical index access.
@@ -208,12 +215,112 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * is valid.
 	 */
 	public constructor(
-		arg?: GridObj<DictVal> | HaysonGrid | HVal | (HaysonDict | DictVal)[],
+		arg?:
+			| GridParams<DictVal>
+			| HaysonGrid
+			| HVal
+			| (HaysonDict | DictVal)[],
 		skipChecks = false
 	) {
-		this.$store = new GridObjStore(arg)
+		let meta: HDict | undefined
+		let columns: { name: string; meta?: HDict }[] | undefined
+		let rows: DictVal[] | HaysonDict[] | undefined
+		let version = DEFAULT_GRID_VERSION
 
-		this.rebuildColumnCache()
+		const value = arg as
+			| GridParams<DictVal>
+			| HaysonGrid
+			| HVal
+			| (HaysonDict | DictVal)[]
+			| undefined
+			| null
+
+		if (value === undefined) {
+			rows = []
+		} else if (isHVal(value) || value === null) {
+			if (valueIsKind<HGrid<DictVal>>(value, Kind.Grid)) {
+				meta = value.meta
+				columns = value.getColumns()
+				rows = value.getRows()
+				version = value.version
+			} else if (valueIsKind<HDict>(value, Kind.Dict)) {
+				rows = [value] as DictVal[]
+			} else {
+				rows = [HDict.make({ val: value }) as DictVal]
+			}
+		} else if (Array.isArray(value)) {
+			rows = value.map(
+				(dict: HaysonDict | DictVal): DictVal =>
+					HDict.make(dict) as DictVal
+			) as DictVal[]
+		} else {
+			// Covers grid objects (GridObj) and Hayson...
+
+			if (value.meta) {
+				meta = makeValue(value.meta) as HDict
+
+				// Remove the version from the meta. This is used when decoding a Hayson based grid that
+				// adds the version number to the grid's meta data. We need to remove the version so
+				// comparisons (i.e. `equals`) still work as expected.
+				if (meta.has(GRID_VERSION_NAME)) {
+					version =
+						meta.get<HStr>(GRID_VERSION_NAME)?.value ??
+						DEFAULT_GRID_VERSION
+
+					meta.remove(GRID_VERSION_NAME)
+				}
+			}
+
+			if ((value as GridParams).columns) {
+				columns = (value as GridParams).columns || []
+			} else if ((value as HaysonGrid).cols) {
+				const obj = value as HaysonGrid
+
+				if (obj.cols) {
+					columns = obj.cols.map(
+						(
+							col
+						): {
+							name: string
+							meta?: HDict
+						} => ({
+							name: col.name,
+							meta: col.meta
+								? (makeValue(col.meta) as HDict)
+								: undefined,
+						})
+					)
+				}
+			}
+
+			// Both HaysonGrid and GridObj share a rows iterator property.
+			if ((value as GridParams).rows) {
+				rows = (value as GridParams<DictVal>).rows || []
+			}
+
+			if ((value as GridParams).version) {
+				version =
+					(value as GridParams<DictVal>).version ||
+					DEFAULT_GRID_VERSION
+			}
+		}
+
+		meta = meta ?? HDict.make()
+		columns = columns ?? []
+		rows = rows ?? []
+
+		for (let i = 0; i < rows.length; ++i) {
+			rows[i] = makeValue(rows[i]) as DictVal
+		}
+
+		this.$store = new GridObjStore(
+			version,
+			meta,
+			columns.map(
+				(column): GridColumn => new GridColumn(column.name, column.meta)
+			),
+			rows as DictVal[]
+		)
 
 		// If we're check each row then create the grid and add each dict.
 		// Adding in this way enforces error checking on each row.
@@ -252,6 +359,26 @@ export class HGrid<DictVal extends HDict = HDict>
 		return new Proxy(this, handler) as HGrid<DictVal>
 	}
 
+	private get columnNameCache(): Record<string, number> {
+		if (!this.$columnNameCache) {
+			this.$columnNameCache = {}
+			this.rebuildColumnCache()
+		}
+		return this.$columnNameCache as Record<string, number>
+	}
+
+	private rebuildColumnCache(): void {
+		const cache = this.columnNameCache
+
+		for (const key of Object.keys(cache)) {
+			delete cache[key]
+		}
+
+		for (let i = 0; i < this.$store.columns.length; ++i) {
+			cache[this.$store.columns[i].name] = i
+		}
+	}
+
 	/**
 	 * Makes a new grid.
 	 *
@@ -262,7 +389,11 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns A grid.
 	 */
 	public static make<DictVal extends HDict = HDict>(
-		arg?: GridObj<DictVal> | HaysonGrid | HVal | (HaysonDict | DictVal)[],
+		arg?:
+			| GridParams<DictVal>
+			| HaysonGrid
+			| HVal
+			| (HaysonDict | DictVal)[],
 		skipChecks = false
 	): HGrid<DictVal> {
 		return valueIsKind<HGrid<DictVal>>(arg, Kind.Grid)
@@ -1538,7 +1669,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The new column or the one already found.
 	 */
 	public addColumn(name: string, meta?: HDict): GridColumn {
-		const index = this.$columnNameCache[name]
+		const index = this.columnNameCache[name]
 
 		// If the column already exists then just update it.
 		if (typeof index === 'number') {
@@ -1564,7 +1695,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns True if the grid has the column.
 	 */
 	public hasColumn(name: string): boolean {
-		return this.$columnNameCache[name] !== undefined
+		return this.columnNameCache[name] !== undefined
 	}
 
 	/**
@@ -1589,7 +1720,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		const column = new GridColumn(name, meta || HDict.make())
 
 		this.$store.columns[index] = column
-		this.$columnNameCache[column.name] = index
+		this.columnNameCache[column.name] = index
 
 		return column
 	}
@@ -1620,7 +1751,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		if (typeof index === 'number') {
 			column = this.$store.columns[index as number]
 		} else if (typeof index === 'string') {
-			const i = this.$columnNameCache[index]
+			const i = this.columnNameCache[index]
 			if (i !== undefined) {
 				column = this.$store.columns[i]
 			}
@@ -1682,16 +1813,6 @@ export class HGrid<DictVal extends HDict = HDict>
 		)
 
 		this.rebuildColumnCache()
-	}
-
-	private rebuildColumnCache(): void {
-		for (const key of Object.keys(this.$columnNameCache)) {
-			delete this.$columnNameCache[key]
-		}
-
-		for (let i = 0; i < this.$store.columns.length; ++i) {
-			this.$columnNameCache[this.$store.columns[i].name] = i
-		}
 	}
 
 	/**

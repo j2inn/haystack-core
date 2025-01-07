@@ -2,67 +2,24 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
-import { DictObjStore } from '../../../src/core/dict/DictObjStore'
+import { DictHValObjStore } from '../../../src/core/dict/DictHValObjStore'
 import { HMarker } from '../../../src/core/HMarker'
 import { HStr } from '../../../src/core/HStr'
-import { HGrid } from '../../../src/core/grid/HGrid'
-import { HDict } from '../../../src/core/dict/HDict'
 import { Kind } from '../../../src/core/Kind'
 
 import '../../matchers'
 import '../../customMatchers'
 
 describe('DictObjStore', () => {
-	let store: DictObjStore
+	let store: DictHValObjStore
 
 	beforeEach(() => {
-		store = new DictObjStore({
+		store = new DictHValObjStore({
 			site: HMarker.make(),
 			dis: HStr.make('A site'),
 			isNull: null,
 		})
 	})
-
-	describe('#constructor()', () => {
-		it('makes an object from an object', () => {
-			expect(store.toJSON()).toEqual({
-				site: { _kind: Kind.Marker },
-				dis: 'A site',
-				isNull: null,
-			})
-		})
-
-		it('makes an object from null', () => {
-			const store = new DictObjStore(null)
-			expect(store.toJSON()).toEqual({ val: null })
-		})
-
-		it('makes an object from a haystack value', () => {
-			const store = new DictObjStore(HStr.make('a string'))
-			expect(store.toJSON()).toEqual({ val: 'a string' })
-		})
-
-		it('makes an object from a dict', () => {
-			const store = new DictObjStore(
-				new HDict({
-					site: HMarker.make(),
-				})
-			)
-			expect(store.toJSON()).toEqual({ site: { _kind: Kind.Marker } })
-		})
-
-		it('makes an object from a grid', () => {
-			const store = new DictObjStore(
-				new HGrid({
-					rows: [new HDict({ site: HMarker.make() })],
-				})
-			)
-
-			expect(store.toJSON()).toEqual({
-				row0: { site: { _kind: Kind.Marker } },
-			})
-		})
-	}) // .#constructor()
 
 	describe('#get()', () => {
 		it('gets a value', () => {

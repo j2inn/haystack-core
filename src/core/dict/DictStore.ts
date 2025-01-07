@@ -6,6 +6,8 @@ import { HaysonDict } from '../hayson'
 import { OptionalHVal } from '../HVal'
 import { HValObj } from './HValObj'
 
+export const DICT_STORE_SYMBOL = Symbol.for('dictStore')
+
 /**
  * Inner backing data store for a dict.
  */
@@ -61,14 +63,19 @@ export interface DictStore {
 	 * @returns A JSON reprentation of the object.
 	 */
 	toJSON(): HaysonDict
+
+	/**
+	 * Indicates this is a dict store.
+	 */
+	[DICT_STORE_SYMBOL]: symbol
 }
 
 /**
- * Type guard to check whether the store is a dict or not.
+ * Type guard to check whether the value is a dict store or not.
  *
  * @param store The dict store.
  * @returns true if the object is a dict store.
  */
-export function isDictStore(store: unknown): store is DictStore {
-	return typeof (store as DictStore)?.getKeys === 'function'
+export function isDictStore(value: unknown): value is DictStore {
+	return !!((value as DictStore)?.[DICT_STORE_SYMBOL] === DICT_STORE_SYMBOL)
 }

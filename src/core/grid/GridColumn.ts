@@ -4,22 +4,24 @@
 
 import { HDict } from '../dict/HDict'
 import { HStr } from '../HStr'
-import { CANNOT_CHANGE_READONLY_VALUE, valueIsKind } from '../HVal'
+import { valueIsKind } from '../HVal'
 import { Kind } from '../Kind'
+
+export const GRID_COLUMN_SYMBOL = Symbol.for('gridColumn')
 
 /**
  * A grid column.
  */
 export class GridColumn {
 	/**
-	 * Inner name of the column.
+	 * Name of the column.
 	 */
-	private $name: string
+	readonly name: string
 
 	/**
-	 * Inner meta data for the column.
+	 * Meta data for the column.
 	 */
-	private $meta: HDict
+	readonly meta: HDict
 
 	/**
 	 * Constructs a new column.
@@ -28,30 +30,8 @@ export class GridColumn {
 	 * @param meta The column's meta data.
 	 */
 	public constructor(name: string, meta?: HDict) {
-		this.$name = name
-		this.$meta = meta || HDict.make()
-	}
-
-	/**
-	 * @returns The column's name.
-	 */
-	public get name(): string {
-		return this.$name
-	}
-
-	public set name(name: string) {
-		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
-	}
-
-	/**
-	 * @returns The column's meta data.
-	 */
-	public get meta(): HDict {
-		return this.$meta
-	}
-
-	public set meta(meta: HDict) {
-		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
+		this.name = name
+		this.meta = meta || HDict.make()
 	}
 
 	/**
@@ -79,10 +59,10 @@ export class GridColumn {
 		if (!isGridColumn(column)) {
 			return false
 		}
-		if (column.name !== this.$name) {
+		if (column.name !== this.name) {
 			return false
 		}
-		if (!column.meta.equals(this.$meta)) {
+		if (!column.meta.equals(this.meta)) {
 			return false
 		}
 		return true
@@ -91,7 +71,7 @@ export class GridColumn {
 	/**
 	 * Flag used to identify a grid column.
 	 */
-	public readonly _isAGridColumn = true
+	public [GRID_COLUMN_SYMBOL] = GRID_COLUMN_SYMBOL
 }
 
 /**
@@ -101,5 +81,5 @@ export class GridColumn {
  * @returns True if the value is a grid column.
  */
 export function isGridColumn(value: unknown): value is GridColumn {
-	return (value as GridColumn)?._isAGridColumn
+	return (value as GridColumn)?.[GRID_COLUMN_SYMBOL] === GRID_COLUMN_SYMBOL
 }

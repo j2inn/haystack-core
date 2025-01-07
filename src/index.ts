@@ -64,14 +64,13 @@ export * from './core/EnumTag'
 
 // Core grid
 export * from './core/grid/GridColumn'
-export * from './core/grid/GridObj'
 export * from './core/grid/GridObjStore'
 export * from './core/grid/GridStore'
 export * from './core/grid/HGrid'
 
 // Core dict
 export * from './core/dict/DictJsonStore'
-export * from './core/dict/DictObjStore'
+export * from './core/dict/DictHValObjStore'
 export * from './core/dict/DictStore'
 export * from './core/dict/HDict'
 export * from './core/dict/HValObj'

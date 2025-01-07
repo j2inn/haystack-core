@@ -2,7 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
-import { DictStore } from '../dict/DictStore'
+import { DICT_STORE_SYMBOL, DictStore } from '../dict/DictStore'
 import { HDict } from '../dict/HDict'
 import { HValObj } from '../dict/HValObj'
 import { HaysonDict } from '../hayson'
@@ -45,7 +45,7 @@ export class GridRowDictStore<DictVal extends HDict> implements DictStore {
 	public set(name: string, value: OptionalHVal): void {
 		// The column to the grid if it's missing.
 		if (!this.#grid.hasColumn(name)) {
-			this.#grid.addColumn(name, undefined)
+			this.#grid.addColumn(name)
 		}
 
 		this.#cells.set(name, value)
@@ -70,4 +70,6 @@ export class GridRowDictStore<DictVal extends HDict> implements DictStore {
 	public toJSON(): HaysonDict {
 		return this.#cells.toJSON()
 	}
+
+	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 }

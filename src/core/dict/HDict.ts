@@ -28,7 +28,7 @@ import { JsonV3Dict, JsonV3Val } from '../jsonv3'
 import { Kind } from '../Kind'
 import { makeValue, dictToDis, LocalizedCallback } from '../util'
 import { DictJsonStore } from './DictJsonStore'
-import { DictObjStore } from './DictObjStore'
+import { DictHValObjStore, toHValObj } from './DictHValObjStore'
 import { DictStore, isDictStore } from './DictStore'
 import { HValObj } from './HValObj'
 
@@ -146,7 +146,31 @@ export class HDict implements HVal, Iterable<HValRow> {
 			| OptionalHVal
 			| DictStore
 	) {
-		this.$store = isDictStore(values) ? values : new DictObjStore(values)
+		if (isDictStore(values)) {
+			this.$store = values
+		} else {
+			let hvalObjs: HValObj
+
+			if (isHVal(values) || values === null) {
+				if (valueIsKind<HDict>(values, Kind.Dict)) {
+					hvalObjs = values.toObj()
+				} else if (valueIsKind<HGrid>(values, Kind.Grid)) {
+					hvalObjs = {}
+					for (let i = 0; i < values.length; ++i) {
+						hvalObjs[`row${i}`] = values.get(i) as OptionalHVal
+					}
+				} else {
+					hvalObjs = { val: values }
+				}
+			} else if (values) {
+				hvalObjs = toHValObj(values)
+			} else {
+				hvalObjs = {}
+			}
+
+			this.$store = new DictHValObjStore(hvalObjs)
+		}
+
 		return this.makeProxy()
 	}
 
