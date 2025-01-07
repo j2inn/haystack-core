@@ -474,8 +474,6 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The encoded zinc string.
 	 */
 	public toZinc(nested?: boolean): string {
-		const rows = this.getRows()
-
 		let zinc = nested ? '<<\n' : ''
 
 		// Header and version
@@ -487,6 +485,8 @@ export class HGrid<DictVal extends HDict = HDict>
 			zinc += ` ${metaZinc}`
 		}
 		zinc += '\n'
+
+		const rows = this.getRows()
 
 		// Columns
 		if (!rows.length && !this.$store.columns.length) {
