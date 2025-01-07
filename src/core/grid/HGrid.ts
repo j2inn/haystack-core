@@ -134,7 +134,14 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * The internal grid storage.
 	 */
-	private readonly $store: GridStore<DictVal>;
+	private readonly $store: GridStore<DictVal>
+
+	/**
+	 * An internal column index cache.
+	 *
+	 * This is used to increase the performance of column name look ups.
+	 */
+	private readonly $columnNameCache: Record<string, number> = {};
 
 	/**
 	 * Numerical index access.
@@ -204,7 +211,20 @@ export class HGrid<DictVal extends HDict = HDict>
 		arg?: GridObj<DictVal> | HaysonGrid | HVal | (HaysonDict | DictVal)[],
 		skipChecks = false
 	) {
-		this.$store = new GridObjStore(arg, skipChecks)
+		this.$store = new GridObjStore(arg)
+
+		this.rebuildColumnCache()
+
+		// If we're check each row then create the grid and add each dict.
+		// Adding in this way enforces error checking on each row.
+		if (!skipChecks) {
+			const rows = this.$store.rows
+			this.$store.rows = []
+			for (const dict of rows) {
+				this.add(makeValue(dict) as DictVal)
+			}
+		}
+
 		return this.makeProxy()
 	}
 
@@ -541,7 +561,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 */
 	public get(index: number): DictVal | undefined {
 		this.checkRowIndexNum(index)
-		return this.$store.get(index)
+		return this.$store.rows[index]
 	}
 
 	/**
@@ -1222,7 +1242,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The total number of rows.
 	 */
 	public get length(): number {
-		return this.$store.size
+		return this.$store.rows.length
 	}
 
 	/**
@@ -1466,9 +1486,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The row dict.
 	 */
 	private makeRowDictFromValues(dict: DictVal): DictVal {
-		return HDict.makeFromStore(
-			new GridRowDictStore(this.$store, dict)
-		) as DictVal
+		return HDict.makeFromStore(new GridRowDictStore(this, dict)) as DictVal
 	}
 
 	/**
@@ -1520,7 +1538,17 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The new column or the one already found.
 	 */
 	public addColumn(name: string, meta?: HDict): GridColumn {
-		return this.$store.addColumn(name, meta)
+		const index = this.$columnNameCache[name]
+
+		// If the column already exists then just update it.
+		if (typeof index === 'number') {
+			return this.setColumn(index, name, meta || HDict.make())
+		} else {
+			const column = new GridColumn(name, meta || HDict.make())
+			this.$store.columns.push(column)
+			this.rebuildColumnCache()
+			return column
+		}
 	}
 
 	/**
@@ -1536,7 +1564,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns True if the grid has the column.
 	 */
 	public hasColumn(name: string): boolean {
-		return this.$store.hasColumn(name)
+		return this.$columnNameCache[name] !== undefined
 	}
 
 	/**
@@ -1558,9 +1586,12 @@ export class HGrid<DictVal extends HDict = HDict>
 			throw new Error('Cannot set an invalid column')
 		}
 
-		const col = new GridColumn(name, meta || HDict.make())
-		this.$store.setColumn(index, col)
-		return col
+		const column = new GridColumn(name, meta || HDict.make())
+
+		this.$store.columns[index] = column
+		this.$columnNameCache[column.name] = index
+
+		return column
 	}
 
 	/**
@@ -1585,7 +1616,18 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The column or undefined if not found.
 	 */
 	public getColumn(index: number | string): GridColumn | undefined {
-		return this.$store.getColumn(index)
+		let column: GridColumn | undefined
+		if (typeof index === 'number') {
+			column = this.$store.columns[index as number]
+		} else if (typeof index === 'string') {
+			const i = this.$columnNameCache[index]
+			if (i !== undefined) {
+				column = this.$store.columns[i]
+			}
+		} else {
+			throw new Error('Invalid input')
+		}
+		return column
 	}
 
 	/**
@@ -1622,7 +1664,34 @@ export class HGrid<DictVal extends HDict = HDict>
 	public reorderColumns(names: string | string[]): void {
 		const colNames = Array.isArray(names) ? names : [names]
 
-		this.$store.reorderColumns(colNames)
+		this.$store.columns = this.$store.columns.sort(
+			(first, second): number => {
+				let firstIndex = 0
+				let secondIndex = 0
+				for (let i = 0; i < colNames.length; ++i) {
+					if (colNames[i] === first.name) {
+						firstIndex = i
+					}
+					if (colNames[i] === second.name) {
+						secondIndex = i
+					}
+				}
+
+				return firstIndex - secondIndex
+			}
+		)
+
+		this.rebuildColumnCache()
+	}
+
+	private rebuildColumnCache(): void {
+		for (const key of Object.keys(this.$columnNameCache)) {
+			delete this.$columnNameCache[key]
+		}
+
+		for (let i = 0; i < this.$store.columns.length; ++i) {
+			this.$columnNameCache[this.$store.columns[i].name] = i
+		}
 	}
 
 	/**
