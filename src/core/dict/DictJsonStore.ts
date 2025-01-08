@@ -4,6 +4,8 @@
 
 import { HaysonDict } from '../hayson'
 import { OptionalHVal } from '../HVal'
+import { Kind } from '../Kind'
+import { makeValue } from '../util'
 import { toHValObj } from './DictHValObjStore'
 import { DICT_STORE_SYMBOL, DictStore } from './DictStore'
 import { HValObj, hvalObjToJson } from './HValObj'
@@ -12,6 +14,10 @@ import { HValObj, hvalObjToJson } from './HValObj'
  * A dict store that uses a pure JSON (Hayson) object to store the values.
  *
  * This is designed to work as lazily and efficiently as possible.
+ *
+ * * Values are lazily decoded from the original JSON object.
+ * * The first set decodes all values and sets a flag to ensure all decoded values are used from then on.
+ * * The design ensures the original JSON object is used for encoding back to JSON as much as possible.
  */
 export class DictJsonStore implements DictStore {
 	/**
@@ -21,59 +27,100 @@ export class DictJsonStore implements DictStore {
 
 	/**
 	 * Cached hvals.
+	 *
+	 * This cache is gradually added to if values are read from the JSON object.
+	 * If the dict is written too then all values are decoded.
 	 */
-	#hvals?: HValObj
+	#hvals: HValObj = {}
+
+	/**
+	 * A flag indicating whether all the values have been decoded.
+	 */
+	#allDecoded = false
 
 	constructor(values: HaysonDict) {
 		this.#values = values
 	}
 
 	public get(name: string): OptionalHVal | undefined {
-		return this.getHvals()[name]
+		// Is the value already decoded?
+		const hval = this.#hvals[name]
+
+		if (hval !== undefined) {
+			return hval
+		}
+
+		// If the values are all decoded then there's no point in checking the original
+		// JSON values.
+		if (!this.#allDecoded) {
+			const val = this.#values[name]
+
+			// Lazily decode and cache the value.
+			if (val !== undefined) {
+				const newHVal = makeValue(val)
+
+				this.#hvals[name] = newHVal
+
+				// If a collection is read then we have no way of knowing if it's been modified (as it's a child).
+				// In this case, we decode all the values so we don't end up returning an invalid JSON object.
+				if (
+					newHVal &&
+					(newHVal.getKind() === Kind.Dict ||
+						newHVal.getKind() === Kind.List ||
+						newHVal.getKind() === Kind.Grid)
+				) {
+					this.decodeAll()
+				}
+
+				return newHVal
+			}
+		}
+
+		return undefined
 	}
 
 	public has(name: string): boolean {
-		return this.#hvals
+		return this.#allDecoded
 			? this.#hvals[name] !== undefined
 			: this.#values[name] !== undefined
 	}
 
 	public set(name: string, value: OptionalHVal): void {
-		this.getHvals()[name] = value
+		this.decodeAll()
+		this.#hvals[name] = value
 	}
 
 	public remove(name: string): void {
-		if (this.#hvals) {
-			delete this.#hvals[name]
-		} else {
-			delete this.#values[name]
-		}
+		delete this.#hvals[name]
+		delete this.#values[name]
 	}
 
 	public clear(): void {
 		this.#values = {}
-		this.#hvals = undefined
+		this.#hvals = {}
+		// Just mark as all decoded so all the values have been removed and hence are synchronized.
+		this.#allDecoded = true
 	}
 
 	public getKeys(): string[] {
-		return Object.keys(this.#hvals ?? this.#values)
+		return Object.keys(this.#allDecoded ? this.#hvals : this.#values)
 	}
 
 	public toObj(): HValObj {
-		return this.getHvals()
+		this.decodeAll()
+		return this.#hvals
 	}
 
 	public toJSON(): HaysonDict {
-		return this.#hvals ? hvalObjToJson(this.#hvals) : this.#values
+		return this.#allDecoded ? hvalObjToJson(this.#hvals) : this.#values
 	}
 
 	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
-	private getHvals(): HValObj {
-		if (!this.#hvals) {
+	private decodeAll(): void {
+		if (!this.#allDecoded) {
+			this.#allDecoded = true
 			this.#hvals = toHValObj(this.#values)
 		}
-
-		return this.#hvals
 	}
 }

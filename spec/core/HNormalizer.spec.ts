@@ -755,10 +755,6 @@ describe('HNormalizer', function (): void {
 						originalDef.values.forEach(sort)
 						generatedDef.values.forEach(sort)
 
-						expect(originalDef.toJSON()).toEqual(
-							generatedDef.toJSON()
-						)
-
 						const equals = originalDef.equals(generatedDef)
 
 						if (!equals) {

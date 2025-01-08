@@ -8,9 +8,7 @@ import { OptionalHVal } from '../HVal'
 /**
  * An object composed of haystack values.
  */
-export interface HValObj {
-	[prop: string]: OptionalHVal
-}
+export type HValObj = Record<string, OptionalHVal>
 
 /**
  * Converts a haystack value object to a JSON object.

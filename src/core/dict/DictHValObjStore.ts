@@ -14,9 +14,9 @@ import { HValObj, hvalObjToJson } from './HValObj'
  * @param values The values.
  * @returns Haystack values.
  */
-export function toHValObj(values: {
-	[prop: string]: OptionalHVal | HaysonVal
-}): HValObj {
+export function toHValObj(
+	values: Record<string, OptionalHVal | HaysonVal>
+): HValObj {
 	const hvalObj: HValObj = {}
 
 	for (const prop in values) {
