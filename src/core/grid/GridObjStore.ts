@@ -39,4 +39,8 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 	public toJSON(): HaysonGrid {
 		return gridStoreToJson(this)
 	}
+
+	public toJSONString(): string {
+		return JSON.stringify(this.toJSON())
+	}
 }

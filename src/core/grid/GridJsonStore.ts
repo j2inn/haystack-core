@@ -114,4 +114,8 @@ export class GridJsonStore<DictVal extends HDict>
 			? this.#grid
 			: gridStoreToJson(this)
 	}
+
+	public toJSONString(): string {
+		return JSON.stringify(this.toJSON())
+	}
 }

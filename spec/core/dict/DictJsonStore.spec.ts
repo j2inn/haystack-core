@@ -112,4 +112,16 @@ describe('DictJsonStore', () => {
 			})
 		})
 	}) // .#toJSON()
+
+	describe('#toJSONString()', () => {
+		it('returns a JSON string', () => {
+			expect(store.toJSONString()).toEqual(
+				JSON.stringify({
+					site: { _kind: Kind.Marker },
+					dis: 'A site',
+					isNull: null,
+				})
+			)
+		})
+	}) // .#toJSONString()
 })

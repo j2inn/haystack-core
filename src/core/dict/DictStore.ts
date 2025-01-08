@@ -65,6 +65,11 @@ export interface DictStore {
 	toJSON(): HaysonDict
 
 	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	toJSONString(): string
+
+	/**
 	 * Indicates this is a dict store.
 	 */
 	[DICT_STORE_SYMBOL]: symbol

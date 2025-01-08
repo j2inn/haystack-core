@@ -2,7 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
-import { GridJsonStore } from '../../../src/core/grid/GridJsonStore'
+import { GridJsonStringStore } from '../../../src/core/grid/GridJsonStringStore'
 import {
 	DEFAULT_GRID_VERSION,
 	GridStore,
@@ -15,30 +15,32 @@ import { Kind } from '../../../src/core/Kind'
 import '../../matchers'
 import '../../customMatchers'
 
-describe('GridJsonStore', () => {
+describe('GridJsonStringStore', () => {
 	let store: GridStore<HDict>
 
 	beforeEach(() => {
-		store = new GridJsonStore({
-			_kind: Kind.Grid,
-			meta: { ver: DEFAULT_GRID_VERSION, foo: 'bar' },
-			cols: [
-				{
-					name: 'foo',
-					meta: {},
-				},
-				{
-					name: 'boo',
-					meta: {},
-				},
-			],
-			rows: [
-				{
-					foo: 'foo',
-					boo: null,
-				},
-			],
-		})
+		store = new GridJsonStringStore(
+			JSON.stringify({
+				_kind: Kind.Grid,
+				meta: { ver: DEFAULT_GRID_VERSION, foo: 'bar' },
+				cols: [
+					{
+						name: 'foo',
+						meta: {},
+					},
+					{
+						name: 'boo',
+						meta: {},
+					},
+				],
+				rows: [
+					{
+						foo: 'foo',
+						boo: null,
+					},
+				],
+			})
+		)
 	})
 
 	describe('#version', () => {
@@ -147,6 +149,33 @@ describe('GridJsonStore', () => {
 				JSON.stringify({
 					_kind: Kind.Grid,
 					meta: { ver: DEFAULT_GRID_VERSION, foo: 'bar' },
+					cols: [
+						{
+							name: 'foo',
+							meta: {},
+						},
+						{
+							name: 'boo',
+							meta: {},
+						},
+					],
+					rows: [
+						{
+							foo: 'foo',
+							boo: null,
+						},
+					],
+				})
+			)
+		})
+
+		it('returns a different JSON representation after the version has been modified', () => {
+			store.version = '4.0'
+
+			expect(store.toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Grid,
+					meta: { ver: '4.0', foo: 'bar' },
 					cols: [
 						{
 							name: 'foo',

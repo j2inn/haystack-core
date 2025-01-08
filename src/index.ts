@@ -64,6 +64,7 @@ export * from './core/EnumTag'
 
 // Core dict
 export * from './core/dict/DictJsonStore'
+export * from './core/dict/DictJsonStringStore'
 export * from './core/dict/DictHValObjStore'
 export * from './core/dict/DictStore'
 export * from './core/dict/HDict'
@@ -72,6 +73,7 @@ export * from './core/dict/HValObj'
 // Core grid
 export * from './core/grid/GridColumn'
 export * from './core/grid/GridJsonStore'
+export * from './core/grid/GridJsonStringStore'
 export * from './core/grid/GridObjStore'
 export * from './core/grid/GridStore'
 export * from './core/grid/HGrid'

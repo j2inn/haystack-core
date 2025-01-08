@@ -103,4 +103,31 @@ describe('GridObjStore', () => {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', () => {
+		it('returns a JSON string representation of the grid', () => {
+			expect(store.toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Grid,
+					meta: { ver: DEFAULT_GRID_VERSION, foo: 'bar' },
+					cols: [
+						{
+							name: 'foo',
+							meta: {},
+						},
+						{
+							name: 'boo',
+							meta: {},
+						},
+					],
+					rows: [
+						{
+							foo: 'foo',
+							boo: null,
+						},
+					],
+				})
+			)
+		})
+	}) // #toJSONString()
 })

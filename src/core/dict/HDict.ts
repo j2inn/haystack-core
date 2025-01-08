@@ -520,7 +520,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns A string containing the JSON representation of the object.
 	 */
 	public toJSONString(): string {
-		return JSON.stringify(this)
+		return this.$store.toJSONString()
 	}
 
 	/**

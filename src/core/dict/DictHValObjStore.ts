@@ -77,5 +77,9 @@ export class DictHValObjStore implements DictStore {
 		return hvalObjToJson(this.#values)
 	}
 
+	public toJSONString(): string {
+		return JSON.stringify(this.toJSON())
+	}
+
 	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 }

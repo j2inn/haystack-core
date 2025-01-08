@@ -52,6 +52,11 @@ export interface GridStore<DictVal extends HDict> {
 	toJSON(): HaysonGrid
 
 	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	toJSONString(): string
+
+	/**
 	 * Indicates this is a grid store.
 	 */
 	[GRID_STORE_SYMBOL]: symbol

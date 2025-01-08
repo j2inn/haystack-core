@@ -2,7 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
-import { DictHValObjStore } from '../../../src/core/dict/DictHValObjStore'
+import { DictJsonStringStore } from '../../../src/core/dict/DictJsonStringStore'
 import { HMarker } from '../../../src/core/HMarker'
 import { HStr } from '../../../src/core/HStr'
 import { Kind } from '../../../src/core/Kind'
@@ -10,15 +10,17 @@ import { Kind } from '../../../src/core/Kind'
 import '../../matchers'
 import '../../customMatchers'
 
-describe('DictObjStore', () => {
-	let store: DictHValObjStore
+describe('DictJsonStringStore', () => {
+	let store: DictJsonStringStore
 
 	beforeEach(() => {
-		store = new DictHValObjStore({
-			site: HMarker.make(),
-			dis: HStr.make('A site'),
-			isNull: null,
-		})
+		store = new DictJsonStringStore(
+			JSON.stringify({
+				site: { _kind: Kind.Marker },
+				dis: 'A site',
+				isNull: null,
+			})
+		)
 	})
 
 	describe('#get()', () => {
@@ -33,6 +35,11 @@ describe('DictObjStore', () => {
 
 	describe('#has()', () => {
 		it('returns true if the value exists', () => {
+			expect(store.has('dis')).toBe(true)
+		})
+
+		it('returns true after the value has been set', () => {
+			store.set('dis', HStr.make('New site'))
 			expect(store.has('dis')).toBe(true)
 		})
 
@@ -54,6 +61,12 @@ describe('DictObjStore', () => {
 
 	describe('#remove()', () => {
 		it('removes a value', () => {
+			store.remove('dis')
+			expect(store.has('dis')).toBe(false)
+		})
+
+		it('removes a value after it has been set', () => {
+			store.set('dis', HStr.make('New site'))
 			store.remove('dis')
 			expect(store.has('dis')).toBe(false)
 		})
@@ -90,6 +103,16 @@ describe('DictObjStore', () => {
 				isNull: null,
 			})
 		})
+
+		it('returns a JSON object after it has been set', () => {
+			store.set('dis', HStr.make('New site'))
+
+			expect(store.toJSON()).toEqual({
+				site: { _kind: Kind.Marker },
+				dis: 'New site',
+				isNull: null,
+			})
+		})
 	}) // .#toJSON()
 
 	describe('#toJSONString()', () => {
@@ -98,6 +121,18 @@ describe('DictObjStore', () => {
 				JSON.stringify({
 					site: { _kind: Kind.Marker },
 					dis: 'A site',
+					isNull: null,
+				})
+			)
+		})
+
+		it('returns a JSON string after it has been set', () => {
+			store.set('dis', HStr.make('New site'))
+
+			expect(store.toJSONString()).toEqual(
+				JSON.stringify({
+					site: { _kind: Kind.Marker },
+					dis: 'New site',
 					isNull: null,
 				})
 			)

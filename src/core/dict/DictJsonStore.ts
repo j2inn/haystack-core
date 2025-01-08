@@ -115,6 +115,10 @@ export class DictJsonStore implements DictStore {
 		return this.#allDecoded ? hvalObjToJson(this.#hvals) : this.#values
 	}
 
+	public toJSONString(): string {
+		return JSON.stringify(this.toJSON())
+	}
+
 	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private decodeAll(): void {
