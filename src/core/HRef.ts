@@ -295,7 +295,7 @@ export class HRef implements HVal {
 	 * @returns The value as a list.
 	 */
 	public toList(): HList<HRef> {
-		return HList.make(this)
+		return HList.make([this])
 	}
 
 	/**

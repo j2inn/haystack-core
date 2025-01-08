@@ -194,7 +194,7 @@ export class HMarker implements HVal {
 	 * @returns The value as a list.
 	 */
 	public toList(): HList<HMarker> {
-		return HList.make(this)
+		return HList.make([this])
 	}
 
 	/**

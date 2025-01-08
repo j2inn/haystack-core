@@ -22,7 +22,6 @@ import { CoordObj, HCoord } from './core/HCoord'
 import { DateObj, HDate } from './core/HDate'
 import { HDateTime } from './core/HDateTime'
 import { HDict } from './core/dict/HDict'
-import { DictStore } from './core/dict/DictStore'
 import { HGrid } from './core/grid/HGrid'
 import { HList } from './core/list/HList'
 import { HMarker } from './core/HMarker'
@@ -81,10 +80,7 @@ export function symbol(value: string | HaysonSymbol | HSymbol): HSymbol {
 }
 
 export function dict(
-	values?:
-		| { [prop: string]: OptionalHVal | HaysonVal }
-		| OptionalHVal
-		| DictStore
+	values?: { [prop: string]: OptionalHVal | HaysonVal } | OptionalHVal
 ): HDict {
 	return HDict.make(values)
 }

@@ -17,5 +17,5 @@ describe('DictStore', () => {
 		it('returns false for an object that is not a dict store', () => {
 			expect(isDictStore({})).toBe(false)
 		})
-	}) // hvalObjToJson()
+	}) // isDictStore()
 })

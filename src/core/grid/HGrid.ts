@@ -351,21 +351,22 @@ export class HGrid<DictVal extends HDict = HDict>
 
 	private get columnNameCache(): Record<string, number> {
 		if (!this.$columnNameCache) {
-			this.$columnNameCache = {}
 			this.rebuildColumnCache()
 		}
 		return this.$columnNameCache as Record<string, number>
 	}
 
 	private rebuildColumnCache(): void {
-		const cache = this.columnNameCache
+		if (!this.$columnNameCache) {
+			this.$columnNameCache = {}
+		}
 
-		for (const key of Object.keys(cache)) {
-			delete cache[key]
+		for (const key of Object.keys(this.$columnNameCache)) {
+			delete this.$columnNameCache[key]
 		}
 
 		for (let i = 0; i < this.$store.columns.length; ++i) {
-			cache[this.$store.columns[i].name] = i
+			this.$columnNameCache[this.$store.columns[i].name] = i
 		}
 	}
 
@@ -1822,7 +1823,7 @@ export class HGrid<DictVal extends HDict = HDict>
 		}
 
 		if (name === undefined) {
-			return HList.make()
+			return HList.make([])
 		}
 
 		const values = this.getRows()

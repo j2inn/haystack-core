@@ -4,19 +4,21 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HList } from '../../src/core/list/HList'
-import { HNum } from '../../src/core/HNum'
-import { HMarker } from '../../src/core/HMarker'
-import { HStr } from '../../src/core/HStr'
-import { HVal, TEXT_ENCODER, valueIsKind } from '../../src/core/HVal'
-import { Kind } from '../../src/core/Kind'
-import { HRemove } from '../../src/core/HRemove'
-import { HFilter } from '../../src/filter/HFilter'
-import '../matchers'
-import '../customMatchers'
-import { HDict } from '../../src/core/dict/HDict'
-import { HGrid } from '../../src/core/grid/HGrid'
-import { HaysonList } from '../../src/core/hayson'
+import { HList } from '../../../src/core/list/HList'
+import { HNum } from '../../../src/core/HNum'
+import { HMarker } from '../../../src/core/HMarker'
+import { HStr } from '../../../src/core/HStr'
+import { HVal, TEXT_ENCODER, valueIsKind } from '../../../src/core/HVal'
+import { Kind } from '../../../src/core/Kind'
+import { HRemove } from '../../../src/core/HRemove'
+import { HFilter } from '../../../src/filter/HFilter'
+
+import { HDict } from '../../../src/core/dict/HDict'
+import { HGrid } from '../../../src/core/grid/HGrid'
+import { HaysonList } from '../../../src/core/hayson'
+
+import '../../matchers'
+import '../../customMatchers'
 
 describe('HList', function (): void {
 	let list: HList
@@ -33,7 +35,7 @@ describe('HList', function (): void {
 		})
 
 		it('creates an empty list from no arguments', function (): void {
-			expect(new HList()).toEqual(HList.make([]))
+			expect(new HList([])).toEqual(HList.make([]))
 		})
 
 		it('creates with null arguments', function (): void {
@@ -53,31 +55,31 @@ describe('HList', function (): void {
 
 		it('creates a list from multiple arguments', function (): void {
 			expect(
-				new HList<HVal>(
+				new HList<HVal>([
 					HStr.make('foovalue'),
 					HNum.make(99),
-					HMarker.make()
-				)
+					HMarker.make(),
+				])
 			).toEqual(list)
 		})
 
 		it('creates a list from multiple mixed type arguments', function (): void {
 			expect(
-				new HList<HVal>(HStr.make('foovalue'), 99, HMarker.make())
+				new HList<HVal>([HStr.make('foovalue'), 99, HMarker.make()])
 			).toEqual(list)
 		})
 
 		it('creates a list from multiple array arguments', function (): void {
 			expect(
-				new HList<HVal>(
+				new HList<HVal>([
 					[HStr.make('foovalue'), HNum.make(99)],
-					[HMarker.make()]
-				)
+					[HMarker.make()],
+				])
 			).toEqual(list)
 		})
 
 		it('creates a list from a hayson list', function (): void {
-			expect(new HList('foovalue', 99, { _kind: Kind.Marker })).toEqual(
+			expect(new HList(['foovalue', 99, { _kind: Kind.Marker }])).toEqual(
 				list
 			)
 		})

@@ -1499,33 +1499,33 @@ type,val
 			it('returns a list from a column index number', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy(0)).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 
 			it('returns a list from a column name', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy('col0')).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 
 			it('returns a list from a column instance', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy(grid.getColumns()[0])).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 		}) // #listBy()

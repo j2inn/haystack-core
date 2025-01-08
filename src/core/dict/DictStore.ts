@@ -83,7 +83,7 @@ export interface DictStore {
 /**
  * Type guard to check whether the value is a dict store or not.
  *
- * @param store The dict store.
+ * @param value The value to test.
  * @returns true if the object is a dict store.
  */
 export function isDictStore(value: unknown): value is DictStore {

@@ -215,10 +215,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns A dict.
 	 */
 	public static make<T extends HDict>(
-		values?:
-			| { [prop: string]: OptionalHVal | HaysonVal }
-			| OptionalHVal
-			| DictStore
+		values?: { [prop: string]: OptionalHVal | HaysonVal } | OptionalHVal
 	): T {
 		return (
 			valueIsKind<HDict>(values, Kind.Dict) ? values : new HDict(values)

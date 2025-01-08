@@ -367,7 +367,7 @@ export class HDate implements HVal {
 	 * @returns The value as a list.
 	 */
 	public toList(): HList<HDate> {
-		return HList.make(this)
+		return HList.make([this])
 	}
 
 	/**

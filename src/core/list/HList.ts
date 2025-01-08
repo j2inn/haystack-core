@@ -26,6 +26,8 @@ import { HNum } from '../HNum'
 import { HGrid } from '../grid/HGrid'
 import { EvalContext } from '../../filter/EvalContext'
 import { JsonV3List, JsonV3Val } from '../jsonv3'
+import { isListStore, ListStore } from './ListStore'
+import { ListObjStore } from './ListObjStore'
 
 /**
  * An iterator for a list.
@@ -112,7 +114,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * The list values.
 	 */
-	public values: Value[];
+	public $store: ListStore<Value>;
 
 	/**
 	 * Numerical index access.
@@ -126,9 +128,6 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * // A single haystack value array.
 	 * const list0 = new HList([HStr.make('foo), HMarker.make()])
 	 *
-	 * // Pass in multiple arguments instead of an array.
-	 * const list1 = new HList(HStr.make('foo'), HMarker.make())
-	 *
 	 * // Create a list using Hayson.
 	 * const list2 = new HList(['foo', { _kind: Kind.Marker }])
 	 * const list2 = new HList('foo', { _kind: Kind.Marker })
@@ -137,9 +136,13 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param value list values.
 	 */
 	public constructor(
-		...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
+		values?:
+			| (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
+			| ListStore<Value>
 	) {
-		this.values = HList.toValues<Value>(values)
+		this.$store = isListStore(values)
+			? values
+			: new ListObjStore(HList.toValues<Value>(values ?? []))
 
 		// Implement proxy to make it easy to get and set internal values.
 		const handler = {
@@ -169,6 +172,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 		}
 
 		return new Proxy(this, handler)
+	}
+
+	get values(): Value[] {
+		return this.$store.values
+	}
+
+	set values(values: Value[]) {
+		this.$store.values = values
 	}
 
 	/**

@@ -103,7 +103,7 @@ describe('HDict', function (): void {
 		})
 
 		it('creates a dict from a haystack list', function (): void {
-			const list = HList.make('foo', 123)
+			const list = HList.make(['foo', 123])
 
 			const newDict = new HDict({
 				val: list,
@@ -552,11 +552,11 @@ describe('HDict', function (): void {
 
 	describe('#toList()', function (): void {
 		it('returns a haystack list from a dict', function (): void {
-			const list = HList.make<HVal>(
+			const list = HList.make<HVal>([
 				HStr.make('foovalue'),
 				HNum.make(99),
-				HMarker.make()
-			)
+				HMarker.make(),
+			])
 			expect(dict.toList()).toEqual(list)
 		})
 	}) // #toList()

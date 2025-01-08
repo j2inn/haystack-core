@@ -453,7 +453,7 @@ export class HNum implements HVal {
 	 * @returns The value as a list.
 	 */
 	public toList(): HList<HNum> {
-		return HList.make(this)
+		return HList.make([this])
 	}
 
 	/**

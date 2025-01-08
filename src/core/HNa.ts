@@ -194,7 +194,7 @@ export class HNa implements HVal {
 	 * @returns The value as a list.
 	 */
 	public toList(): HList<HNa> {
-		return HList.make(this)
+		return HList.make([this])
 	}
 
 	/**

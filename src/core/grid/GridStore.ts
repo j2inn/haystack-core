@@ -70,7 +70,7 @@ export interface GridStore<DictVal extends HDict> {
 /**
  * Type guard to check whether the value is a grid store.
  *
- * @param store The grid store.
+ * @param value The value to test.
  * @returns true if the object is a grid store.
  */
 export function isGridStore<DictVal extends HDict>(
