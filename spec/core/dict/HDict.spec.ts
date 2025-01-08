@@ -13,7 +13,7 @@ import { HMarker } from '../../../src/core/HMarker'
 import { HBool } from '../../../src/core/HBool'
 import { HList } from '../../../src/core/HList'
 import { HGrid } from '../../../src/core/grid/HGrid'
-import { HVal } from '../../../src/core/HVal'
+import { HVal, TEXT_ENCODER } from '../../../src/core/HVal'
 import { HSymbol } from '../../../src/core/HSymbol'
 import { HNamespace } from '../../../src/core/HNamespace'
 import { HRef } from '../../../src/core/HRef'
@@ -209,6 +209,20 @@ describe('HDict', function (): void {
 			)
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(dict.toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						foo: 'foovalue',
+						goo: 99,
+						soo: { _kind: 'marker' },
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns a JSON Object', function (): void {

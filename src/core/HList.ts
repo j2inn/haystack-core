@@ -14,6 +14,7 @@ import {
 	OptionalHVal,
 	ZINC_NULL,
 	AXON_NULL,
+	TEXT_ENCODER,
 } from './HVal'
 import { HaysonVal, HaysonList } from './hayson'
 import { HFilter } from '../filter/HFilter'
@@ -870,6 +871,13 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	}
 
 	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
+	}
+
+	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
 	public toJSONv3(): JsonV3List {
@@ -1146,19 +1154,5 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 				(val): Value => (val === null ? null : val.newCopy()) as Value
 			)
 		)
-	}
-
-	/**
-	 * Iterates through the list to ensure we have a valid set of haystack values.
-	 *
-	 * As the list's array is directly exposed calling this method will ensure all the
-	 * values held in the list are haystack values.
-	 */
-	public validate(): void {
-		for (let i = 0; i < this.values.length; ++i) {
-			if (!isHVal(this.values[i])) {
-				this.values[i] = makeValue(this.values[i]) as Value
-			}
-		}
 	}
 }

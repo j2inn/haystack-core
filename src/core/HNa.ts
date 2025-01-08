@@ -8,6 +8,7 @@ import { Kind } from './Kind'
 import {
 	HVal,
 	NOT_SUPPORTED_IN_FILTER_MSG,
+	TEXT_ENCODER,
 	valueInspect,
 	valueIsKind,
 	valueMatches,
@@ -152,6 +153,13 @@ export class HNa implements HVal {
 	 */
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**

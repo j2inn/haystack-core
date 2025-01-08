@@ -17,6 +17,7 @@ import { HFilter } from '../../../src/filter/HFilter'
 import { HaysonDict } from '../../../src/core/hayson'
 import { HBool } from '../../../src/core/HBool'
 import { ZincReader } from '../../../src/core/ZincReader'
+import { TEXT_ENCODER } from '../../../src/core/HVal'
 import {
 	DEFAULT_GRID_VERSION,
 	GRID_VERSION_NAME,
@@ -364,6 +365,38 @@ describe('HGrid', function (): void {
 				)
 			})
 		}) // #toJSONString()
+
+		describe('#toJSONUint8Array()', function (): void {
+			it('returns a JSON byte buffer', function (): void {
+				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
+
+				expect(grid.toJSONUint8Array()).toEqual(
+					TEXT_ENCODER.encode(
+						JSON.stringify({
+							_kind: Kind.Grid,
+							meta: { ver: DEFAULT_GRID_VERSION },
+							cols: [
+								{
+									name: 'foo',
+									meta: {},
+								},
+								{
+									name: 'goo',
+									meta: {},
+								},
+							],
+							rows: [
+								{
+									foo: 'foo',
+									goo: null,
+								},
+							],
+						})
+					)
+				)
+			})
+		}) // #toJSONUint8Array()
 
 		describe('#toJSONv3()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {

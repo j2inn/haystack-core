@@ -7,6 +7,8 @@ import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -119,6 +121,19 @@ describe('HSymbol', function (): void {
 			)
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HSymbol.make('foo').toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.Symbol,
+						val: 'foo',
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns an encoded symbol', function (): void {

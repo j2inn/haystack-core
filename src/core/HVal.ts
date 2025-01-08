@@ -144,6 +144,11 @@ export function valueToAxon(val: HVal | null): string {
 export type OptionalHVal<Value extends HVal | null = HVal | null> = Value | null
 
 /**
+ * A reusable text encoder.
+ */
+export const TEXT_ENCODER = new TextEncoder()
+
+/**
  * The interface for a haystack value.
  *
  * Each haystack encoded value should declare a static factory 'make' method
@@ -208,6 +213,11 @@ export interface HVal {
 	 * @returns A string containing the JSON representation of the object.
 	 */
 	toJSONString(): string
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	toJSONUint8Array(): Uint8Array
 
 	/**
 	 * Encode the value using the older Haystack version 3 JSON encoding.

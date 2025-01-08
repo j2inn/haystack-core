@@ -7,6 +7,8 @@ import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -72,7 +74,7 @@ describe('HNa', function (): void {
 	}) // #toJSON()
 
 	describe('#toJSONString()', function (): void {
-		it('returns JSON', function (): void {
+		it('returns a JSON string', function (): void {
 			expect(HNa.make().toJSONString()).toBe(
 				JSON.stringify({
 					_kind: Kind.NA,
@@ -80,6 +82,18 @@ describe('HNa', function (): void {
 			)
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HNa.make().toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.NA,
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns JSON', function (): void {

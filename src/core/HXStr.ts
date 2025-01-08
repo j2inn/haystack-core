@@ -10,6 +10,7 @@ import {
 	valueInspect,
 	valueIsKind,
 	valueMatches,
+	TEXT_ENCODER,
 } from './HVal'
 import { HaysonXStr } from './hayson'
 import { Node } from '../filter/Node'
@@ -217,6 +218,13 @@ export class HXStr implements HVal {
 	 */
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**

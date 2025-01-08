@@ -8,7 +8,7 @@ import { HList } from '../../src/core/HList'
 import { HNum } from '../../src/core/HNum'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
-import { HVal, valueIsKind } from '../../src/core/HVal'
+import { HVal, TEXT_ENCODER, valueIsKind } from '../../src/core/HVal'
 import { Kind } from '../../src/core/Kind'
 import { HRemove } from '../../src/core/HRemove'
 import { HFilter } from '../../src/filter/HFilter'
@@ -595,6 +595,22 @@ describe('HList', function (): void {
 		})
 	}) // #toJSONString()
 
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			list.push(null)
+			expect(list.toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify([
+						'foovalue',
+						99,
+						{ _kind: Kind.Marker },
+						null,
+					])
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns the list as JSON', function (): void {
 			list.push(null)
@@ -921,24 +937,6 @@ describe('HList', function (): void {
 			expect(list).not.toBe(listCopy)
 		})
 	}) // #newCopy()
-
-	describe('#validate()', function (): void {
-		it('makes sure the internal array items are real haystack values', function (): void {
-			const numList = HList.make<HNum>(1, 2, 3)
-
-			const numArray = numList.values as unknown as number[]
-
-			numArray[2] = 4
-
-			numList.validate()
-
-			expect(numList.values).toEqual([
-				HNum.make(1),
-				HNum.make(2),
-				HNum.make(4),
-			])
-		})
-	}) // #validate()
 
 	describe('#toGrid()', function (): void {
 		it('returns the value as a grid', function (): void {

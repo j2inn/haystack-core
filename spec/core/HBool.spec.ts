@@ -7,6 +7,8 @@ import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { Kind } from '../../src/core/Kind'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -131,6 +133,14 @@ describe('HBool', function (): void {
 			expect(HBool.make(true).toJSONString()).toEqual('true')
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HBool.make(true).toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode('true')
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns JSON for false', function (): void {

@@ -9,6 +9,7 @@ import {
 	valueInspect,
 	valueIsKind,
 	valueMatches,
+	TEXT_ENCODER,
 } from './HVal'
 import { HaysonRef } from './hayson'
 import { HStr } from './HStr'
@@ -244,6 +245,13 @@ export class HRef implements HVal {
 	 */
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**

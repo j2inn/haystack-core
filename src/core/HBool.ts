@@ -9,6 +9,7 @@ import {
 	valueInspect,
 	valueIsKind,
 	valueMatches,
+	TEXT_ENCODER,
 } from './HVal'
 import { Node } from '../filter/Node'
 import { HGrid } from './grid/HGrid'
@@ -189,6 +190,13 @@ export class HBool implements HVal {
 	 */
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
