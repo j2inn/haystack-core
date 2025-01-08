@@ -37,7 +37,7 @@ export class ListJsonStore<Value extends OptionalHVal>
 
 	public toJSON(): HaysonList {
 		return this.#values
-			? this.#values.map((value) => (value ? value.toJSON() : null))
+			? this.#values.map((value) => value?.toJSON() ?? null)
 			: this.#list
 	}
 
