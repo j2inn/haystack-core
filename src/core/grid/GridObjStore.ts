@@ -23,7 +23,7 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 
 	public rows: DictVal[]
 
-	public [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
 	public constructor(
 		version: string,

@@ -77,7 +77,7 @@ export interface DictStore {
 	/**
 	 * Indicates this is a dict store.
 	 */
-	[DICT_STORE_SYMBOL]: symbol
+	readonly [DICT_STORE_SYMBOL]: symbol
 }
 
 /**

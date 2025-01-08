@@ -70,7 +70,7 @@ export class DictJsonUint8ArrayStore implements DictStore {
 		return this.#store ? this.#store.toJSONUint8Array() : this.#values
 	}
 
-	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private getStore(): DictStore {
 		if (!this.#store) {

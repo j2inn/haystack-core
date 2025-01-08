@@ -85,5 +85,5 @@ export class DictHValObjStore implements DictStore {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
-	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 }

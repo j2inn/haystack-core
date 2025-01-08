@@ -23,7 +23,7 @@ export class GridJsonUint8ArrayStore<DictVal extends HDict>
 
 	#store?: GridStore<DictVal>
 
-	public [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
 	public constructor(grid: Uint8Array) {
 		this.#grid = grid

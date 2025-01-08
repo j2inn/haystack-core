@@ -64,7 +64,7 @@ export interface GridStore<DictVal extends HDict> {
 	/**
 	 * Indicates this is a grid store.
 	 */
-	[GRID_STORE_SYMBOL]: symbol
+	readonly [GRID_STORE_SYMBOL]: symbol
 }
 
 /**

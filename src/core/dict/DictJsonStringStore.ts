@@ -70,7 +70,7 @@ export class DictJsonStringStore implements DictStore {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
-	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private getStore(): DictStore {
 		if (!this.#store) {

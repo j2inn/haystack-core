@@ -30,7 +30,7 @@ export class GridJsonStore<DictVal extends HDict>
 	#columns?: GridColumn[]
 	#rows?: DictVal[]
 
-	public [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
 	public constructor(grid: HaysonGrid) {
 		this.#grid = grid
