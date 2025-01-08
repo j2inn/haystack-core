@@ -4,7 +4,6 @@
 
 import { HDict } from '../dict/HDict'
 import { HaysonGrid } from '../hayson'
-import { HStr } from '../HStr'
 import { makeValue } from '../util'
 import { GridColumn } from './GridColumn'
 import {
@@ -23,41 +22,60 @@ import {
 export class GridJsonStore<DictVal extends HDict>
 	implements GridStore<DictVal>
 {
-	public version: string
+	readonly #grid: HaysonGrid
 
-	public meta: HDict
-
-	public columns: GridColumn[]
-
-	public rows: DictVal[]
+	#version?: string
+	#meta?: HDict
+	#columns?: GridColumn[]
+	#rows?: DictVal[]
 
 	public [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
 	public constructor(grid: HaysonGrid) {
-		let version = DEFAULT_GRID_VERSION
+		this.#grid = grid
+	}
 
-		let meta: HDict
-		if (grid.meta) {
-			meta = makeValue(grid.meta) as HDict
-
-			// Remove the version from the meta. This is used when decoding a Hayson based grid that
-			// adds the version number to the grid's meta data. We need to remove the version so
-			// comparisons (i.e. `equals`) still work as expected.
-			if (meta.has(GRID_VERSION_NAME)) {
-				version =
-					meta.get<HStr>(GRID_VERSION_NAME)?.value ??
-					DEFAULT_GRID_VERSION
-
-				meta.remove(GRID_VERSION_NAME)
-			}
-		} else {
-			meta = new HDict()
+	public get version(): string {
+		if (this.#version === undefined) {
+			this.#version = String(
+				this.#grid.meta?.[GRID_VERSION_NAME] ?? DEFAULT_GRID_VERSION
+			)
 		}
 
-		this.version = version
-		this.meta = meta
-		this.columns = grid.cols
-			? grid.cols.map(
+		return this.#version
+	}
+
+	public set version(version: string) {
+		this.#version = version
+	}
+
+	public get meta(): HDict {
+		if (!this.#meta) {
+			if (this.#grid.meta) {
+				this.#meta = makeValue(this.#grid.meta) as HDict
+
+				// Remove the version from the meta. This is used when decoding a Hayson based grid that
+				// adds the version number to the grid's meta data. We need to remove the version so
+				// comparisons (i.e. `equals`) still work as expected.
+				if (this.#meta.has(GRID_VERSION_NAME)) {
+					this.#meta.remove(GRID_VERSION_NAME)
+				}
+			} else {
+				this.#meta = new HDict()
+			}
+		}
+
+		return this.#meta
+	}
+
+	public set meta(meta: HDict) {
+		this.#meta = meta
+	}
+
+	public get columns(): GridColumn[] {
+		if (!this.#columns) {
+			this.#columns =
+				this.#grid.cols?.map(
 					(column): GridColumn =>
 						new GridColumn(
 							column.name,
@@ -65,14 +83,35 @@ export class GridJsonStore<DictVal extends HDict>
 								? (makeValue(column.meta) as HDict)
 								: undefined
 						)
-			  )
-			: []
-		this.rows = grid.rows
-			? grid.rows.map((row) => makeValue(row) as DictVal)
-			: []
+				) ?? []
+		}
+
+		return this.#columns
+	}
+
+	public set columns(columns: GridColumn[]) {
+		this.#columns = columns
+	}
+
+	public get rows(): DictVal[] {
+		if (!this.#rows) {
+			this.#rows =
+				this.#grid.rows?.map((row) => makeValue(row) as DictVal) ?? []
+		}
+
+		return this.#rows
+	}
+
+	public set rows(rows: DictVal[]) {
+		this.#rows = rows
 	}
 
 	public toJSON(): HaysonGrid {
-		return gridStoreToJson(this)
+		return this.#version === undefined &&
+			!this.#meta &&
+			!this.#columns &&
+			!this.#rows
+			? this.#grid
+			: gridStoreToJson(this)
 	}
 }
