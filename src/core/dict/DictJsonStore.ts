@@ -35,6 +35,8 @@ export class DictJsonStore implements DictStore {
 	 */
 	#hvals: HValObj = {}
 
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+
 	constructor(values: HaysonDict) {
 		this.#values = values
 	}
@@ -117,8 +119,6 @@ export class DictJsonStore implements DictStore {
 	public toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
-
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private decodeAll(): void {
 		if (this.#values) {

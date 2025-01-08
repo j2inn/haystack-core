@@ -41,6 +41,8 @@ export function toHValObj(
 export class DictHValObjStore implements DictStore {
 	#values: HValObj
 
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+
 	public constructor(values: HValObj) {
 		this.#values = values
 	}
@@ -84,6 +86,4 @@ export class DictHValObjStore implements DictStore {
 	public toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
-
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 }

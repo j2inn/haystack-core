@@ -26,6 +26,8 @@ export class DictJsonStringStore implements DictStore {
 	 */
 	#store?: DictStore
 
+	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+
 	constructor(values: string) {
 		this.#values = values
 	}
@@ -69,8 +71,6 @@ export class DictJsonStringStore implements DictStore {
 	public toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
-
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private getStore(): DictStore {
 		if (!this.#store) {
