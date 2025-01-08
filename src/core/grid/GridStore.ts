@@ -77,7 +77,7 @@ export function isGridStore<DictVal extends HDict>(
  * @param grid The grid store.
  * @returns The JSON representation of the grid.
  */
-export function gridToJson<DictVal extends HDict>(
+export function gridStoreToJson<DictVal extends HDict>(
 	grid: GridStore<DictVal>
 ): HaysonGrid {
 	return {

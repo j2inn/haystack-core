@@ -12,11 +12,13 @@ import {
 	GRID_STORE_SYMBOL,
 	GRID_VERSION_NAME,
 	GridStore,
-	gridToJson,
+	gridStoreToJson,
 } from './GridStore'
 
 /**
  * Implements the storage for an HGrid using JSON.
+ *
+ * This is designed to work as lazily and efficiently as possible.
  */
 export class GridJsonStore<DictVal extends HDict>
 	implements GridStore<DictVal>
@@ -71,6 +73,6 @@ export class GridJsonStore<DictVal extends HDict>
 	}
 
 	public toJSON(): HaysonGrid {
-		return gridToJson(this)
+		return gridStoreToJson(this)
 	}
 }
