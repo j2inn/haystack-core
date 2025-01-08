@@ -19,7 +19,7 @@ import { HDict } from '../core/dict/HDict'
 import { HRef } from '../core/HRef'
 import { HSymbol } from '../core/HSymbol'
 import { TokenRelationship } from './TokenRelationship'
-import { HList } from '../core/HList'
+import { HList } from '../core/list/HList'
 
 /**
  * AWT Node Implementation for a Haystack Filter.

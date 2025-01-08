@@ -4,7 +4,7 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off", @typescript-eslint/explicit-module-boundary-types: "off" */
 
-import { Kind } from './Kind'
+import { Kind } from '../Kind'
 import {
 	HVal,
 	NOT_SUPPORTED_IN_FILTER_MSG,
@@ -15,17 +15,17 @@ import {
 	ZINC_NULL,
 	AXON_NULL,
 	TEXT_ENCODER,
-} from './HVal'
-import { HaysonVal, HaysonList } from './hayson'
-import { HFilter } from '../filter/HFilter'
-import { HMarker } from './HMarker'
-import { Node } from '../filter/Node'
-import { HDict } from './dict/HDict'
-import { makeValue } from './util'
-import { HNum } from './HNum'
-import { HGrid } from './grid/HGrid'
-import { EvalContext } from '../filter/EvalContext'
-import { JsonV3List, JsonV3Val } from './jsonv3'
+} from '../HVal'
+import { HaysonVal, HaysonList } from '../hayson'
+import { HFilter } from '../../filter/HFilter'
+import { HMarker } from '../HMarker'
+import { Node } from '../../filter/Node'
+import { HDict } from '../dict/HDict'
+import { makeValue } from '../util'
+import { HNum } from '../HNum'
+import { HGrid } from '../grid/HGrid'
+import { EvalContext } from '../../filter/EvalContext'
+import { JsonV3List, JsonV3Val } from '../jsonv3'
 
 /**
  * An iterator for a list.

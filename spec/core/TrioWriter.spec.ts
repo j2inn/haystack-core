@@ -7,7 +7,7 @@ import { HDict } from '../../src/core/dict/HDict'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
 import { HBool } from '../../src/core/HBool'
-import { HList } from '../../src/core/HList'
+import { HList } from '../../src/core/list/HList'
 import { HGrid } from '../../src/core/grid/HGrid'
 
 describe('TrioWriter', function (): void {

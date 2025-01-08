@@ -11,7 +11,7 @@ import { HMarker } from './HMarker'
 import { HStr } from './HStr'
 import { HVal, valueIsKind } from './HVal'
 import { HGrid } from './grid/HGrid'
-import { HList } from './HList'
+import { HList } from './list/HList'
 import { Kind } from './Kind'
 
 /**

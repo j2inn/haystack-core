@@ -36,7 +36,6 @@ export * from './core/HCoord'
 export * from './core/HDate'
 export * from './core/HDateTime'
 export * from './core/HSymbol'
-export * from './core/HList'
 export * from './core/HMarker'
 export * from './core/HNa'
 export * from './core/HNum'
@@ -79,6 +78,9 @@ export * from './core/grid/GridJsonUint8ArrayStore'
 export * from './core/grid/GridObjStore'
 export * from './core/grid/GridStore'
 export * from './core/grid/HGrid'
+
+// Core list
+export * from './core/list/HList'
 
 // Shorthand
 export * from './shorthand'

@@ -5,7 +5,7 @@
 import { HGrid } from './grid/HGrid'
 import { HDict } from './dict/HDict'
 import { HStr } from './HStr'
-import { HList } from './HList'
+import { HList } from './list/HList'
 import { HSymbol } from './HSymbol'
 import { Kind } from './Kind'
 import { memoize } from '../util/memoize'

@@ -14,7 +14,7 @@ import {
 import { HaysonNum, HaysonNumVal } from './hayson'
 import { Node } from '../filter/Node'
 import { HGrid } from './grid/HGrid'
-import { HList } from './HList'
+import { HList } from './list/HList'
 import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { HUnit } from './HUnit'

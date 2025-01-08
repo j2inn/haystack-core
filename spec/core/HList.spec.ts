@@ -4,7 +4,7 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HList } from '../../src/core/HList'
+import { HList } from '../../src/core/list/HList'
 import { HNum } from '../../src/core/HNum'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'

@@ -4,7 +4,7 @@
 
 import { HDict } from './dict/HDict'
 import { HGrid } from './grid/HGrid'
-import { HList } from './HList'
+import { HList } from './list/HList'
 import { HNamespace } from './HNamespace'
 import { HStr } from './HStr'
 import { HSymbol } from './HSymbol'

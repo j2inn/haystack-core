@@ -3,7 +3,7 @@
  */
 
 import '../../src/core/Array'
-import { HList } from '../../src/core/HList'
+import { HList } from '../../src/core/list/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HStr } from '../../src/core/HStr'

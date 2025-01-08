@@ -5,7 +5,7 @@
 import { HSymbol } from '../../src/core/HSymbol'
 import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/grid/HGrid'
-import { HList } from '../../src/core/HList'
+import { HList } from '../../src/core/list/HList'
 import { HDict } from '../../src/core/dict/HDict'
 import { TEXT_ENCODER } from '../../src/core/HVal'
 
