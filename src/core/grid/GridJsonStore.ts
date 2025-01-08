@@ -3,8 +3,9 @@
  */
 
 import { HDict } from '../dict/HDict'
-import { HaysonGrid } from '../hayson'
+import { HaysonDict, HaysonGrid } from '../hayson'
 import { TEXT_ENCODER } from '../HVal'
+import { Kind } from '../Kind'
 import { makeValue } from '../util'
 import { GridColumn } from './GridColumn'
 import {
@@ -12,7 +13,6 @@ import {
 	GRID_STORE_SYMBOL,
 	GRID_VERSION_NAME,
 	GridStore,
-	gridStoreToJson,
 } from './GridStore'
 
 /**
@@ -108,12 +108,36 @@ export class GridJsonStore<DictVal extends HDict>
 	}
 
 	public toJSON(): HaysonGrid {
-		return this.#version === undefined &&
+		// If nothing has changed then just return the grid as it is.
+		if (
+			this.#version === undefined &&
 			!this.#meta &&
 			!this.#columns &&
 			!this.#rows
-			? this.#grid
-			: gridStoreToJson(this)
+		) {
+			return this.#grid
+		}
+
+		// Return a new grid only with the parts of the grid that have changed.
+		return {
+			_kind: Kind.Grid,
+			meta:
+				this.#meta || this.#version
+					? {
+							[GRID_VERSION_NAME]: this.version,
+							...this.meta.toJSON(),
+					  }
+					: this.#grid.meta,
+			cols: this.#columns
+				? this.#columns.map((column: GridColumn) => ({
+						name: column.name,
+						meta: column.meta.toJSON(),
+				  }))
+				: this.#grid.cols,
+			rows: this.#rows
+				? this.#rows.map((row: DictVal): HaysonDict => row.toJSON())
+				: this.#grid.rows,
+		}
 	}
 
 	public toJSONString(): string {

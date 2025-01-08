@@ -96,17 +96,10 @@ export function gridStoreToJson<DictVal extends HDict>(
 			[GRID_VERSION_NAME]: grid.version,
 			...grid.meta.toJSON(),
 		},
-		cols: grid.columns.map(
-			(
-				column: GridColumn
-			): {
-				name: string
-				meta: HaysonDict
-			} => ({
-				name: column.name,
-				meta: column.meta.toJSON(),
-			})
-		),
+		cols: grid.columns.map((column: GridColumn) => ({
+			name: column.name,
+			meta: column.meta.toJSON(),
+		})),
 		rows: grid.rows.map((row: DictVal): HaysonDict => row.toJSON()),
 	}
 }
