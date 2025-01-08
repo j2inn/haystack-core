@@ -149,6 +149,11 @@ export type OptionalHVal<Value extends HVal | null = HVal | null> = Value | null
 export const TEXT_ENCODER = new TextEncoder()
 
 /**
+ * A reusable text decoder.
+ */
+export const TEXT_DECODER = new TextDecoder()
+
+/**
  * The interface for a haystack value.
  *
  * Each haystack encoded value should declare a static factory 'make' method

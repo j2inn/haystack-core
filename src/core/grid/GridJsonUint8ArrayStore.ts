@@ -4,28 +4,28 @@
 
 import { HDict } from '../dict/HDict'
 import { HaysonGrid } from '../hayson'
-import { TEXT_ENCODER } from '../HVal'
+import { TEXT_DECODER } from '../HVal'
 import { GridColumn } from './GridColumn'
-import { GridJsonStore } from './GridJsonStore'
+import { GridJsonStringStore } from './GridJsonStringStore'
 import { GRID_STORE_SYMBOL, GridStore } from './GridStore'
 
 /**
- * Implements the storage for an HGrid using a JSON string.
+ * Implements the storage for an HGrid using a JSON string in a byte buffer.
  *
  * This is designed to work as lazily and efficiently as possible.
  *
- * This enables a grid to be lazily decoded from a JSON string.
+ * This enables a grid to be lazily decoded from a JSON string byte buffer.
  */
-export class GridJsonStringStore<DictVal extends HDict>
+export class GridJsonUint8ArrayStore<DictVal extends HDict>
 	implements GridStore<DictVal>
 {
-	readonly #grid: string
+	readonly #grid: Uint8Array
 
 	#store?: GridStore<DictVal>
 
 	public [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
-	public constructor(grid: string) {
+	public constructor(grid: Uint8Array) {
 		this.#grid = grid
 	}
 
@@ -66,16 +66,18 @@ export class GridJsonStringStore<DictVal extends HDict>
 	}
 
 	public toJSONString(): string {
-		return this.#store ? this.#store.toJSONString() : this.#grid
+		return this.getStore().toJSONString()
 	}
 
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.#store ? this.#store.toJSONUint8Array() : this.#grid
 	}
 
 	private getStore(): GridStore<DictVal> {
 		if (!this.#store) {
-			this.#store = new GridJsonStore(JSON.parse(this.#grid))
+			this.#store = new GridJsonStringStore(
+				TEXT_DECODER.decode(this.#grid)
+			)
 		}
 
 		return this.#store

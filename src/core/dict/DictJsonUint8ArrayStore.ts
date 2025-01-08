@@ -3,30 +3,30 @@
  */
 
 import { HaysonDict } from '../hayson'
-import { OptionalHVal, TEXT_ENCODER } from '../HVal'
-import { DictJsonStore } from './DictJsonStore'
+import { OptionalHVal, TEXT_DECODER } from '../HVal'
+import { DictJsonStringStore } from './DictJsonStringStore'
 import { DICT_STORE_SYMBOL, DictStore } from './DictStore'
 import { HValObj } from './HValObj'
 
 /**
- * A dict store that uses a JSON (Hayson) string.
+ * A dict store that uses a JSON (Hayson) string encoded in a byte buffer.
  *
  * This is designed to work as lazily and efficiently as possible.
  *
- * This enables a dict to be lazily decoded from a JSON string.
+ * This enables a dict to be lazily decoded from a JSON string in a byte buffer.
  */
-export class DictJsonStringStore implements DictStore {
+export class DictJsonUint8ArrayStore implements DictStore {
 	/**
-	 * The original Hayson dict encoded as a string.
+	 * The original Hayson dict encoded as a string in a byte buffer.
 	 */
-	#values: string
+	#values: Uint8Array
 
 	/**
 	 * The inner JSON store that's lazily created.
 	 */
 	#store?: DictStore
 
-	constructor(values: string) {
+	constructor(values: Uint8Array) {
 		this.#values = values
 	}
 
@@ -63,18 +63,20 @@ export class DictJsonStringStore implements DictStore {
 	}
 
 	public toJSONString(): string {
-		return this.#store ? this.#store.toJSONString() : this.#values
+		return this.getStore().toJSONString()
 	}
 
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.#store ? this.#store.toJSONUint8Array() : this.#values
 	}
 
 	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private getStore(): DictStore {
 		if (!this.#store) {
-			this.#store = new DictJsonStore(JSON.parse(this.#values))
+			this.#store = new DictJsonStringStore(
+				TEXT_DECODER.decode(this.#values)
+			)
 		}
 
 		return this.#store
