@@ -22,8 +22,10 @@ import { HValObj, hvalObjToJson } from './HValObj'
 export class DictJsonStore implements DictStore {
 	/**
 	 * The original Hayson dict.
+	 *
+	 * If undefined then all values have been decoded so this object is no longer needed.
 	 */
-	#values: HaysonDict
+	#values?: HaysonDict
 
 	/**
 	 * Cached hvals.
@@ -32,11 +34,6 @@ export class DictJsonStore implements DictStore {
 	 * If the dict is written too then all values are decoded.
 	 */
 	#hvals: HValObj = {}
-
-	/**
-	 * A flag indicating whether all the values have been decoded.
-	 */
-	#allDecoded = false
 
 	constructor(values: HaysonDict) {
 		this.#values = values
@@ -52,7 +49,7 @@ export class DictJsonStore implements DictStore {
 
 		// If the values are all decoded then there's no point in checking the original
 		// JSON values.
-		if (!this.#allDecoded) {
+		if (this.#values) {
 			const val = this.#values[name]
 
 			// Lazily decode and cache the value.
@@ -80,9 +77,9 @@ export class DictJsonStore implements DictStore {
 	}
 
 	public has(name: string): boolean {
-		return this.#allDecoded
-			? this.#hvals[name] !== undefined
-			: this.#values[name] !== undefined
+		return this.#values
+			? this.#values[name] !== undefined
+			: this.#hvals[name] !== undefined
 	}
 
 	public set(name: string, value: OptionalHVal): void {
@@ -92,18 +89,16 @@ export class DictJsonStore implements DictStore {
 
 	public remove(name: string): void {
 		delete this.#hvals[name]
-		delete this.#values[name]
+		delete this.#values?.[name]
 	}
 
 	public clear(): void {
-		this.#values = {}
+		this.#values = undefined
 		this.#hvals = {}
-		// Just mark as all decoded so all the values have been removed and hence are synchronized.
-		this.#allDecoded = true
 	}
 
 	public getKeys(): string[] {
-		return Object.keys(this.#allDecoded ? this.#hvals : this.#values)
+		return Object.keys(this.#values ?? this.#hvals)
 	}
 
 	public toObj(): HValObj {
@@ -112,7 +107,7 @@ export class DictJsonStore implements DictStore {
 	}
 
 	public toJSON(): HaysonDict {
-		return this.#allDecoded ? hvalObjToJson(this.#hvals) : this.#values
+		return this.#values ?? hvalObjToJson(this.#hvals)
 	}
 
 	public toJSONString(): string {
@@ -126,9 +121,11 @@ export class DictJsonStore implements DictStore {
 	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	private decodeAll(): void {
-		if (!this.#allDecoded) {
-			this.#allDecoded = true
-			this.#hvals = toHValObj(this.#values)
+		if (this.#values) {
+			this.#hvals = toHValObj(this.#values as HaysonDict)
+
+			// To save memory, mark this as undefined.
+			this.#values = undefined
 		}
 	}
 }
