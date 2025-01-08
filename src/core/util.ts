@@ -46,6 +46,7 @@ import { Scanner } from '../util/Scanner'
 import { HNamespace } from './HNamespace'
 import { DictJsonStore } from './dict/DictJsonStore'
 import { GridJsonStore } from './grid/GridJsonStore'
+import { ListJsonStore } from './list/ListJsonStore'
 
 /**
  * Make the haystack value based on the supplied data.
@@ -79,7 +80,7 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 	}
 
 	if (Array.isArray(val)) {
-		return HList.make(val as HaysonList)
+		return new HList(new ListJsonStore(val as HaysonList))
 	}
 
 	const obj = val as { _kind?: string }

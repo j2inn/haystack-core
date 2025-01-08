@@ -71,8 +71,7 @@ Object.defineProperties(Array.prototype, {
 		configurable: true,
 		writable: true,
 		value: function (): HaysonVal {
-			const val = makeValue(this as HaysonVal)
-			return val ? val.toJSON() : val
+			return HList.make(this as HaysonVal).toJSON()
 		},
 	},
 })

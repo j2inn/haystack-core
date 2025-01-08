@@ -2,6 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
+import { HaysonList } from '../hayson'
 import { OptionalHVal } from '../HVal'
 
 export const LIST_STORE_SYMBOL = Symbol.for('listStore')
@@ -14,6 +15,11 @@ export interface ListStore<Value extends OptionalHVal> {
 	 * The list values
 	 */
 	values: Value[]
+
+	/**
+	 * @returns A JSON reprentation of the list.
+	 */
+	toJSON(): HaysonList
 
 	/**
 	 * Indicates this is a list store.

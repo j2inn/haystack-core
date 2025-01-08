@@ -36,6 +36,9 @@ import { HGrid } from '../../src/core/grid/HGrid'
 import { HNamespace } from '../../src/core/HNamespace'
 import { makeProjectHaystackNormalizer } from '../readDefs'
 
+import '../matchers'
+import '../customMatchers'
+
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
 		it('returns an HBool.TRUE for a true boolean', function (): void {
@@ -215,7 +218,7 @@ describe('util', function (): void {
 		})
 
 		it('returns a list from an array of haystack values', function (): void {
-			expect(makeValue(['foo'])).toEqual(HList.make(HStr.make('foo')))
+			expect(makeValue(['foo'])).toValEqual(HList.make(HStr.make('foo')))
 		})
 
 		it('returns null for a null value', function (): void {

@@ -871,7 +871,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @returns A JSON reprentation of the object.
 	 */
 	public toJSON(): HaysonList {
-		return this.values.map((val): HaysonVal => val?.toJSON() ?? null)
+		return this.$store.toJSON()
 	}
 
 	/**

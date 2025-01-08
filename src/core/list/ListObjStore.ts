@@ -2,6 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
+import { HaysonList } from '../hayson'
 import { OptionalHVal } from '../HVal'
 import { LIST_STORE_SYMBOL, ListStore } from './ListStore'
 
@@ -17,5 +18,9 @@ export class ListObjStore<Value extends OptionalHVal>
 
 	constructor(values: Value[]) {
 		this.values = values
+	}
+
+	public toJSON(): HaysonList {
+		return this.values.map((value) => (value ? value.toJSON() : null))
 	}
 }
