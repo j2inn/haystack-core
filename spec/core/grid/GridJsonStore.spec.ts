@@ -11,6 +11,7 @@ import { HDict } from '../../../src/core/dict/HDict'
 import { GridColumn } from '../../../src/core/grid/GridColumn'
 import { HStr } from '../../../src/core/HStr'
 import { Kind } from '../../../src/core/Kind'
+import { TEXT_ENCODER } from '../../../src/core/HVal'
 
 import '../../matchers'
 import '../../customMatchers'
@@ -167,4 +168,33 @@ describe('GridJsonStore', () => {
 			)
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', () => {
+		it('returns a JSON byte buffer', () => {
+			expect(store.toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.Grid,
+						meta: { ver: DEFAULT_GRID_VERSION, foo: 'bar' },
+						cols: [
+							{
+								name: 'foo',
+								meta: {},
+							},
+							{
+								name: 'boo',
+								meta: {},
+							},
+						],
+						rows: [
+							{
+								foo: 'foo',
+								boo: null,
+							},
+						],
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 })

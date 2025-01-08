@@ -70,6 +70,11 @@ export interface DictStore {
 	toJSONString(): string
 
 	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	toJSONUint8Array(): Uint8Array
+
+	/**
 	 * Indicates this is a dict store.
 	 */
 	[DICT_STORE_SYMBOL]: symbol

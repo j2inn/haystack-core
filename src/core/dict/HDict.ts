@@ -20,7 +20,6 @@ import {
 	isHVal,
 	NOT_SUPPORTED_IN_FILTER_MSG,
 	OptionalHVal,
-	TEXT_ENCODER,
 	valueEquals,
 	valueIsKind,
 	ZINC_NULL,
@@ -528,7 +527,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.$store.toJSONUint8Array()
 	}
 
 	/**

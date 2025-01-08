@@ -57,6 +57,11 @@ export interface GridStore<DictVal extends HDict> {
 	toJSONString(): string
 
 	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	toJSONUint8Array(): Uint8Array
+
+	/**
 	 * Indicates this is a grid store.
 	 */
 	[GRID_STORE_SYMBOL]: symbol

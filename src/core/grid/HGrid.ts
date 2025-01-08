@@ -12,7 +12,6 @@ import {
 	OptionalHVal,
 	ZINC_NULL,
 	isHVal,
-	TEXT_ENCODER,
 } from '../HVal'
 import { HDict } from '../dict/HDict'
 import { HValObj } from '../dict/HValObj'
@@ -440,7 +439,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.$store.toJSONUint8Array()
 	}
 
 	/**

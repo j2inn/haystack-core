@@ -3,7 +3,7 @@
  */
 
 import { HaysonDict } from '../hayson'
-import { OptionalHVal } from '../HVal'
+import { OptionalHVal, TEXT_ENCODER } from '../HVal'
 import { DictJsonStore } from './DictJsonStore'
 import { DICT_STORE_SYMBOL, DictStore } from './DictStore'
 import { HValObj } from './HValObj'
@@ -64,6 +64,10 @@ export class DictJsonStringStore implements DictStore {
 
 	public toJSONString(): string {
 		return this.#store ? this.#store.toJSONString() : this.#values
+	}
+
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	public [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL

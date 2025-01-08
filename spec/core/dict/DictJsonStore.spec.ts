@@ -6,6 +6,7 @@ import { DictJsonStore } from '../../../src/core/dict/DictJsonStore'
 import { HMarker } from '../../../src/core/HMarker'
 import { HStr } from '../../../src/core/HStr'
 import { Kind } from '../../../src/core/Kind'
+import { TEXT_ENCODER } from '../../../src/core/HVal'
 
 import '../../matchers'
 import '../../customMatchers'
@@ -124,4 +125,18 @@ describe('DictJsonStore', () => {
 			)
 		})
 	}) // .#toJSONString()
+
+	describe('#toJSONUint8Array()', () => {
+		it('returns a JSON byte buffer', () => {
+			expect(store.toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						site: { _kind: Kind.Marker },
+						dis: 'A site',
+						isNull: null,
+					})
+				)
+			)
+		})
+	}) // .#toJSONUint8Array()
 })

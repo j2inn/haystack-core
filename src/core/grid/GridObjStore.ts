@@ -4,6 +4,7 @@
 
 import { HDict } from '../dict/HDict'
 import { HaysonGrid } from '../hayson'
+import { TEXT_ENCODER } from '../HVal'
 import { GridColumn } from './GridColumn'
 import { GRID_STORE_SYMBOL, GridStore, gridStoreToJson } from './GridStore'
 
@@ -42,5 +43,9 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 
 	public toJSONString(): string {
 		return JSON.stringify(this.toJSON())
+	}
+
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }
