@@ -126,6 +126,12 @@ describe('HBool', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HBool.make(true).toJSONString()).toEqual('true')
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns JSON for false', function (): void {
 			expect(HBool.make(false).toJSONv3()).toBe(false)

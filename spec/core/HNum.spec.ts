@@ -403,6 +403,18 @@ describe('HNum', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns JSON string', function (): void {
+			expect(HNum.make(123, 'm').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Number,
+					val: 123,
+					unit: 'm',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns the number encoded as a string', function (): void {
 			expect(HNum.make(34.6).toJSONv3()).toBe('n:34.6')

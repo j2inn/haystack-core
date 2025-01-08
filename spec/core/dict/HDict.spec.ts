@@ -198,6 +198,18 @@ describe('HDict', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(dict.toJSONString()).toBe(
+				JSON.stringify({
+					foo: 'foovalue',
+					goo: 99,
+					soo: { _kind: 'marker' },
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a JSON Object', function (): void {
 			expect(dict.toJSONv3()).toEqual({

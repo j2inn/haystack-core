@@ -109,6 +109,17 @@ describe('HSymbol', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HSymbol.make('foo').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Symbol,
+					val: 'foo',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns an encoded symbol', function (): void {
 			expect(HSymbol.make('foo').toJSONv3()).toBe('y:foo')

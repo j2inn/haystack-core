@@ -75,6 +75,16 @@ describe('HMarker', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns JSON', function (): void {
+			expect(HMarker.make().toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Marker,
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns JSON', function (): void {
 			expect(HMarker.make().toJSONv3()).toEqual('m:')

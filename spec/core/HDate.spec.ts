@@ -170,6 +170,17 @@ describe('HDate', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HDate.make('2020-01-01').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Date,
+					val: '2020-01-01',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HDate.make('2020-01-01').toJSONv3()).toBe('d:2020-01-01')

@@ -171,6 +171,18 @@ describe('HCoord', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(makeCoord(2, 4).toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Coord,
+					lat: 2,
+					lng: 4,
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a JSON string', function (): void {
 			expect(makeCoord(2, 4).toJSONv3()).toBe('c:2,4')

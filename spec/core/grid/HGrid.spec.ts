@@ -335,6 +335,36 @@ describe('HGrid', function (): void {
 			})
 		}) // #toJSON()
 
+		describe('#toJSONString()', function (): void {
+			it('returns a JSON string representation of a grid', function (): void {
+				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
+
+				expect(grid.toJSONString()).toBe(
+					JSON.stringify({
+						_kind: Kind.Grid,
+						meta: { ver: DEFAULT_GRID_VERSION },
+						cols: [
+							{
+								name: 'foo',
+								meta: {},
+							},
+							{
+								name: 'goo',
+								meta: {},
+							},
+						],
+						rows: [
+							{
+								foo: 'foo',
+								goo: null,
+							},
+						],
+					})
+				)
+			})
+		}) // #toJSONString()
+
 		describe('#toJSONv3()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {
 				grid.get(0)?.set('goo', null)

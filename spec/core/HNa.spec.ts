@@ -71,6 +71,16 @@ describe('HNa', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns JSON', function (): void {
+			expect(HNa.make().toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.NA,
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns JSON', function (): void {
 			expect(HNa.make().toJSONv3()).toEqual('z:')

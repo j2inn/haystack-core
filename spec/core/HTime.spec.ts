@@ -155,6 +155,17 @@ describe('HTime', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns JSON', function (): void {
+			expect(HTime.make('12:00:00').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Time,
+					val: '12:00:00',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HTime.make('12:00:00').toJSONv3()).toBe('h:12:00:00')

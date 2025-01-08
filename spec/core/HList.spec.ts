@@ -586,6 +586,15 @@ describe('HList', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			list.push(null)
+			expect(list.toJSONString()).toBe(
+				JSON.stringify(['foovalue', 99, { _kind: Kind.Marker }, null])
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns the list as JSON', function (): void {
 			list.push(null)

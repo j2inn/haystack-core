@@ -136,6 +136,17 @@ describe('HRef', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HRef.make('foo').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Ref,
+					val: 'foo',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HRef.make('foo').toJSONv3()).toBe('r:foo')

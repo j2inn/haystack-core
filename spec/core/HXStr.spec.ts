@@ -171,6 +171,18 @@ describe('HXStr', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HXStr.make('Type', 'value').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.XStr,
+					val: 'value',
+					type: 'Type',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HXStr.make('Type', 'value').toJSONv3()).toBe('x:Type:value')

@@ -205,6 +205,11 @@ export interface HVal {
 	toJSON(): HaysonVal
 
 	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	toJSONString(): string
+
+	/**
 	 * Encode the value using the older Haystack version 3 JSON encoding.
 	 * Please note, this has been supplanted by the newer `Hayson` JSON
 	 * format (use `toJSON`).

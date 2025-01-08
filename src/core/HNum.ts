@@ -407,6 +407,13 @@ export class HNum implements HVal {
 	}
 
 	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	public toJSONString(): string {
+		return JSON.stringify(this)
+	}
+
+	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
 	public toJSONv3(): JsonV3Num {

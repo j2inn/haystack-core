@@ -171,6 +171,12 @@ describe('HStr', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a string', function (): void {
+			expect(HStr.make('foo').toJSONString()).toEqual('"foo"')
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HStr.make('foo').toJSONv3()).toEqual('foo')

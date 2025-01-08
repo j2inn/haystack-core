@@ -135,6 +135,17 @@ describe('HUri', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HUri.make('/foo').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Uri,
+					val: '/foo',
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {
 			expect(HUri.make('/foo').toJSONv3()).toBe('u:/foo')

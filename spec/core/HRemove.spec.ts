@@ -75,6 +75,16 @@ describe('HRemove', function (): void {
 		})
 	}) // #toJSON()
 
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HRemove.make().toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Remove,
+				})
+			)
+		})
+	}) // #toJSONString()
+
 	describe('#toJSONv3()', function (): void {
 		it('returns a zinc encoded string', function (): void {
 			expect(HRemove.make().toJSONv3()).toBe('-:')
