@@ -22,6 +22,11 @@ export interface ListStore<Value extends OptionalHVal> {
 	toJSON(): HaysonList
 
 	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	toJSONString(): string
+
+	/**
 	 * Indicates this is a list store.
 	 */
 	readonly [LIST_STORE_SYMBOL]: symbol

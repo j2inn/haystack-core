@@ -40,4 +40,8 @@ export class ListJsonStore<Value extends OptionalHVal>
 			? this.#values.map((value) => (value ? value.toJSON() : null))
 			: this.#list
 	}
+
+	public toJSONString(): string {
+		return JSON.stringify(this)
+	}
 }

@@ -878,7 +878,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @returns A string containing the JSON representation of the object.
 	 */
 	public toJSONString(): string {
-		return JSON.stringify(this)
+		return this.$store.toJSONString()
 	}
 
 	/**

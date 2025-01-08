@@ -23,4 +23,8 @@ export class ListObjStore<Value extends OptionalHVal>
 	public toJSON(): HaysonList {
 		return this.values.map((value) => (value ? value.toJSON() : null))
 	}
+
+	public toJSONString(): string {
+		return JSON.stringify(this)
+	}
 }
