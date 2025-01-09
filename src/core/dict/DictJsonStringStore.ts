@@ -75,6 +75,7 @@ export class DictJsonStringStore implements DictStore {
 	private getStore(): DictStore {
 		if (!this.#store) {
 			this.#store = new DictJsonStore(JSON.parse(this.#values))
+			this.#values = ''
 		}
 
 		return this.#store

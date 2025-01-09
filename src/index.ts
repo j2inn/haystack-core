@@ -83,6 +83,7 @@ export * from './core/grid/HGrid'
 export * from './core/list/ListStore'
 export * from './core/list/ListObjStore'
 export * from './core/list/ListJsonStore'
+export * from './core/list/ListJsonStringStore'
 export * from './core/list/HList'
 
 // Shorthand

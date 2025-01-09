@@ -10,6 +10,15 @@ import '../../customMatchers'
 
 describe('ListObjStore', () => {
 	describe('#values', () => {
+		it('sets values', () => {
+			const values = [HNum.make(42)]
+
+			const store = new ListObjStore<HNum>([])
+			store.values = values
+
+			expect(store.values).toEqual(values)
+		})
+
 		it('returns values', () => {
 			const values = [HNum.make(42)]
 

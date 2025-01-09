@@ -19,7 +19,7 @@ import { GRID_STORE_SYMBOL, GridStore } from './GridStore'
 export class GridJsonStringStore<DictVal extends HDict>
 	implements GridStore<DictVal>
 {
-	readonly #grid: string
+	#grid: string
 
 	#store?: GridStore<DictVal>
 
@@ -76,6 +76,7 @@ export class GridJsonStringStore<DictVal extends HDict>
 	private getStore(): GridStore<DictVal> {
 		if (!this.#store) {
 			this.#store = new GridJsonStore(JSON.parse(this.#grid))
+			this.#grid = ''
 		}
 
 		return this.#store

@@ -2,18 +2,18 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
-import { ListJsonStore } from '../../../src/core/list/ListJsonStore'
+import { ListJsonStringStore } from '../../../src/core/list/ListJsonStringStore'
 import { HNum } from '../../../src/core/HNum'
 
 import '../../matchers'
 import '../../customMatchers'
 
-describe('ListJsonStore', () => {
+describe('ListJsonStringStore', () => {
 	describe('#values', () => {
 		it('sets values', () => {
 			const values = [HNum.make(42)]
 
-			const store = new ListJsonStore<HNum>([])
+			const store = new ListJsonStringStore<HNum>('[]')
 			store.values = values
 
 			expect(store.values).toEqual(values)
@@ -21,7 +21,7 @@ describe('ListJsonStore', () => {
 
 		it('returns values', () => {
 			const values = [42]
-			const store = new ListJsonStore(values)
+			const store = new ListJsonStringStore(JSON.stringify(values))
 
 			expect(store.values.length).toBe(1)
 			expect(store.values[0]).toValEqual(HNum.make(42))
@@ -31,12 +31,14 @@ describe('ListJsonStore', () => {
 	describe('#toJSON()', () => {
 		it('returns JSON', () => {
 			const values = [42]
-			expect(new ListJsonStore(values).toJSON()).toEqual([42])
+			expect(
+				new ListJsonStringStore(JSON.stringify(values)).toJSON()
+			).toEqual([42])
 		})
 
 		it('returns JSON after changing the values', () => {
 			const values = [42]
-			const store = new ListJsonStore(values)
+			const store = new ListJsonStringStore(JSON.stringify(values))
 			store.values = [HNum.make(43)]
 			expect(store.toJSON()).toEqual([43])
 		})
@@ -45,7 +47,9 @@ describe('ListJsonStore', () => {
 	describe('#toJSONString()', () => {
 		it('returns a JSON string', () => {
 			const values = [42]
-			expect(new ListJsonStore(values).toJSONString()).toEqual('[42]')
+			expect(
+				new ListJsonStringStore(JSON.stringify(values)).toJSONString()
+			).toEqual('[42]')
 		})
 	}) // #toJSONString()
 })
