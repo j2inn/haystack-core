@@ -374,8 +374,6 @@ describe('TrioReader', function (): void {
 		it('returns an array of dicts', function (): void {
 			const dicts = TrioReader.readAllDicts(trioColls)
 
-			trioDict2.toJSON()
-
 			expect(dicts.length).toBe(3)
 			expect(dicts[0]).toValEqual(trioDict0)
 			expect(dicts[1]).toValEqual(trioDict1)
