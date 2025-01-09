@@ -27,6 +27,11 @@ export interface ListStore<Value extends OptionalHVal> {
 	toJSONString(): string
 
 	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	toJSONUint8Array(): Uint8Array
+
+	/**
 	 * Indicates this is a list store.
 	 */
 	readonly [LIST_STORE_SYMBOL]: symbol

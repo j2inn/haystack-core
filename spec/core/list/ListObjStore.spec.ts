@@ -4,6 +4,7 @@
 
 import { ListObjStore } from '../../../src/core/list/ListObjStore'
 import { HNum } from '../../../src/core/HNum'
+import { TEXT_ENCODER } from '../../../src/core/HVal'
 
 import '../../matchers'
 import '../../customMatchers'
@@ -39,4 +40,13 @@ describe('ListObjStore', () => {
 			expect(new ListObjStore(values).toJSONString()).toEqual('[42]')
 		})
 	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', () => {
+		it('returns a JSON byte buffer', () => {
+			const values = [HNum.make(42)]
+			expect(new ListObjStore(values).toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode('[42]')
+			)
+		})
+	}) // #toJSONUint8Array()
 })

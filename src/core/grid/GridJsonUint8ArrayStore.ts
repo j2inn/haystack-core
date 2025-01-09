@@ -19,7 +19,7 @@ import { GRID_STORE_SYMBOL, GridStore } from './GridStore'
 export class GridJsonUint8ArrayStore<DictVal extends HDict>
 	implements GridStore<DictVal>
 {
-	readonly #grid: Uint8Array
+	#grid?: Uint8Array
 
 	#store?: GridStore<DictVal>
 
@@ -70,7 +70,9 @@ export class GridJsonUint8ArrayStore<DictVal extends HDict>
 	}
 
 	public toJSONUint8Array(): Uint8Array {
-		return this.#store ? this.#store.toJSONUint8Array() : this.#grid
+		return this.#store
+			? this.#store.toJSONUint8Array()
+			: this.#grid ?? new Uint8Array()
 	}
 
 	private getStore(): GridStore<DictVal> {
@@ -78,6 +80,8 @@ export class GridJsonUint8ArrayStore<DictVal extends HDict>
 			this.#store = new GridJsonStringStore(
 				TEXT_DECODER.decode(this.#grid)
 			)
+
+			this.#grid = undefined
 		}
 
 		return this.#store

@@ -3,24 +3,24 @@
  */
 
 import { HaysonList } from '../hayson'
-import { OptionalHVal, TEXT_ENCODER } from '../HVal'
-import { ListJsonStore } from './ListJsonStore'
+import { OptionalHVal, TEXT_DECODER } from '../HVal'
+import { ListJsonStringStore } from './ListJsonStringStore'
 import { LIST_STORE_SYMBOL, ListStore } from './ListStore'
 
 /**
- * Implements the storage for an HList using a JSON (Hayson) string.
+ * Implements the storage for an HList using a JSON (Hayson) string encoded in a byte buffer.
  *
  * This is designed to work as lazily and efficiently as possible.
  *
- * This enables a list to be lazily decoded from a JSON string.
+ * This enables a list to be lazily decoded from a JSON string in a byte buffer.
  */
-export class ListJsonStringStore<Value extends OptionalHVal>
+export class ListJsonUint8ArrayStore<Value extends OptionalHVal>
 	implements ListStore<Value>
 {
 	/**
-	 * The original Hayson list encoded as a string.
+	 * The original Hayson list encoded as a string in a byte buffer.
 	 */
-	#list: string
+	#list?: Uint8Array
 
 	/**
 	 * The inner JSON store that's lazily created.
@@ -29,7 +29,7 @@ export class ListJsonStringStore<Value extends OptionalHVal>
 
 	readonly [LIST_STORE_SYMBOL] = LIST_STORE_SYMBOL
 
-	constructor(list: string) {
+	constructor(list: Uint8Array) {
 		this.#list = list
 	}
 
@@ -46,17 +46,21 @@ export class ListJsonStringStore<Value extends OptionalHVal>
 	}
 
 	public toJSONString(): string {
-		return this.#store ? this.#store.toJSONString() : this.#list
+		return this.getStore().toJSONString()
 	}
 
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.#store
+			? this.#store.toJSONUint8Array()
+			: this.#list ?? new Uint8Array()
 	}
 
 	private getStore(): ListStore<Value> {
 		if (!this.#store) {
-			this.#store = new ListJsonStore(JSON.parse(this.#list))
-			this.#list = ''
+			this.#store = new ListJsonStringStore(
+				TEXT_DECODER.decode(this.#list)
+			)
+			this.#list = undefined
 		}
 
 		return this.#store

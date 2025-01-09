@@ -3,12 +3,16 @@
  */
 
 import { HaysonList } from '../hayson'
-import { OptionalHVal } from '../HVal'
+import { OptionalHVal, TEXT_ENCODER } from '../HVal'
 import { makeValue } from '../util'
 import { LIST_STORE_SYMBOL, ListStore } from './ListStore'
 
 /**
  * Implements the storage for an HList using JSON.
+ *
+ * This is designed to work as lazily and efficiently as possible.
+ *
+ * This enables a list to be lazily decoded from a JSON object.
  */
 export class ListJsonStore<Value extends OptionalHVal>
 	implements ListStore<Value>
@@ -47,5 +51,9 @@ export class ListJsonStore<Value extends OptionalHVal>
 
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

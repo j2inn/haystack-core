@@ -19,7 +19,7 @@ export class DictJsonUint8ArrayStore implements DictStore {
 	/**
 	 * The original Hayson dict encoded as a string in a byte buffer.
 	 */
-	#values: Uint8Array
+	#values?: Uint8Array
 
 	/**
 	 * The inner JSON store that's lazily created.
@@ -69,7 +69,9 @@ export class DictJsonUint8ArrayStore implements DictStore {
 	}
 
 	public toJSONUint8Array(): Uint8Array {
-		return this.#store ? this.#store.toJSONUint8Array() : this.#values
+		return this.#store
+			? this.#store.toJSONUint8Array()
+			: this.#values ?? new Uint8Array()
 	}
 
 	private getStore(): DictStore {
@@ -77,6 +79,8 @@ export class DictJsonUint8ArrayStore implements DictStore {
 			this.#store = new DictJsonStringStore(
 				TEXT_DECODER.decode(this.#values)
 			)
+
+			this.#values = undefined
 		}
 
 		return this.#store

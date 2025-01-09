@@ -3,7 +3,7 @@
  */
 
 import { HaysonList } from '../hayson'
-import { OptionalHVal } from '../HVal'
+import { OptionalHVal, TEXT_ENCODER } from '../HVal'
 import { LIST_STORE_SYMBOL, ListStore } from './ListStore'
 
 /**
@@ -26,5 +26,9 @@ export class ListObjStore<Value extends OptionalHVal>
 
 	public toJSONString(): string {
 		return JSON.stringify(this)
+	}
+
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

@@ -14,7 +14,6 @@ import {
 	OptionalHVal,
 	ZINC_NULL,
 	AXON_NULL,
-	TEXT_ENCODER,
 } from '../HVal'
 import { HaysonVal, HaysonList } from '../hayson'
 import { HFilter } from '../../filter/HFilter'
@@ -885,7 +884,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
 	public toJSONUint8Array(): Uint8Array {
-		return TEXT_ENCODER.encode(this.toJSONString())
+		return this.$store.toJSONUint8Array()
 	}
 
 	/**

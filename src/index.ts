@@ -84,6 +84,7 @@ export * from './core/list/ListStore'
 export * from './core/list/ListObjStore'
 export * from './core/list/ListJsonStore'
 export * from './core/list/ListJsonStringStore'
+export * from './core/list/ListJsonUint8ArrayStore'
 export * from './core/list/HList'
 
 // Shorthand
