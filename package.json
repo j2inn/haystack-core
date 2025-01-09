@@ -33,9 +33,9 @@
 		"bundle": "webpack",
 		"start": "npm install && npm run test && npm run build && npm run bundle && npm run server",
 		"circular": "madge --circular --extensions ts ./",
-		"examples": "nodemon --ext ts --ignore dist/ --exec \"ts-node ./examples/defs.ts\"",
 		"prepack": "npm run lint && npm test && npm run build",
-		"checktypes": "tsc --noEmit"
+		"checktypes": "tsc --noEmit",
+		"perf:readgrid": "node ./perf/readGrid.js"
 	},
 	"files": [
 		"dist/**/*"
