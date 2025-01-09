@@ -13,7 +13,7 @@ import { LIST_STORE_SYMBOL, ListStore } from './ListStore'
 export class ListJsonStore<Value extends OptionalHVal>
 	implements ListStore<Value>
 {
-	readonly #list: HaysonList
+	#list?: HaysonList
 
 	#values?: Value[];
 
@@ -25,7 +25,10 @@ export class ListJsonStore<Value extends OptionalHVal>
 
 	public get values(): Value[] {
 		if (!this.#values) {
-			this.#values = this.#list.map((value) => makeValue(value) as Value)
+			this.#values =
+				this.#list?.map((value) => makeValue(value) as Value) ?? []
+
+			this.#list = undefined
 		}
 
 		return this.#values
@@ -33,12 +36,13 @@ export class ListJsonStore<Value extends OptionalHVal>
 
 	public set values(values: Value[]) {
 		this.#values = values
+		this.#list = undefined
 	}
 
 	public toJSON(): HaysonList {
 		return this.#values
 			? this.#values.map((value) => value?.toJSON() ?? null)
-			: this.#list
+			: this.#list ?? []
 	}
 
 	public toJSONString(): string {
