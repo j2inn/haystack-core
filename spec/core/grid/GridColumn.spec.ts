@@ -16,13 +16,13 @@ describe('GridColumn', () => {
 	})
 
 	describe('#dis', () => {
-		it('returns true for a display name', () => {
+		it('returns a display name', () => {
 			expect(column.dis).toBe('Display name')
 		})
 	}) // #dis
 
 	describe('#displayName', () => {
-		it('returns true for a display name', () => {
+		it('returns a display name', () => {
 			expect(column.displayName).toBe('Display name')
 		})
 	}) // #displayName
