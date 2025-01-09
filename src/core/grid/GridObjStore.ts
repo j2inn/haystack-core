@@ -3,10 +3,11 @@
  */
 
 import { HDict } from '../dict/HDict'
-import { HaysonGrid } from '../hayson'
+import { HaysonDict, HaysonGrid } from '../hayson'
 import { TEXT_ENCODER } from '../HVal'
+import { Kind } from '../Kind'
 import { GridColumn } from './GridColumn'
-import { GRID_STORE_SYMBOL, GridStore, gridStoreToJson } from './GridStore'
+import { GRID_STORE_SYMBOL, GRID_VERSION_NAME, GridStore } from './GridStore'
 
 /**
  * Implements the storage for an HGrid.
@@ -38,7 +39,18 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 	}
 
 	public toJSON(): HaysonGrid {
-		return gridStoreToJson(this)
+		return {
+			_kind: Kind.Grid,
+			meta: {
+				[GRID_VERSION_NAME]: this.version,
+				...this.meta.toJSON(),
+			},
+			cols: this.columns.map((column: GridColumn) => ({
+				name: column.name,
+				meta: column.meta.toJSON(),
+			})),
+			rows: this.rows.map((row: DictVal): HaysonDict => row.toJSON()),
+		}
 	}
 
 	public toJSONString(): string {
