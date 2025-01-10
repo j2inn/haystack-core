@@ -69,8 +69,8 @@
 		"prettier-eslint": "^15.0.1",
 		"prettier-eslint-cli": "^7.1.0",
 		"rimraf": "^6.0.1",
-		"rollup": "^4.29.1",
-		"rollup-plugin-dts": "^6.1.1",
+		"rollup": "^3.25.1",
+		"rollup-plugin-dts": "^5.3.0",
 		"ts-jest": "^29.1.0",
 		"ts-loader": "^9.4.3",
 		"ts-node": "^10.9.1",
@@ -79,8 +79,5 @@
 		"typescript-eslint-parser": "^22.0.0",
 		"webpack": "^5.88.0",
 		"webpack-cli": "^6.0.1"
-	},
-	"optionalDependencies": {
-		"@rollup/rollup-linux-x64-gnu": "^4.30.1"
 	}
 }
