@@ -87,22 +87,22 @@ export class HSpan {
 	/**
 	 * The relative mode. If undefined the span is absolute.
 	 */
-	public readonly mode?: SpanMode
+	readonly mode?: SpanMode
 
 	/**
 	 * Inclusive starting time.
 	 */
-	public readonly start?: HDateTime | HDate
+	readonly start?: HDateTime | HDate
 
 	/**
 	 * Exclusive ending time.
 	 */
-	public readonly end?: HDateTime | HDate
+	readonly end?: HDateTime | HDate
 
 	/**
 	 * The timezone to use.
 	 */
-	public readonly timezone: string
+	readonly timezone: string
 
 	/**
 	 * Construct a new span.
@@ -112,7 +112,7 @@ export class HSpan {
 	 * @param options.end The ending date or date time.
 	 * @param options.timezone Optional timezone identifier.
 	 */
-	public constructor(
+	constructor(
 		args:
 			| RelativeSpan
 			| SingleDateSpan
@@ -143,7 +143,7 @@ export class HSpan {
 	 * @param str The string to decode.
 	 * @returns The decoded span or undefined.
 	 */
-	public static fromStr(str: string): HSpan | undefined {
+	static fromStr(str: string): HSpan | undefined {
 		const mode = SpanMode[str as SpanMode]
 
 		if (mode) {
@@ -197,7 +197,7 @@ export class HSpan {
 	/**
 	 * @returns Encodes the span as a string value.
 	 */
-	public toString(): string {
+	toString(): string {
 		if (this.isRelative()) {
 			return this.mode as string
 		}
@@ -212,14 +212,14 @@ export class HSpan {
 	/**
 	 * @returns an Axon representation of this span.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return `toSpan(${HStr.make(this.toString()).toAxon()})`
 	}
 
 	/**
 	 * @returns A JSON representation of a span.
 	 */
-	public toJSON(): SpanJsonData {
+	toJSON(): SpanJsonData {
 		const data: SpanJsonData = {}
 
 		if (this.isRelative()) {
@@ -240,7 +240,7 @@ export class HSpan {
 	/**
 	 * @returns True if the span is relative.
 	 */
-	public isRelative(): boolean {
+	isRelative(): boolean {
 		return !!this.mode
 	}
 
@@ -267,7 +267,7 @@ export class HSpan {
 	 * @param options.Interval The luxon Interval class.
 	 * @returns A luxon interval.
 	 */
-	public toLuxonInterval<IntervalType>(
+	toLuxonInterval<IntervalType>(
 		{
 			DateTime,
 			Interval,

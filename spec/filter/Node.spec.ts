@@ -87,21 +87,21 @@ describe('Node', function (): void {
 		let node: TestParentNode
 
 		class TestParentNode extends ParentNode {
-			public constructor(nodes: Node[]) {
+			constructor(nodes: Node[]) {
 				super(nodes)
 			}
 
-			public get type(): NodeType {
+			get type(): NodeType {
 				return NodeType.condOr
 			}
 
-			public set childNodes(nodes: Node[]) {
+			set childNodes(nodes: Node[]) {
 				this.$nodes = nodes
 			}
 
-			public accept(): void {}
+			accept(): void {}
 
-			public eval(): boolean {
+			eval(): boolean {
 				return false
 			}
 		}
@@ -140,17 +140,17 @@ describe('Node', function (): void {
 		let node: Node
 
 		class TestLeafNode extends LeafNode {
-			public constructor(tokens: Token[]) {
+			constructor(tokens: Token[]) {
 				super(tokens)
 			}
 
-			public get type(): NodeType {
+			get type(): NodeType {
 				return NodeType.condOr
 			}
 
-			public accept(): void {}
+			accept(): void {}
 
-			public eval(): boolean {
+			eval(): boolean {
 				return false
 			}
 		}

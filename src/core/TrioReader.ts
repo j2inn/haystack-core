@@ -25,11 +25,11 @@ const TRIO = 'Trio'
 export class TrioDictIterator implements Iterator<HDict> {
 	private readonly $reader: TrioReader
 
-	public constructor(reader: TrioReader) {
+	constructor(reader: TrioReader) {
 		this.$reader = reader
 	}
 
-	public next(): IteratorResult<HDict> {
+	next(): IteratorResult<HDict> {
 		const dict = this.$reader.readDict()
 
 		return {
@@ -80,7 +80,7 @@ export class TrioReader implements Iterable<HDict> {
 	 *
 	 * @param input The scanner used for the input.
 	 */
-	public constructor(input: Scanner | string) {
+	constructor(input: Scanner | string) {
 		this.scanner = typeof input === 'string' ? new Scanner(input) : input
 		this.zinc = new ZincReader(this.scanner)
 	}
@@ -91,7 +91,7 @@ export class TrioReader implements Iterable<HDict> {
 	 * @returns The next dict.
 	 * @throws Error if there's a problem reading the trio file.
 	 */
-	public readDict(): HDict | undefined {
+	readDict(): HDict | undefined {
 		let tags: HValObj | undefined = undefined
 		let endOfDict = false
 
@@ -163,7 +163,7 @@ export class TrioReader implements Iterable<HDict> {
 	/**
 	 * Iterate the reader's dicts.
 	 */
-	public [Symbol.iterator](): Iterator<HDict> {
+	[Symbol.iterator](): Iterator<HDict> {
 		return new TrioDictIterator(this)
 	}
 
@@ -172,7 +172,7 @@ export class TrioReader implements Iterable<HDict> {
 	 *
 	 * @returns All the dicts in an array.
 	 */
-	public readAllDicts(): HDict[] {
+	readAllDicts(): HDict[] {
 		return [...this]
 	}
 
@@ -182,7 +182,7 @@ export class TrioReader implements Iterable<HDict> {
 	 * @param input The trio input.
 	 * @returns An array of dicts.
 	 */
-	public static readAllDicts(input: string): HDict[] {
+	static readAllDicts(input: string): HDict[] {
 		return new TrioReader(input).readAllDicts()
 	}
 
@@ -191,7 +191,7 @@ export class TrioReader implements Iterable<HDict> {
 	 *
 	 * @returns The grid.
 	 */
-	public readGrid(): HGrid {
+	readGrid(): HGrid {
 		return HGrid.make({ rows: this.readAllDicts() })
 	}
 
@@ -201,7 +201,7 @@ export class TrioReader implements Iterable<HDict> {
 	 * @param input The trio input.
 	 * @returns A grid.
 	 */
-	public static readGrid(input: string): HGrid {
+	static readGrid(input: string): HGrid {
 		return new TrioReader(input).readGrid()
 	}
 

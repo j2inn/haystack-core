@@ -33,23 +33,23 @@ export class ListJsonUint8ArrayStore<Value extends OptionalHVal>
 		this.#list = list
 	}
 
-	public get values(): Value[] {
+	get values(): Value[] {
 		return this.getStore().values
 	}
 
-	public set values(values: Value[]) {
+	set values(values: Value[]) {
 		this.getStore().values = values
 	}
 
-	public toJSON(): HaysonList {
+	toJSON(): HaysonList {
 		return this.getStore().toJSON()
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.getStore().toJSONString()
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return this.#store
 			? this.#store.toJSONUint8Array()
 			: this.#list ?? new Uint8Array()

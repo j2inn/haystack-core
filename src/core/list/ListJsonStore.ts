@@ -27,7 +27,7 @@ export class ListJsonStore<Value extends OptionalHVal>
 		this.#list = list
 	}
 
-	public get values(): Value[] {
+	get values(): Value[] {
 		if (!this.#values) {
 			this.#values =
 				this.#list?.map((value) => makeValue(value) as Value) ?? []
@@ -38,22 +38,22 @@ export class ListJsonStore<Value extends OptionalHVal>
 		return this.#values
 	}
 
-	public set values(values: Value[]) {
+	set values(values: Value[]) {
 		this.#values = values
 		this.#list = undefined
 	}
 
-	public toJSON(): HaysonList {
+	toJSON(): HaysonList {
 		return this.#values
 			? this.#values.map((value) => value?.toJSON() ?? null)
 			: this.#list ?? []
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

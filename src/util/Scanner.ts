@@ -21,29 +21,29 @@ export class Scanner {
 	/**
 	 * The input string to read from.
 	 */
-	public readonly input: string
+	readonly input: string
 
 	/**
 	 * The current character read from the input.
 	 */
-	public current: string | null = null
+	current: string | null = null
 
 	/**
 	 * The next character read from the input.
 	 */
-	public next: string | null = null
+	next: string | null = null
 
 	/**
 	 * The current character index from the input.
 	 */
-	public index = 0
+	index = 0
 
 	/**
 	 * Constructors a new lexer.
 	 *
 	 * @param input The input haystack filter string to process.
 	 */
-	public constructor(input: string) {
+	constructor(input: string) {
 		this.input = input
 
 		// Prime the scanner.
@@ -55,7 +55,7 @@ export class Scanner {
 	 *
 	 * @returns The scanner instance.
 	 */
-	public consume(): this {
+	consume(): this {
 		++this.index
 		this.update()
 		return this
@@ -70,7 +70,7 @@ export class Scanner {
 	 * @returns The scanner instance.
 	 * @throws An error if a newline isn't found.
 	 */
-	public expectAndConsumeNewLine(id: string): this {
+	expectAndConsumeNewLine(id: string): this {
 		// Handle carriage return line feeds as well.
 		if (this.current === '\r' && this.next === '\n') {
 			this.consume()
@@ -88,7 +88,7 @@ export class Scanner {
 	 * @returns The scanner instance.
 	 * @throws An error if the two values don't match.
 	 */
-	public expect(expected: string, id: string): this {
+	expect(expected: string, id: string): this {
 		if (this.current !== expected) {
 			this.throwExpectedError(expected, id)
 		}
@@ -130,7 +130,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if there's a match.
 	 */
-	public is(c: string | null): boolean {
+	is(c: string | null): boolean {
 		return this.current === c
 	}
 
@@ -139,7 +139,7 @@ export class Scanner {
 	 *
 	 * @returns True if EOF.
 	 */
-	public isEof(): boolean {
+	isEof(): boolean {
 		return this.current === null
 	}
 
@@ -149,7 +149,7 @@ export class Scanner {
 	 * This does not consume all different types of white space - just space and tab characters.
 	 * @returns The scanner instance.
 	 */
-	public consumeSpacesAndTabs(): this {
+	consumeSpacesAndTabs(): this {
 		while (this.isSpaceOrTab()) {
 			this.consume()
 		}
@@ -159,7 +159,7 @@ export class Scanner {
 	/**
 	 * @returns true if the current character is a space or tab.
 	 */
-	public isSpaceOrTab(): boolean {
+	isSpaceOrTab(): boolean {
 		return Scanner.isSpaceOrTab(this.current)
 	}
 
@@ -169,7 +169,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if a space or a tab.
 	 */
-	public static isSpaceOrTab(c: string | null): boolean {
+	static isSpaceOrTab(c: string | null): boolean {
 		return c === ' ' || c === '\t'
 	}
 
@@ -177,7 +177,7 @@ export class Scanner {
 	 * Consume any white space characters.
 	 * @returns The scanner instance.
 	 */
-	public consumeWhiteSpace(): this {
+	consumeWhiteSpace(): this {
 		while (this.isWhiteSpace()) {
 			this.consume()
 		}
@@ -189,7 +189,7 @@ export class Scanner {
 	 *
 	 * @returns True if valid letter.
 	 */
-	public isLetter(): boolean {
+	isLetter(): boolean {
 		return Scanner.isLetter(this.current)
 	}
 
@@ -198,7 +198,7 @@ export class Scanner {
 	 *
 	 * @returns True if the current character is a new line.
 	 */
-	public isNewLine(): boolean {
+	isNewLine(): boolean {
 		return Scanner.isNewLine(this.current)
 	}
 
@@ -208,7 +208,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if the character is a new line.
 	 */
-	public static isNewLine(c: string | null): boolean {
+	static isNewLine(c: string | null): boolean {
 		return c === '\n' || c === '\r'
 	}
 
@@ -218,7 +218,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if valid letter.
 	 */
-	public static isLetter(c: string | null): boolean {
+	static isLetter(c: string | null): boolean {
 		if (typeof c !== 'string') {
 			return false
 		}
@@ -236,7 +236,7 @@ export class Scanner {
 	 *
 	 * @returns True if valid number.
 	 */
-	public isDigit(): boolean {
+	isDigit(): boolean {
 		return Scanner.isDigit(this.current)
 	}
 
@@ -246,7 +246,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if valid number.
 	 */
-	public static isDigit(c: string | null): boolean {
+	static isDigit(c: string | null): boolean {
 		if (typeof c !== 'string') {
 			return false
 		}
@@ -260,7 +260,7 @@ export class Scanner {
 	 *
 	 * @returns True if white space.
 	 */
-	public isWhiteSpace(): boolean {
+	isWhiteSpace(): boolean {
 		return Scanner.isWhiteSpace(this.current)
 	}
 
@@ -270,7 +270,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if white space.
 	 */
-	public static isWhiteSpace(c: string | null): boolean {
+	static isWhiteSpace(c: string | null): boolean {
 		return c === ' ' || c === '\t' || c === '\r' || c === '\n'
 	}
 
@@ -279,7 +279,7 @@ export class Scanner {
 	 *
 	 * @returns True if this is a hex character.
 	 */
-	public isHex(): boolean {
+	isHex(): boolean {
 		return Scanner.isHex(this.current)
 	}
 
@@ -289,7 +289,7 @@ export class Scanner {
 	 * @param c The charcter to test.
 	 * @returns True if this is a hex character.
 	 */
-	public static isHex(c: string | null): boolean {
+	static isHex(c: string | null): boolean {
 		switch (c) {
 			case '0':
 			case '1':
@@ -324,7 +324,7 @@ export class Scanner {
 	 *
 	 * @returns True if upper case.
 	 */
-	public isUpperCase(): boolean {
+	isUpperCase(): boolean {
 		return Scanner.isUpperCase(this.current)
 	}
 
@@ -334,7 +334,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if upper case.
 	 */
-	public static isUpperCase(c: string | null): boolean {
+	static isUpperCase(c: string | null): boolean {
 		if (!c) {
 			return false
 		}
@@ -347,7 +347,7 @@ export class Scanner {
 	 *
 	 * @returns True if lower case.
 	 */
-	public isLowerCase(): boolean {
+	isLowerCase(): boolean {
 		return Scanner.isLowerCase(this.current)
 	}
 
@@ -357,7 +357,7 @@ export class Scanner {
 	 * @param c The character to test.
 	 * @returns True if lower case.
 	 */
-	public static isLowerCase(c: string | null): boolean {
+	static isLowerCase(c: string | null): boolean {
 		if (!c) {
 			return false
 		}

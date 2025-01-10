@@ -239,17 +239,17 @@ export abstract class ParentNode implements Node {
 		this.$nodes = nodes
 	}
 
-	public abstract get type(): NodeType
+	abstract get type(): NodeType
 
-	public get tokens(): readonly Token[] {
+	get tokens(): readonly Token[] {
 		return []
 	}
 
-	public get nodes(): readonly Node[] {
+	get nodes(): readonly Node[] {
 		return this.$nodes
 	}
 
-	public toJSON(): NodeData {
+	toJSON(): NodeData {
 		const data: NodeData = {
 			type: NodeType[this.type],
 		}
@@ -263,14 +263,14 @@ export abstract class ParentNode implements Node {
 		return data
 	}
 
-	public abstract accept(visitor: Visitor): void
+	abstract accept(visitor: Visitor): void
 
-	public acceptChildNodes(visitor: Visitor): void {
+	acceptChildNodes(visitor: Visitor): void {
 		// By default, visit all child nodes.
 		this.nodes.forEach((node: Node): void => node.accept(visitor))
 	}
 
-	public abstract eval(context: EvalContext): boolean
+	abstract eval(context: EvalContext): boolean
 }
 
 /**
@@ -283,17 +283,17 @@ export abstract class LeafNode implements Node {
 		this.$tokens = tokens
 	}
 
-	public abstract get type(): NodeType
+	abstract get type(): NodeType
 
-	public get tokens(): readonly Token[] {
+	get tokens(): readonly Token[] {
 		return this.$tokens
 	}
 
-	public get nodes(): readonly Node[] {
+	get nodes(): readonly Node[] {
 		return []
 	}
 
-	public toJSON(): NodeData {
+	toJSON(): NodeData {
 		const data: NodeData = {
 			type: NodeType[this.type],
 		}
@@ -314,38 +314,38 @@ export abstract class LeafNode implements Node {
 		return data
 	}
 
-	public abstract accept(visitor: Visitor): void
+	abstract accept(visitor: Visitor): void
 
-	public acceptChildNodes(): void {}
+	acceptChildNodes(): void {}
 
-	public abstract eval(context: EvalContext): boolean
+	abstract eval(context: EvalContext): boolean
 }
 
 /**
  * An OR condition node.
  */
 export class CondOrNode extends ParentNode {
-	public constructor(condAnds: CondAndNode[]) {
+	constructor(condAnds: CondAndNode[]) {
 		super(condAnds)
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.condOr
 	}
 
-	public get condAnds(): CondAndNode[] {
+	get condAnds(): CondAndNode[] {
 		return this.$nodes as CondAndNode[]
 	}
 
-	public set condAnds(condAnds: CondAndNode[]) {
+	set condAnds(condAnds: CondAndNode[]) {
 		this.$nodes = condAnds
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitCondOr(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		for (const condAnd of this.$nodes) {
 			if (condAnd.eval(context)) {
 				return true
@@ -368,27 +368,27 @@ export type TermNode =
  * An AND condition node.
  */
 export class CondAndNode extends ParentNode {
-	public constructor(terms: TermNode[]) {
+	constructor(terms: TermNode[]) {
 		super(terms)
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.condAnd
 	}
 
-	public get terms(): TermNode[] {
+	get terms(): TermNode[] {
 		return this.$nodes as TermNode[]
 	}
 
-	public set terms(terms: TermNode[]) {
+	set terms(terms: TermNode[]) {
 		this.$nodes = terms
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitCondAnd(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		if (this.$nodes.length) {
 			for (const node of this.$nodes) {
 				if (!node.eval(context)) {
@@ -405,27 +405,27 @@ export class CondAndNode extends ParentNode {
  * A parentheses node.
  */
 export class ParensNode extends ParentNode {
-	public constructor(condOr: CondOrNode) {
+	constructor(condOr: CondOrNode) {
 		super([condOr])
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.parens
 	}
 
-	public get condOr(): CondOrNode {
+	get condOr(): CondOrNode {
 		return this.$nodes[0] as CondOrNode
 	}
 
-	public set condOr(condOr: CondOrNode) {
+	set condOr(condOr: CondOrNode) {
 		this.$nodes = [condOr]
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitParens(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		return this.$nodes[0].eval(context)
 	}
 }
@@ -434,27 +434,27 @@ export class ParensNode extends ParentNode {
  * A has node.
  */
 export class HasNode extends LeafNode {
-	public constructor(path: TokenObj | TokenPaths) {
+	constructor(path: TokenObj | TokenPaths) {
 		super([path])
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.has
 	}
 
-	public get path(): TokenObj | TokenPaths {
+	get path(): TokenObj | TokenPaths {
 		return this.$tokens[0] as TokenObj
 	}
 
-	public set path(path: TokenObj | TokenPaths) {
+	set path(path: TokenObj | TokenPaths) {
 		this.$tokens[0] = path as TokenObj | TokenPaths
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitHas(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		return !!get(context, this.path.paths).length
 	}
 }
@@ -463,27 +463,27 @@ export class HasNode extends LeafNode {
  * A missing node.
  */
 export class MissingNode extends LeafNode {
-	public constructor(path: TokenObj | TokenPaths) {
+	constructor(path: TokenObj | TokenPaths) {
 		super([path])
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.missing
 	}
 
-	public get path(): TokenObj | TokenPaths {
+	get path(): TokenObj | TokenPaths {
 		return this.$tokens[0] as TokenObj | TokenPaths
 	}
 
-	public set path(path: TokenObj | TokenPaths) {
+	set path(path: TokenObj | TokenPaths) {
 		this.$tokens[0] = path as TokenObj | TokenPaths
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitMissing(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		return !get(context, this.path.paths).length
 	}
 }
@@ -492,47 +492,43 @@ export class MissingNode extends LeafNode {
  * A comparison node.
  */
 export class CmpNode extends LeafNode {
-	public constructor(
-		path: TokenObj | TokenPaths,
-		cmpOp: TokenObj,
-		val: TokenValue
-	) {
+	constructor(path: TokenObj | TokenPaths, cmpOp: TokenObj, val: TokenValue) {
 		super([path, cmpOp, val])
 	}
 
-	public get path(): TokenObj | TokenPaths {
+	get path(): TokenObj | TokenPaths {
 		return this.$tokens[0] as TokenObj | TokenPaths
 	}
 
-	public set path(path: TokenObj | TokenPaths) {
+	set path(path: TokenObj | TokenPaths) {
 		this.$tokens[0] = path as TokenObj | TokenPaths
 	}
 
-	public get cmpOp(): TokenObj {
+	get cmpOp(): TokenObj {
 		return this.$tokens[1] as TokenObj
 	}
 
-	public set cmpOp(cmpOp: TokenObj) {
+	set cmpOp(cmpOp: TokenObj) {
 		this.$tokens[1] = cmpOp
 	}
 
-	public get val(): TokenValue {
+	get val(): TokenValue {
 		return this.$tokens[2] as TokenValue
 	}
 
-	public set val(val: TokenValue) {
+	set val(val: TokenValue) {
 		this.$tokens[2] = val
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.cmp
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitCmp(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		const value = this.val.value
 
 		for (const pathValue of get(context, this.path.paths)) {
@@ -580,27 +576,27 @@ export class CmpNode extends LeafNode {
  * An 'is a' node.
  */
 export class IsANode extends LeafNode {
-	public constructor(val: TokenValue) {
+	constructor(val: TokenValue) {
 		super([val])
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.isa
 	}
 
-	public get val(): TokenValue {
+	get val(): TokenValue {
 		return this.$tokens[0] as TokenValue
 	}
 
-	public set val(val: TokenValue) {
+	set val(val: TokenValue) {
 		this.$tokens[0] = val
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitIsA(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		const value = this.val.value as HSymbol
 		return !!context?.namespace?.reflect(context.dict)?.fits(value)
 	}
@@ -628,51 +624,47 @@ function toRelationshipTokens(
  * A relationship node.
  */
 export class RelationshipNode extends LeafNode {
-	public constructor(
-		rel: TokenRelationship,
-		term?: TokenValue,
-		ref?: TokenValue
-	) {
+	constructor(rel: TokenRelationship, term?: TokenValue, ref?: TokenValue) {
 		super(toRelationshipTokens(rel, term, ref))
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.rel
 	}
 
-	public get rel(): TokenRelationship {
+	get rel(): TokenRelationship {
 		return this.$tokens[0] as TokenRelationship
 	}
 
-	public set rel(val: TokenRelationship) {
+	set rel(val: TokenRelationship) {
 		this.$tokens[0] = val
 	}
 
-	public get term(): TokenValue | undefined {
+	get term(): TokenValue | undefined {
 		return this.$tokens.find((t) => t.type === TokenType.symbol) as
 			| TokenValue
 			| undefined
 	}
 
-	public set term(term: TokenValue | undefined) {
+	set term(term: TokenValue | undefined) {
 		this.$tokens = toRelationshipTokens(this.rel, term, this.ref)
 	}
 
-	public get ref(): TokenValue | undefined {
+	get ref(): TokenValue | undefined {
 		return this.$tokens.find((t) => t.type === TokenType.ref) as
 			| TokenValue
 			| undefined
 	}
 
-	public set ref(ref: TokenValue | undefined) {
+	set ref(ref: TokenValue | undefined) {
 		this.$tokens = toRelationshipTokens(this.rel, this.term, ref)
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitRelationship(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		const relName = this.rel.relationship
 		const relTerm = this.term?.value as HSymbol
 		const ref = this.ref?.value as HRef
@@ -691,31 +683,31 @@ export class RelationshipNode extends LeafNode {
  * A wildcard equality node.
  */
 export class WildcardEqualsNode extends LeafNode {
-	public constructor(path: TokenObj, ref: TokenValue) {
+	constructor(path: TokenObj, ref: TokenValue) {
 		super([path, ref])
 	}
 
-	public get type(): NodeType {
+	get type(): NodeType {
 		return NodeType.wildcardEq
 	}
 
-	public get id(): TokenObj {
+	get id(): TokenObj {
 		return this.$tokens[0] as TokenObj
 	}
 
-	public set id(path: TokenObj) {
+	set id(path: TokenObj) {
 		this.$tokens[0] = path as TokenObj
 	}
 
-	public get ref(): TokenValue {
+	get ref(): TokenValue {
 		return this.$tokens[1] as TokenValue
 	}
 
-	public accept(visitor: Visitor): void {
+	accept(visitor: Visitor): void {
 		visitor.visitWildcardEquals(this)
 	}
 
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		const wcRef = this.ref.value as HRef
 		const paths = this.id.paths
 

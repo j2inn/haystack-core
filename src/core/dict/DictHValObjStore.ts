@@ -39,51 +39,51 @@ export function toHValObj(
  * in an object.
  */
 export class DictHValObjStore implements DictStore {
-	#values: HValObj
+	#values: HValObj;
 
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
-	public constructor(values: HValObj) {
+	constructor(values: HValObj) {
 		this.#values = values
 	}
 
-	public get(name: string): OptionalHVal | undefined {
+	get(name: string): OptionalHVal | undefined {
 		return this.#values[name]
 	}
 
-	public has(name: string): boolean {
+	has(name: string): boolean {
 		return this.#values[name] !== undefined
 	}
 
-	public set(name: string, value: OptionalHVal): void {
+	set(name: string, value: OptionalHVal): void {
 		this.#values[name] = value
 	}
 
-	public remove(name: string): void {
+	remove(name: string): void {
 		delete this.#values[name]
 	}
 
-	public clear(): void {
+	clear(): void {
 		this.#values = {}
 	}
 
-	public getKeys(): string[] {
+	getKeys(): string[] {
 		return Object.keys(this.#values)
 	}
 
-	public toObj(): HValObj {
+	toObj(): HValObj {
 		return this.#values
 	}
 
-	public toJSON(): HaysonDict {
+	toJSON(): HaysonDict {
 		return hvalObjToJson(this.#values)
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this.toJSON())
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

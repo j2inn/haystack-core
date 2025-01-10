@@ -24,51 +24,51 @@ export class DictJsonStringStore implements DictStore {
 	/**
 	 * The inner JSON store that's lazily created.
 	 */
-	#store?: DictStore
+	#store?: DictStore;
 
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	constructor(values: string) {
 		this.#values = values
 	}
 
-	public get(name: string): OptionalHVal | undefined {
+	get(name: string): OptionalHVal | undefined {
 		return this.getStore().get(name)
 	}
 
-	public has(name: string): boolean {
+	has(name: string): boolean {
 		return this.getStore().has(name)
 	}
 
-	public set(name: string, value: OptionalHVal): void {
+	set(name: string, value: OptionalHVal): void {
 		this.getStore().set(name, value)
 	}
 
-	public remove(name: string): void {
+	remove(name: string): void {
 		this.getStore().remove(name)
 	}
 
-	public clear(): void {
+	clear(): void {
 		this.getStore().clear()
 	}
 
-	public getKeys(): string[] {
+	getKeys(): string[] {
 		return this.getStore().getKeys()
 	}
 
-	public toObj(): HValObj {
+	toObj(): HValObj {
 		return this.getStore().toObj()
 	}
 
-	public toJSON(): HaysonDict {
+	toJSON(): HaysonDict {
 		return this.getStore().toJSON()
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.#store ? this.#store.toJSONString() : this.#values
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 

@@ -62,7 +62,7 @@ export class HUri implements HVal {
 	 * @param value The string value for the URI or a Hayson URI object.
 	 * @returns A haystack URI.
 	 */
-	public static make(value: string | HaysonUri | HUri): HUri {
+	static make(value: string | HaysonUri | HUri): HUri {
 		if (valueIsKind<HUri>(value, Kind.Uri)) {
 			return value
 		} else {
@@ -82,18 +82,18 @@ export class HUri implements HVal {
 	/**
 	 * @returns The URI string value.
 	 */
-	public get value(): string {
+	get value(): string {
 		return this.#value
 	}
 
-	public set value(value: string) {
+	set value(value: string) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Uri
 	}
 
@@ -103,7 +103,7 @@ export class HUri implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HUri>(this, kind)
 	}
 
@@ -114,7 +114,7 @@ export class HUri implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -124,7 +124,7 @@ export class HUri implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
@@ -137,7 +137,7 @@ export class HUri implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.toZinc()
 	}
 
@@ -147,7 +147,7 @@ export class HUri implements HVal {
 	 * @param value The uri to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return valueIsKind<HUri>(value, Kind.Uri) && this.value === value.value
 	}
 
@@ -157,7 +157,7 @@ export class HUri implements HVal {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HUri>(value, Kind.Uri)) {
 			return -1
 		}
@@ -174,14 +174,14 @@ export class HUri implements HVal {
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.value
 	}
 
 	/**
 	 * @returns The encoded URI value.
 	 */
-	public valueOf(): string {
+	valueOf(): string {
 		return this.value
 	}
 
@@ -190,7 +190,7 @@ export class HUri implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		let buf = '`'
 
 		for (const c of this.value) {
@@ -224,7 +224,7 @@ export class HUri implements HVal {
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonUri {
+	toJSON(): HaysonUri {
 		return {
 			_kind: this.getKind(),
 			val: this.value,
@@ -234,70 +234,70 @@ export class HUri implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Uri {
+	toJSONv3(): JsonV3Uri {
 		return `u:${this.value}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return this.toZinc()
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HUri {
+	newCopy(): HUri {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HUri> {
+	toList(): HList<HUri> {
 		return HList.make(this)
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 
 	/**
 	 * Return the scheme being used or an empty string if it can't be found.
 	 */
-	public get scheme(): string {
+	get scheme(): string {
 		return this.parse().scheme
 	}
 
 	/**
 	 * @returns The host name or an empty string if it can't be found.
 	 */
-	public get hostname(): string {
+	get hostname(): string {
 		return this.parse().hostname
 	}
 
@@ -305,14 +305,14 @@ export class HUri implements HVal {
 	 * @returns The port number being used or -1 if the port number can't
 	 * be parsed for an unknown protocol.
 	 */
-	public get port(): number {
+	get port(): number {
 		return this.parse().port
 	}
 
 	/**
 	 * @returns The pathname or an empty string if none can be found.
 	 */
-	public get pathname(): string {
+	get pathname(): string {
 		return this.parse().pathname
 	}
 
@@ -320,7 +320,7 @@ export class HUri implements HVal {
 	 * @returns The paths or an empty array if no paths can be found.
 	 */
 	@memoize()
-	public get paths(): string[] {
+	get paths(): string[] {
 		return this.parse()
 			.pathname.split('/')
 			.filter((path) => !!path.length)
@@ -329,14 +329,14 @@ export class HUri implements HVal {
 	/**
 	 * @return the fragment identifier or an empty string if it can't be found.
 	 */
-	public get hash(): string {
+	get hash(): string {
 		return this.parse().hash
 	}
 
 	/**
 	 * @returns The whole query string.
 	 */
-	public get query(): string {
+	get query(): string {
 		return this.parse().query
 	}
 
@@ -344,7 +344,7 @@ export class HUri implements HVal {
 	 * @returns The parsed query object.
 	 */
 	@memoize()
-	public get queryParams(): Record<string, string> {
+	get queryParams(): Record<string, string> {
 		return this.parse()
 			.query.split('&')
 			.reduce((obj, value) => {

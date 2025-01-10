@@ -36,19 +36,16 @@ export class GenerateHaystackFilterV3Visitor extends GenerateHaystackFilterVisit
 	 * the V3 database. The resultant HGrid from the V3 database should then be filtered
 	 * down further using `HFilter#eval(...)` to derive the final result.
 	 */
-	public requery = false
+	requery = false
 
-	public constructor(
-		namespace: HNamespace,
-		options?: { wildcardEqDepth?: number }
-	) {
+	constructor(namespace: HNamespace, options?: { wildcardEqDepth?: number }) {
 		super()
 		this.#namespace = namespace
 		this.#wildcardEqDepth =
 			options?.wildcardEqDepth ?? DEFAULT_WILDCARD_EQUALITY_DEPTH
 	}
 
-	public visitIsA(node: IsANode): void {
+	visitIsA(node: IsANode): void {
 		// Convert the `is a` query in a large joined `has` query for all subtypes.
 		// For instance, if the query is `^mammal`, we have to convert the query into
 		// `cat or dog or hamster` since Haystack v3 has no notion defs.
@@ -72,7 +69,7 @@ export class GenerateHaystackFilterV3Visitor extends GenerateHaystackFilterVisit
 		}
 	}
 
-	public visitRelationship(node: RelationshipNode): void {
+	visitRelationship(node: RelationshipNode): void {
 		const relationship = node.rel.relationship
 		const term = node.term?.value as HSymbol | undefined
 		const ref = node.ref
@@ -113,7 +110,7 @@ export class GenerateHaystackFilterV3Visitor extends GenerateHaystackFilterVisit
 		}
 	}
 
-	public visitWildcardEquals(node: WildcardEqualsNode): void {
+	visitWildcardEquals(node: WildcardEqualsNode): void {
 		// For haystack v3, we simply make an ever increasing dereferenced path.
 		// For example, equipRef *== @ahu is converted to (equipRef == @ahu or equipRef->equipRef == @ahu ...)
 

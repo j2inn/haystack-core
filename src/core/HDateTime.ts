@@ -188,9 +188,7 @@ export class HDateTime implements HVal {
 	 * @param value The date time as a string, a JS Date or Hayson date object.
 	 * @returns A haystack date time.
 	 */
-	public static make(
-		value: string | Date | HaysonDateTime | HDateTime
-	): HDateTime {
+	static make(value: string | Date | HaysonDateTime | HDateTime): HDateTime {
 		if (valueIsKind<HDateTime>(value, Kind.DateTime)) {
 			return value
 		} else {
@@ -201,39 +199,39 @@ export class HDateTime implements HVal {
 	/**
 	 * @returns The date time value.
 	 */
-	public get value(): string {
+	get value(): string {
 		return this.#value
 	}
 
-	public set value(value: string) {
+	set value(value: string) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The date time in an ISO 8601 format.
 	 */
-	public get iso(): string {
+	get iso(): string {
 		return this.#iso
 	}
 
 	/**
 	 * @returns The timezone.
 	 */
-	public get timezone(): string {
+	get timezone(): string {
 		return this.#timezone
 	}
 
 	/**
 	 * @returns The date time object as a JavaScript date.
 	 */
-	public get date(): Date {
+	get date(): Date {
 		return new Date(this.iso)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.DateTime
 	}
 
@@ -243,7 +241,7 @@ export class HDateTime implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HDateTime>(this, kind)
 	}
 
@@ -254,7 +252,7 @@ export class HDateTime implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -264,21 +262,21 @@ export class HDateTime implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
 	/**
 	 * @returns Now as a date time object.
 	 */
-	public static now(): HDateTime {
+	static now(): HDateTime {
 		return HDateTime.make(new Date())
 	}
 
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return (
 			this.date.toLocaleString() +
 			(this.timezone ? ` ${this.timezone}` : '')
@@ -288,7 +286,7 @@ export class HDateTime implements HVal {
 	/**
 	 * @returns The encoded date time value.
 	 */
-	public valueOf(): string {
+	valueOf(): string {
 		return this.value
 	}
 
@@ -297,7 +295,7 @@ export class HDateTime implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return this.value
 	}
 
@@ -307,7 +305,7 @@ export class HDateTime implements HVal {
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return (
 			valueIsKind<HDateTime>(value, Kind.DateTime) &&
 			value.value === this.value
@@ -320,7 +318,7 @@ export class HDateTime implements HVal {
 	 * @param value The value value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HDateTime>(value, Kind.DateTime)) {
 			return -1
 		}
@@ -342,14 +340,14 @@ export class HDateTime implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		throw new Error(NOT_SUPPORTED_IN_FILTER_MSG)
 	}
 
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonDateTime {
+	toJSON(): HaysonDateTime {
 		const json: HaysonDateTime = {
 			_kind: this.getKind(),
 			val: this.iso,
@@ -367,28 +365,28 @@ export class HDateTime implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3DateTime {
+	toJSONv3(): JsonV3DateTime {
 		return `t:${this.toZinc()}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		const date = this.date
 
 		return `dateTime(${HDate.make(date).toAxon()},${HTime.make(
@@ -399,28 +397,28 @@ export class HDateTime implements HVal {
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HDateTime {
+	newCopy(): HDateTime {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HDateTime> {
+	toList(): HList<HDateTime> {
 		return HList.make([this])
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 
@@ -430,7 +428,7 @@ export class HDateTime implements HVal {
 	 * @param isValidTimeZone An optional callback invoked to see if the timezone is valid.
 	 * @returns The IANA timezone name or an empty string if the timezone name isn't valid.
 	 */
-	public getIANATimeZone(
+	getIANATimeZone(
 		isValidTimeZone: (timezone: string) => boolean = defaultIsValidTimeZone
 	): string {
 		return HDateTime.getIANATimeZone(this.#timezone, isValidTimeZone)
@@ -473,7 +471,7 @@ export class HDateTime implements HVal {
 	 * @param isValidTimeZone An optional callback invoked to see if the timezone is valid.
 	 * @returns The IANA timezone name or an empty string if the timezone name isn't valid.
 	 */
-	public static getIANATimeZone(
+	static getIANATimeZone(
 		timezone: string,
 		isValidTimeZone: (timezone: string) => boolean = defaultIsValidTimeZone
 	): string {
@@ -498,7 +496,7 @@ export class HDateTime implements HVal {
 	 * - https://project-haystack.org/doc/docHaystack/TimeZones
 	 */
 	@memoize()
-	public static getTimezoneDb(): HGrid<TimeZoneEntry> {
+	static getTimezoneDb(): HGrid<TimeZoneEntry> {
 		return HGrid.make<TimeZoneEntry>({
 			rows: [
 				{ name: 'Abidjan', fullName: 'Africa/Abidjan' },

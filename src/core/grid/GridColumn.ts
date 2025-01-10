@@ -29,7 +29,7 @@ export class GridColumn {
 	 * @param name The name of the column.
 	 * @param meta The column's meta data.
 	 */
-	public constructor(name: string, meta?: HDict) {
+	constructor(name: string, meta?: HDict) {
 		this.name = name
 		this.meta = meta ?? HDict.make()
 	}
@@ -37,7 +37,7 @@ export class GridColumn {
 	/**
 	 * @returns The display name for the column.
 	 */
-	public get dis(): string {
+	get dis(): string {
 		const dis = this.meta.get('dis')
 		return (valueIsKind<HStr>(dis, Kind.Str) && dis.value) || this.name
 	}
@@ -45,7 +45,7 @@ export class GridColumn {
 	/**
 	 * @returns The display name for the column.
 	 */
-	public get displayName(): string {
+	get displayName(): string {
 		return this.dis
 	}
 
@@ -55,7 +55,7 @@ export class GridColumn {
 	 * @param column The column to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(column: GridColumn): boolean {
+	equals(column: GridColumn): boolean {
 		if (!isGridColumn(column)) {
 			return false
 		}
@@ -71,7 +71,7 @@ export class GridColumn {
 	/**
 	 * Flag used to identify a grid column.
 	 */
-	public [GRID_COLUMN_SYMBOL] = GRID_COLUMN_SYMBOL
+	[GRID_COLUMN_SYMBOL] = GRID_COLUMN_SYMBOL
 }
 
 /**

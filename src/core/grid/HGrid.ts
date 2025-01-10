@@ -57,11 +57,11 @@ export class GridDictIterator<DictVal extends HDict>
 	readonly #grid: HGrid
 	#index = 0
 
-	public constructor(grid: HGrid) {
+	constructor(grid: HGrid) {
 		this.#grid = grid
 	}
 
-	public next(): IteratorResult<DictVal> {
+	next(): IteratorResult<DictVal> {
 		const dict = this.#grid.get(this.#index++)
 
 		return {
@@ -221,7 +221,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @param value The values used to create a grid.
 	 */
-	public constructor(
+	constructor(
 		arg?:
 			| GridParams<DictVal>
 			| HaysonGrid
@@ -376,7 +376,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param value The values used to create a grid.
 	 * @returns A grid.
 	 */
-	public static make<DictVal extends HDict = HDict>(
+	static make<DictVal extends HDict = HDict>(
 		arg?: GridParams<DictVal> | HaysonGrid | HVal | (HaysonDict | DictVal)[]
 	): HGrid<DictVal> {
 		return valueIsKind<HGrid<DictVal>>(arg, Kind.Grid)
@@ -387,28 +387,28 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * @returns The grid's version number.
 	 */
-	public get version(): string {
+	get version(): string {
 		return this.$store.version
 	}
 
 	/**
 	 * Sets the grid's version number.
 	 */
-	public set version(version: string) {
+	set version(version: string) {
 		this.$store.version = version
 	}
 
 	/**
 	 * The grid's meta data.
 	 */
-	public get meta(): HDict {
+	get meta(): HDict {
 		return this.$store.meta
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Grid
 	}
 
@@ -418,35 +418,35 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HGrid>(this, kind)
 	}
 
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonGrid {
+	toJSON(): HaysonGrid {
 		return this.$store.toJSON()
 	}
 
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.$store.toJSONString()
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return this.$store.toJSONUint8Array()
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Grid {
+	toJSONv3(): JsonV3Grid {
 		return {
 			meta: {
 				[GRID_VERSION_NAME]: this.version,
@@ -477,7 +477,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		throw new Error(NOT_SUPPORTED_IN_FILTER_MSG)
 	}
 
@@ -488,7 +488,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * value being encoded is nested.
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(nested?: boolean): string {
+	toZinc(nested?: boolean): string {
 		let zinc = nested ? '<<\n' : ''
 
 		// Header and version
@@ -550,7 +550,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * @returns An Axon encoded string.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		let axon = `${HList.make(this.getRows()).toAxon()}.toGrid`
 
 		if (!this.meta.isEmpty()) {
@@ -566,7 +566,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		if (!valueIsKind<HGrid>(value, Kind.Grid)) {
 			return false
 		}
@@ -611,7 +611,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive.
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HGrid>(value, Kind.Grid)) {
 			return -1
 		}
@@ -637,7 +637,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns All rows in the grid.
 	 */
-	public getRows(): DictVal[] {
+	getRows(): DictVal[] {
 		return this.$store.rows
 	}
 
@@ -656,7 +656,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param index The index number of the row.
 	 * @returns The dict or undefined if it does not exist.
 	 */
-	public get(index: number): DictVal | undefined {
+	get(index: number): DictVal | undefined {
 		this.checkRowIndexNum(index)
 		return this.$store.rows[index]
 	}
@@ -673,7 +673,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The dict or undefined if it does not exist.
 	 */
-	public get first(): DictVal | undefined {
+	get first(): DictVal | undefined {
 		return this.get(0)
 	}
 
@@ -689,7 +689,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The dict or undefined if it does not exist.
 	 */
-	public get last(): DictVal | undefined {
+	get last(): DictVal | undefined {
 		return this.get(Math.max(0, this.length - 1))
 	}
 
@@ -708,7 +708,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns The rows that were removed. If no rows were removed then the is empty.
 	 */
-	public remove(
+	remove(
 		filter: number | string | Node,
 		cx?: Partial<EvalContext>
 	): DictVal[] {
@@ -761,7 +761,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns A new filtered grid.
 	 */
-	public filter(
+	filter(
 		filter: string | Node | ((row: DictVal, index: number) => boolean),
 		cx?: Partial<EvalContext>
 	): HGrid<DictVal> {
@@ -837,7 +837,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns A filtered grid.
 	 */
-	public filterBy(
+	filterBy(
 		name: string,
 		innerFilter: string | Node,
 		cx?: Partial<EvalContext>
@@ -888,7 +888,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param names The column names.
 	 * @returns The filtered grid instance.
 	 */
-	public uniqueBy(names: string | string[]): HGrid<DictVal> {
+	uniqueBy(names: string | string[]): HGrid<DictVal> {
 		const uniqueNames = Array.isArray(names) ? names : [names]
 
 		const grid = HGrid.make<DictVal>({
@@ -961,7 +961,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns true if there's at least one match
 	 */
-	public any(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	any(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		let result = false
 		this.runFilter(
 			filter,
@@ -992,7 +992,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns The first row dict that matches the filter.
 	 */
-	public find(
+	find(
 		filter: string | Node,
 		cx?: Partial<EvalContext>
 	): DictVal | undefined {
@@ -1031,7 +1031,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return this.any(filter, cx)
 	}
 
@@ -1059,7 +1059,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns true if there's at least one match
 	 */
-	public anyBy(
+	anyBy(
 		name: string,
 		innerFilter: string | Node,
 		cx?: Partial<EvalContext>
@@ -1116,7 +1116,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns true if there's at least one match
 	 */
-	public all(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	all(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		if (this.isEmpty()) {
 			return false
 		}
@@ -1165,7 +1165,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns true if there's at least one match
 	 */
-	public allBy(
+	allBy(
 		name: string,
 		innerFilter: string | Node,
 		cx?: Partial<EvalContext>
@@ -1284,7 +1284,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param callback A mapping callback that takes a row dict, an index number
 	 * and returns a new value.
 	 */
-	public map<U>(callback: (row: DictVal, index: number) => U): U[] {
+	map<U>(callback: (row: DictVal, index: number) => U): U[] {
 		return this.getRows().map(callback)
 	}
 
@@ -1316,7 +1316,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * current rows (dicts) as well as the index number.
 	 * @param initialValue Optional initial value for the reduce.
 	 */
-	public reduce<U = DictVal>(
+	reduce<U = DictVal>(
 		callback: (
 			prev: U,
 			current: DictVal,
@@ -1338,7 +1338,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The total number of rows.
 	 */
-	public get length(): number {
+	get length(): number {
 		return this.$store.rows.length
 	}
 
@@ -1358,7 +1358,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The grid instance.
 	 * @throws An error if the index is invalid or the number of rows incorrect.
 	 */
-	public set(index: number, values: DictVal | HaysonDict): this {
+	set(index: number, values: DictVal | HaysonDict): this {
 		const dict = makeValue(values) as DictVal
 
 		if (!dict.isKind(Kind.Dict)) {
@@ -1376,7 +1376,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * Refreshes a grid's columns based upon the rows in the grid.
 	 */
-	public refreshColumns(): void {
+	refreshColumns(): void {
 		for (const row of this.getRows()) {
 			this.addMissingColumns(row)
 		}
@@ -1420,9 +1420,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The grid instance.
 	 * @throws If the values being added are not dicts.
 	 */
-	public add(
-		...rows: (DictVal[] | HaysonDict[] | DictVal | HaysonDict)[]
-	): this {
+	add(...rows: (DictVal[] | HaysonDict[] | DictVal | HaysonDict)[]): this {
 		const toAdd = HGrid.toDicts(rows)
 
 		if (!toAdd.length) {
@@ -1468,7 +1466,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The grid instance.
 	 * @throws An error if the index is invalid or the rows are not dicts.
 	 */
-	public insert(
+	insert(
 		index: number,
 		...rows: (DictVal[] | HaysonDict[] | DictVal | HaysonDict)[]
 	): this {
@@ -1519,7 +1517,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param names The name of the column to sort by.
 	 * @returns The grid instance.
 	 */
-	public sortBy(names: string | string[]): this {
+	sortBy(names: string | string[]): this {
 		const sortNames = Array.isArray(names) ? names : [names]
 
 		if (sortNames.length) {
@@ -1552,7 +1550,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * grid.sortBy('foo').reverse()
 	 * ```
 	 */
-	public reverse(): void {
+	reverse(): void {
 		this.getRows().reverse()
 	}
 
@@ -1588,7 +1586,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * Clear all the rows from the grid.
 	 */
-	public clear(): void {
+	clear(): void {
 		this.getRows().splice(0, this.length)
 	}
 
@@ -1602,7 +1600,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns A copy of the grid's columns.
 	 */
-	public getColumns(): GridColumn[] {
+	getColumns(): GridColumn[] {
 		return [...this.$store.columns]
 	}
 
@@ -1611,7 +1609,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The column names.
 	 */
-	public getColumnNames(): string[] {
+	getColumnNames(): string[] {
 		return this.$store.columns.map((col: GridColumn): string => col.name)
 	}
 
@@ -1628,7 +1626,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param meta The column's meta data.
 	 * @returns The new column or the one already found.
 	 */
-	public addColumn(name: string, meta?: HDict): GridColumn {
+	addColumn(name: string, meta?: HDict): GridColumn {
 		const index = this.columnNameCache[name]
 
 		// If the column already exists then just update it.
@@ -1654,7 +1652,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param name The name of the column.
 	 * @returns True if the grid has the column.
 	 */
-	public hasColumn(name: string): boolean {
+	hasColumn(name: string): boolean {
 		return this.columnNameCache[name] !== undefined
 	}
 
@@ -1672,7 +1670,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @returns The updated column.
 	 * @throws An error if index does not exist in the columns.
 	 */
-	public setColumn(index: number, name: string, meta?: HDict): GridColumn {
+	setColumn(index: number, name: string, meta?: HDict): GridColumn {
 		if (!this.$store.columns[index]) {
 			throw new Error('Cannot set an invalid column')
 		}
@@ -1706,7 +1704,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param index The column index number or name.
 	 * @returns The column or undefined if not found.
 	 */
-	public getColumn(index: number | string): GridColumn | undefined {
+	getColumn(index: number | string): GridColumn | undefined {
 		let column: GridColumn | undefined
 		if (typeof index === 'number') {
 			column = this.$store.columns[index as number]
@@ -1730,7 +1728,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns The number of columns.
 	 */
-	public getColumnsLength(): number {
+	getColumnsLength(): number {
 		return this.$store.columns.length
 	}
 
@@ -1752,7 +1750,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @param names The new order of column names to use.
 	 */
-	public reorderColumns(names: string | string[]): void {
+	reorderColumns(names: string | string[]): void {
 		const colNames = Array.isArray(names) ? names : [names]
 
 		this.$store.columns = this.$store.columns.sort(
@@ -1797,7 +1795,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param column The column name, column index or instance to
 	 * create the list from.
 	 */
-	public listBy<Value extends OptionalHVal>(
+	listBy<Value extends OptionalHVal>(
 		column: string | number | GridColumn
 	): HList<Value> {
 		let name: string | undefined
@@ -1847,7 +1845,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param names The column names.
 	 * @returns A new grid instance with the specified columns.
 	 */
-	public limitColumns<LimitDictVal extends HDict = DictVal>(
+	limitColumns<LimitDictVal extends HDict = DictVal>(
 		names: string[]
 	): HGrid<LimitDictVal> {
 		return HGrid.make<LimitDictVal>({
@@ -1894,7 +1892,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * const fooDict = [...grid].filter((dict): boolean => dict.get('foo') === 'foo')[0]
 	 * ```
 	 */
-	public [Symbol.iterator](): Iterator<DictVal> {
+	[Symbol.iterator](): Iterator<DictVal> {
 		return new GridDictIterator(this)
 	}
 
@@ -1907,7 +1905,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns true if the grid is empty.
 	 */
-	public isEmpty(): boolean {
+	isEmpty(): boolean {
 		return this.length === 0
 	}
 
@@ -1930,7 +1928,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param end Optional end range.
 	 * @returns This grid instance.
 	 */
-	public range(startOrQuantity: number, end?: number): this {
+	range(startOrQuantity: number, end?: number): this {
 		const rows = this.getRows()
 
 		if (end === undefined) {
@@ -1967,7 +1965,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param column The column name, column index or column instance.
 	 * @returns The sum of all the numeric values.
 	 */
-	public sumOf(column: string | number | GridColumn): number {
+	sumOf(column: string | number | GridColumn): number {
 		return this.listBy(column).sum
 	}
 
@@ -1991,7 +1989,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param column The column name, column index or column instance.
 	 * @returns The maximum numerical value found.
 	 */
-	public maxOf(column: string | number | GridColumn): number {
+	maxOf(column: string | number | GridColumn): number {
 		return this.listBy(column).max
 	}
 
@@ -2015,7 +2013,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param column The column name, column index or column instance.
 	 * @returns The minimum numerical value found.
 	 */
-	public minOf(column: string | number | GridColumn): number {
+	minOf(column: string | number | GridColumn): number {
 		return this.listBy(column).min
 	}
 
@@ -2039,7 +2037,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param column The column name, column index or column instance.
 	 * @returns The average of all the numeric values.
 	 */
-	public avgOf(column: string | number | GridColumn): number {
+	avgOf(column: string | number | GridColumn): number {
 		return this.listBy(column).avg
 	}
 
@@ -2052,7 +2050,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns true if the grid has an error associated with it.
 	 */
-	public isError(): boolean {
+	isError(): boolean {
 		return this.meta.has('err')
 	}
 
@@ -2066,9 +2064,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 *
 	 * @returns Error information or undefined if not available.
 	 */
-	public getError():
-		| undefined
-		| { type: string; trace: string; dis: string } {
+	getError(): undefined | { type: string; trace: string; dis: string } {
 		if (!this.isError()) {
 			return undefined
 		}
@@ -2087,14 +2083,14 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * @returns The grid as an array like object.
 	 */
-	public asArrayLike(): ArrayLike<DictVal> {
+	asArrayLike(): ArrayLike<DictVal> {
 		return this as unknown as ArrayLike<DictVal>
 	}
 
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return `[${this.getRows()
 			.map((dict: DictVal): string => String(dict))
 			.join(', ')}]`
@@ -2106,7 +2102,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		if (message) {
 			console.log(String(message))
 		}
@@ -2147,7 +2143,7 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * @returns Returns a copy of the grid.
 	 */
-	public newCopy(): HGrid<DictVal> {
+	newCopy(): HGrid<DictVal> {
 		return HGrid.make<DictVal>({
 			version: this.version,
 			meta: this.meta.newCopy() as HDict,
@@ -2168,21 +2164,21 @@ export class HGrid<DictVal extends HDict = HDict>
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid<DictVal> {
+	toGrid(): HGrid<DictVal> {
 		return this
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<DictVal> {
+	toList(): HList<DictVal> {
 		return HList.make(this.getRows())
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		const obj: HValObj = {}
 
 		const rows = this.getRows()

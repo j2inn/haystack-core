@@ -71,9 +71,9 @@ export class HUnit {
 	/**
 	 * Used for a type guard check.
 	 */
-	public readonly _isHUnit = true
+	readonly _isHUnit = true
 
-	public constructor({ quantity, ids, dimensions, scale, offset }: UnitData) {
+	constructor({ quantity, ids, dimensions, scale, offset }: UnitData) {
 		this.#quantity = quantity
 		this.#ids = ids
 		this.#dimensions = dimensions && new UnitDimensions(dimensions)
@@ -88,7 +88,7 @@ export class HUnit {
 	 * @return The unit instance.
 	 * @throws An error if the unit is already registered.
 	 */
-	public static define(data: UnitData | HUnit): HUnit {
+	static define(data: UnitData | HUnit): HUnit {
 		const unit = valueIsHUnit(data) ? data : new HUnit(data)
 		getDb().define(unit)
 		return unit
@@ -100,14 +100,14 @@ export class HUnit {
 	 * @param id The id of the unit to look up.
 	 * @returns The unit or undefined.
 	 */
-	public static get(id: string): HUnit | undefined {
+	static get(id: string): HUnit | undefined {
 		return getDb().get(id)
 	}
 
 	/**
 	 * Clear the underlying unit database.
 	 */
-	public static clearDatabase(): void {
+	static clearDatabase(): void {
 		// Completely overwrite the database so we also
 		// wipe out any memoization.
 		db = undefined
@@ -119,7 +119,7 @@ export class HUnit {
 	 * @param text The text from `units.txt` to parse.
 	 * @returns All parsed units.
 	 */
-	public static parseDatabase(text: string): UnitData[] {
+	static parseDatabase(text: string): UnitData[] {
 		const units: UnitData[] = []
 		let lastQuantity = ''
 
@@ -151,7 +151,7 @@ export class HUnit {
 	 * @param text The text to parse.
 	 * @returns The quantity or undefined if it can't be found.
 	 */
-	public static parseQuantity(text: string): string {
+	static parseQuantity(text: string): string {
 		const res = /^ *-- *([^(]+) */.exec(text)
 		return ((res && res[1]) ?? '').trim()
 	}
@@ -174,7 +174,7 @@ export class HUnit {
 	 * @return The unit data or undefined if no unit data is found.
 	 * @throws An error if unit data is found but the format is invalid.
 	 */
-	public static parseUnit(text: string): UnitData | undefined {
+	static parseUnit(text: string): UnitData | undefined {
 		const [, ids, dimensions, scale, offset] =
 			/^ *([a-zA-Z][^;]*) *;? *([^;]+)? *;? *([^;]+)? *;? *([^;]+)?/.exec(
 				text
@@ -261,49 +261,49 @@ export class HUnit {
 	/**
 	 * @returns The ids for the units.
 	 */
-	public get ids(): string[] {
+	get ids(): string[] {
 		return this.#ids
 	}
 
 	/**
 	 * @returns The unit's name.
 	 */
-	public get name(): string {
+	get name(): string {
 		return this.#ids[0] ?? ''
 	}
 
 	/**
 	 * @returns The unit's symbol.
 	 */
-	public get symbol(): string {
+	get symbol(): string {
 		return this.#ids[this.#ids.length - 1] ?? ''
 	}
 
 	/**
 	 * @returns The unit's scale.
 	 */
-	public get scale(): number {
+	get scale(): number {
 		return this.#scale
 	}
 
 	/**
 	 * @returns The unit's offset.
 	 */
-	public get offset(): number {
+	get offset(): number {
 		return this.#offset
 	}
 
 	/**
 	 * @returns The unit's quantity or undefined if none available.
 	 */
-	public get quantity(): string | undefined {
+	get quantity(): string | undefined {
 		return this.#quantity
 	}
 
 	/**
 	 * @returns A list of all the quantities available.
 	 */
-	public static get quantities(): string[] {
+	static get quantities(): string[] {
 		return getDb().quantities
 	}
 
@@ -314,21 +314,21 @@ export class HUnit {
 	 * @returns An array of quantities. An empty array is returned
 	 * if the quantity can't be found.
 	 */
-	public static getUnitsForQuantity(quanity: string): readonly HUnit[] {
+	static getUnitsForQuantity(quanity: string): readonly HUnit[] {
 		return getDb().getUnitsForQuantity(quanity)
 	}
 
 	/**
 	 * @returns All the registered units.
 	 */
-	public static get units(): readonly HUnit[] {
+	static get units(): readonly HUnit[] {
 		return getDb().units
 	}
 
 	/**
 	 * @returns The unit's dimensions or undefined if dimensionless.
 	 */
-	public get dimensions(): UnitDimensions | undefined {
+	get dimensions(): UnitDimensions | undefined {
 		return this.#dimensions
 	}
 
@@ -339,7 +339,7 @@ export class HUnit {
 	 * @return The unit to multiply by.
 	 * @throws An error if the units can't be multiplied.
 	 */
-	public multiply(unit: HUnit): HUnit {
+	multiply(unit: HUnit): HUnit {
 		return getDb().multiply(this, unit)
 	}
 
@@ -350,14 +350,14 @@ export class HUnit {
 	 * @return The unit to divide by.
 	 * @throws An error if the units can't be divided.
 	 */
-	public divide(unit: HUnit): HUnit {
+	divide(unit: HUnit): HUnit {
 		return getDb().divide(this, unit)
 	}
 
 	/**
 	 * @returns The unit as a JSON object.
 	 */
-	public toJSON(): UnitData {
+	toJSON(): UnitData {
 		const data: UnitData = {
 			ids: this.#ids,
 			scale: this.#scale,
@@ -381,7 +381,7 @@ export class HUnit {
 	 * @param unit The value to compare against.
 	 * @returns True if the units are equal.
 	 */
-	public equals(unit?: HUnit): boolean {
+	equals(unit?: HUnit): boolean {
 		if (!unit) {
 			return false
 		}
@@ -421,14 +421,14 @@ export class HUnit {
 	/**
 	 * @returns A string representation of a unit.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.symbol
 	}
 
 	/**
 	 * Dump the current state of the unit database to the console output.
 	 */
-	public static inspectDb(): void {
+	static inspectDb(): void {
 		console.table(getDb().units.map((unit) => unit.toJSON()))
 	}
 
@@ -439,7 +439,7 @@ export class HUnit {
 	 * @param to The new unit to convert too.
 	 * @returns The new scalar value.
 	 */
-	public convertTo(scalar: number, to: HUnit): number {
+	convertTo(scalar: number, to: HUnit): number {
 		// Bytes have no dimension so handle as a special case.
 		if (
 			!(isByteUnit(this) && isByteUnit(to)) &&
@@ -458,7 +458,7 @@ export class HUnit {
 	 * @param b The second number.
 	 * @returns True if the two numbers match.
 	 */
-	public static isApproximate(a: number, b: number): boolean {
+	static isApproximate(a: number, b: number): boolean {
 		if (a === b) {
 			return true
 		}

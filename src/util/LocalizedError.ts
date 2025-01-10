@@ -21,7 +21,7 @@ export class LocalizedError extends Error {
 	 * @param options.args Optional arguments used when translating the lexicon key.
 	 * @param options.index Optional index number that may be used by any parsers to show position.
 	 */
-	public constructor({
+	constructor({
 		message,
 		lex,
 		args,
@@ -42,7 +42,7 @@ export class LocalizedError extends Error {
 	 * @returns The lexicon key associated with the error. If the looked up
 	 * lexicon key has '%s', these will be replaced by arguments from in `args`.
 	 */
-	public get lex(): string {
+	get lex(): string {
 		return this.#lex
 	}
 
@@ -50,7 +50,7 @@ export class LocalizedError extends Error {
 	 * @returns The arguments associated with the lexicon key to create a localized
 	 * error message.
 	 */
-	public get args(): Record<string, string | number> {
+	get args(): Record<string, string | number> {
 		return this.#args ?? {}
 	}
 
@@ -59,7 +59,7 @@ export class LocalizedError extends Error {
 	 * associated with the error. Please note, this may return undefined if
 	 * no line number was originally associated with the error.
 	 */
-	public get index(): number | undefined {
+	get index(): number | undefined {
 		return this.#index
 	}
 }

@@ -49,7 +49,7 @@ export class ZincReader {
 	 *
 	 * @param input The scanner used for the input.
 	 */
-	public constructor(input: Scanner | string) {
+	constructor(input: Scanner | string) {
 		this.scanner = typeof input === 'string' ? new Scanner(input) : input
 	}
 
@@ -59,7 +59,7 @@ export class ZincReader {
 	 * @param input The input string or scanner.
 	 * @returns The haystack value.
 	 */
-	public static readValue(input: Scanner | string): HVal | undefined | null {
+	static readValue(input: Scanner | string): HVal | undefined | null {
 		return new ZincReader(input).readValue()
 	}
 
@@ -68,7 +68,7 @@ export class ZincReader {
 	 *
 	 * @returns The next value.
 	 */
-	public readValue(): HVal | undefined | null {
+	readValue(): HVal | undefined | null {
 		while (!this.scanner.isEof()) {
 			// Please note, some of this must match up with FilterParser#nextToken()
 			switch (this.scanner.current) {
@@ -203,7 +203,7 @@ export class ZincReader {
 	 * @returns A string value.
 	 * @throws If the end of the string can't be found.
 	 */
-	public string(): HStr {
+	string(): HStr {
 		let str = ''
 
 		this.scanner.expect('"', Kind.Str).consume()
@@ -237,7 +237,7 @@ export class ZincReader {
 	 * @returns A uri value.
 	 * @throws If the end of the uri can't be found if an invalid character is found.
 	 */
-	public uri(): HUri {
+	uri(): HUri {
 		let str = ''
 
 		this.scanner.consume()
@@ -289,7 +289,7 @@ export class ZincReader {
 	 * @returns A ref value.
 	 * @throws If there's an error parsing the ref.
 	 */
-	public ref(): HRef {
+	ref(): HRef {
 		let str = ''
 
 		this.scanner.consume()
@@ -396,7 +396,7 @@ export class ZincReader {
 	 * @returns A number, date, date time or time value.
 	 * @throws If we don't have a valid number.
 	 */
-	public numberDateTime(): HNum | HDate | HTime | HDateTime {
+	numberDateTime(): HNum | HDate | HTime | HDateTime {
 		// This code was ported from haystack-java. Ideally this code should be reworked
 		// to use a back tracking parser design.
 
@@ -743,7 +743,7 @@ export class ZincReader {
 	/**
 	 * @returns A tag name.
 	 */
-	public tagName(): string {
+	tagName(): string {
 		let tagName = ''
 
 		// First letter must be a letter and lower case.
@@ -774,7 +774,7 @@ export class ZincReader {
 	/**
 	 * @returns A symbol value.
 	 */
-	public symbol(): HSymbol {
+	symbol(): HSymbol {
 		this.scanner.expect('^', Kind.Symbol).consume()
 
 		let symbol = ''

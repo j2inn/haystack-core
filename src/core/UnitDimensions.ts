@@ -29,15 +29,7 @@ export class UnitDimensions {
 	readonly mol: number
 	readonly cd: number
 
-	public constructor({
-		kg,
-		m,
-		sec,
-		K,
-		A,
-		mol,
-		cd,
-	}: Partial<UnitDimensionsData>) {
+	constructor({ kg, m, sec, K, A, mol, cd }: Partial<UnitDimensionsData>) {
 		this.kg = kg ?? 0
 		this.m = m ?? 0
 		this.sec = sec ?? 0
@@ -53,7 +45,7 @@ export class UnitDimensions {
 	 * @param dim The dimension to add to this one.
 	 * @returns The new dimension.
 	 */
-	public add(dim: UnitDimensions): UnitDimensions {
+	add(dim: UnitDimensions): UnitDimensions {
 		return new UnitDimensions({
 			kg: this.kg + dim.kg,
 			m: this.m + dim.m,
@@ -71,7 +63,7 @@ export class UnitDimensions {
 	 * @param dim The dimension to subtract from this one.
 	 * @returns The new dimension.
 	 */
-	public subtract(dim: UnitDimensions): UnitDimensions {
+	subtract(dim: UnitDimensions): UnitDimensions {
 		return new UnitDimensions({
 			kg: this.kg - dim.kg,
 			m: this.m - dim.m,
@@ -89,7 +81,7 @@ export class UnitDimensions {
 	 * @param dim The dimension to test for equality.
 	 * @returns True if the dimensions match.
 	 */
-	public equals(dim?: UnitDimensions): boolean {
+	equals(dim?: UnitDimensions): boolean {
 		if (!dim) {
 			return false
 		}
@@ -108,7 +100,7 @@ export class UnitDimensions {
 	/**
 	 * @returns A JSON representation of the dimension.
 	 */
-	public toJSON(): UnitDimensionsData {
+	toJSON(): UnitDimensionsData {
 		return {
 			kg: this.kg,
 			m: this.m,

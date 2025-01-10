@@ -15,17 +15,17 @@ export class TokenValue implements Token {
 	/**
 	 * The token type.
 	 */
-	public readonly type: TokenType
+	readonly type: TokenType
 
 	/**
 	 * The haystack value.
 	 */
-	public readonly value: HVal
+	readonly value: HVal
 
 	/**
 	 * Flag used to identify a token value.
 	 */
-	public readonly _isATokenValue = true
+	readonly _isATokenValue = true
 
 	/**
 	 * Contructs a new token value.
@@ -34,7 +34,7 @@ export class TokenValue implements Token {
 	 * @param text The token's text.
 	 * @param value The tokens value.
 	 */
-	public constructor(type: TokenType, value: HVal) {
+	constructor(type: TokenType, value: HVal) {
 		this.type = type
 		this.value = value
 	}
@@ -45,7 +45,7 @@ export class TokenValue implements Token {
 	 * @param value The boolean value.
 	 * @returns The token value.
 	 */
-	public static makeBool(value: boolean): TokenValue {
+	static makeBool(value: boolean): TokenValue {
 		return new TokenValue(TokenType.boolean, HBool.make(value))
 	}
 
@@ -55,7 +55,7 @@ export class TokenValue implements Token {
 	 * @param type The token type.
 	 * @return True if the type matches.
 	 */
-	public is(type: TokenType): boolean {
+	is(type: TokenType): boolean {
 		return this.type === type
 	}
 
@@ -66,7 +66,7 @@ export class TokenValue implements Token {
 	 * @param text The text.
 	 * @return True if the objects are equal.
 	 */
-	public equals(token: Token): boolean {
+	equals(token: Token): boolean {
 		if (!isTokenValue(token)) {
 			return false
 		}
@@ -77,21 +77,21 @@ export class TokenValue implements Token {
 	/**
 	 * @returns A string representation of the token.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.value.toString()
 	}
 
 	/**
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.value.toFilter()
 	}
 
 	/**
 	 * @returns A JSON representation of the token.
 	 */
-	public toJSON(): {
+	toJSON(): {
 		type: string
 		[prop: string]: string | string[] | HaysonVal
 	} {

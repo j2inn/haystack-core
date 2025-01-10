@@ -13,17 +13,17 @@ export class TokenObj implements Token {
 	/**
 	 * The token type.
 	 */
-	public readonly type: TokenType
+	readonly type: TokenType
 
 	/**
 	 * The token text value.
 	 */
-	public readonly text: string
+	readonly text: string
 
 	/**
 	 * Flag used to identify a token object.
 	 */
-	public readonly _isATokenObj = true
+	readonly _isATokenObj = true
 
 	/**
 	 * Contructs a new token value.
@@ -32,7 +32,7 @@ export class TokenObj implements Token {
 	 * @param text The token's text.
 	 * @param value The tokens value.
 	 */
-	public constructor(type: TokenType, text: string) {
+	constructor(type: TokenType, text: string) {
 		this.type = type
 		this.text = text
 	}
@@ -40,7 +40,7 @@ export class TokenObj implements Token {
 	/**
 	 * @returns The text value as a paths array.
 	 */
-	public get paths(): string[] {
+	get paths(): string[] {
 		return [this.text]
 	}
 
@@ -50,7 +50,7 @@ export class TokenObj implements Token {
 	 * @param type The token type.
 	 * @return True if the type matches.
 	 */
-	public is(type: TokenType): boolean {
+	is(type: TokenType): boolean {
 		return this.type === type
 	}
 
@@ -61,7 +61,7 @@ export class TokenObj implements Token {
 	 * @param text The text.
 	 * @return True if the objects are equal.
 	 */
-	public equals(token: Token): boolean {
+	equals(token: Token): boolean {
 		if (!isTokenObj(token)) {
 			return false
 		}
@@ -72,21 +72,21 @@ export class TokenObj implements Token {
 	/**
 	 * @returns A string representation of the token.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.toFilter()
 	}
 
 	/**
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.text
 	}
 
 	/**
 	 * @returns A JSON representation of the token.
 	 */
-	public toJSON(): {
+	toJSON(): {
 		type: string
 		[prop: string]: string | string[] | HaysonVal
 	} {

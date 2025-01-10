@@ -32,17 +32,17 @@ export class GridJsonStore<DictVal extends HDict>
 	#columnsJson?: { name: string; meta?: HaysonDict }[]
 
 	#rows?: DictVal[]
-	#rowsJson?: HaysonDict[]
+	#rowsJson?: HaysonDict[];
 
-	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
-	public constructor(grid: HaysonGrid) {
+	constructor(grid: HaysonGrid) {
 		this.#metaJson = grid.meta
 		this.#columnsJson = grid.cols
 		this.#rowsJson = grid.rows
 	}
 
-	public get version(): string {
+	get version(): string {
 		if (this.#version === undefined) {
 			this.#version = String(
 				this.#metaJson?.[GRID_VERSION_NAME] ?? DEFAULT_GRID_VERSION
@@ -52,11 +52,11 @@ export class GridJsonStore<DictVal extends HDict>
 		return this.#version
 	}
 
-	public set version(version: string) {
+	set version(version: string) {
 		this.#version = version
 	}
 
-	public get meta(): HDict {
+	get meta(): HDict {
 		if (!this.#meta) {
 			if (this.#metaJson) {
 				this.#meta = new HDict(new DictJsonStore(this.#metaJson))
@@ -75,11 +75,11 @@ export class GridJsonStore<DictVal extends HDict>
 		return this.#meta
 	}
 
-	public set meta(meta: HDict) {
+	set meta(meta: HDict) {
 		this.#meta = meta
 	}
 
-	public get columns(): GridColumn[] {
+	get columns(): GridColumn[] {
 		if (!this.#columns) {
 			this.#columns =
 				this.#columnsJson?.map(
@@ -98,12 +98,12 @@ export class GridJsonStore<DictVal extends HDict>
 		return this.#columns
 	}
 
-	public set columns(columns: GridColumn[]) {
+	set columns(columns: GridColumn[]) {
 		this.#columns = columns
 		this.#columnsJson = undefined
 	}
 
-	public get rows(): DictVal[] {
+	get rows(): DictVal[] {
 		if (!this.#rows) {
 			this.#rows =
 				this.#rowsJson?.map(
@@ -116,12 +116,12 @@ export class GridJsonStore<DictVal extends HDict>
 		return this.#rows
 	}
 
-	public set rows(rows: DictVal[]) {
+	set rows(rows: DictVal[]) {
 		this.#rows = rows
 		this.#rowsJson = undefined
 	}
 
-	public toJSON(): HaysonGrid {
+	toJSON(): HaysonGrid {
 		// Return a new grid only with the parts of the grid that have changed.
 		return {
 			_kind: Kind.Grid,
@@ -144,11 +144,11 @@ export class GridJsonStore<DictVal extends HDict>
 		}
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this.toJSON())
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

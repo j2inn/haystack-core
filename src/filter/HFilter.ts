@@ -23,12 +23,12 @@ export class HFilter {
 	/**
 	 * The internal parsed node of the current haystack filter.
 	 */
-	public readonly node: Node
+	readonly node: Node
 
 	/**
 	 * Used for a type guard check.
 	 */
-	public readonly _isHFilter = true
+	readonly _isHFilter = true
 
 	/**
 	 * Constructs a new haystack filter from the string.
@@ -38,7 +38,7 @@ export class HFilter {
 	 * @param filter The haystack filter or an already parsed AST node.
 	 * @throws An error if the filter is invalid.
 	 */
-	public constructor(filter: string | Node) {
+	constructor(filter: string | Node) {
 		this.node = isNode(filter)
 			? (filter as Node)
 			: HFilter.parse(filter as string)
@@ -50,7 +50,7 @@ export class HFilter {
 	 * @param value The value to test.
 	 * @returns True if the value is a haystack filter.
 	 */
-	public static isHFilter(value: unknown): value is HFilter {
+	static isHFilter(value: unknown): value is HFilter {
 		return !!(value as HFilter)?._isHFilter
 	}
 
@@ -61,7 +61,7 @@ export class HFilter {
 	 * @returns The base AST node for the haystack filter.
 	 * @throws An error if the haystack filter isn't valid.
 	 */
-	public static parse(filter: string): Node {
+	static parse(filter: string): Node {
 		return new FilterParser(
 			new FilterLexer(new Scanner(filter)).toNextTokenFunc()
 		).parse()
@@ -75,7 +75,7 @@ export class HFilter {
 	 * @param context The evaluation context.
 	 * @returns The result of the evaluation.
 	 */
-	public static eval(node: Node, context: EvalContext): boolean {
+	static eval(node: Node, context: EvalContext): boolean {
 		return node.eval(context)
 	}
 
@@ -86,7 +86,7 @@ export class HFilter {
 	 * @param context The evaluation context.
 	 * @returns The result of the evaluation.
 	 */
-	public eval(context: EvalContext): boolean {
+	eval(context: EvalContext): boolean {
 		return HFilter.eval(this.node, context)
 	}
 
@@ -97,7 +97,7 @@ export class HFilter {
 	 * @returns The haystack filter.
 	 * @throws An error is thrown if the haystack filter is invalid.
 	 */
-	public static toFilter(node: Node): string {
+	static toFilter(node: Node): string {
 		// Generate the Haystack Filter string.
 		const visitor = new GenerateHaystackFilterVisitor()
 		node.accept(visitor)
@@ -116,7 +116,7 @@ export class HFilter {
 	 * @returns The haystack filter.
 	 * @throws An error is thrown if the haystack filter is invalid.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return HFilter.toFilter(this.node)
 	}
 }

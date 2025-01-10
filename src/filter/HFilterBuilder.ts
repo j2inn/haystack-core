@@ -50,7 +50,7 @@ export class HFilterBuilder {
 	/**
 	 * Used for a type guard check.
 	 */
-	public readonly _isHFilterBuilder = true
+	readonly _isHFilterBuilder = true
 
 	/**
 	 * Return true if the value is a haystack filter builder object.
@@ -58,7 +58,7 @@ export class HFilterBuilder {
 	 * @param value The value to test.
 	 * @returns True if the value is a haystack filter builder.
 	 */
-	public static isHFilterBuilder(value: unknown): value is HFilterBuilder {
+	static isHFilterBuilder(value: unknown): value is HFilterBuilder {
 		return !!(value as HFilterBuilder)?._isHFilterBuilder
 	}
 
@@ -68,7 +68,7 @@ export class HFilterBuilder {
 	 * @param path The path.
 	 * @returns The builder instance.
 	 */
-	public has(path: Path): this {
+	has(path: Path): this {
 		this.add(this.toPath(path))
 		return this
 	}
@@ -78,7 +78,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns The builder instance.
 	 */
-	public and(): this {
+	and(): this {
 		this.add('and')
 		return this
 	}
@@ -88,7 +88,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns The builder instance.
 	 */
-	public or(): this {
+	or(): this {
 		this.add('or')
 		return this
 	}
@@ -99,7 +99,7 @@ export class HFilterBuilder {
 	 * @param path The path to add.
 	 * @returns The builder instance.
 	 */
-	public not(path: Path): this {
+	not(path: Path): this {
 		this.add('not').add(this.toPath(path))
 		return this
 	}
@@ -110,7 +110,7 @@ export class HFilterBuilder {
 	 * @param name The symbol name to use in the query.
 	 * @returns The builder instance.
 	 */
-	public is(name: string | HSymbol): this {
+	is(name: string | HSymbol): this {
 		this.add(HSymbol.make(name).toFilter())
 		return this
 	}
@@ -124,7 +124,7 @@ export class HFilterBuilder {
 	 * @param ref Optional target reference value.
 	 * @returns The builder instance.
 	 */
-	public relationship(
+	relationship(
 		name: string | HSymbol,
 		term?: string | HSymbol,
 		ref?: string | HRef
@@ -150,7 +150,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns The builder instance.
 	 */
-	public startParens(): this {
+	startParens(): this {
 		this.add('(')
 		return this
 	}
@@ -160,7 +160,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns The builder instance.
 	 */
-	public endParens(): this {
+	endParens(): this {
 		this.add(')')
 		return this
 	}
@@ -172,7 +172,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public equals(path: Path, value: Value): this {
+	equals(path: Path, value: Value): this {
 		return this.op('==', path, value)
 	}
 
@@ -183,7 +183,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public notEquals(path: Path, value: Value): this {
+	notEquals(path: Path, value: Value): this {
 		return this.op('!=', path, value)
 	}
 
@@ -194,7 +194,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public lessThan(path: Path, value: Value): this {
+	lessThan(path: Path, value: Value): this {
 		return this.op('<', path, value)
 	}
 
@@ -205,7 +205,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public lessThanEquals(path: Path, value: Value): this {
+	lessThanEquals(path: Path, value: Value): this {
 		return this.op('<=', path, value)
 	}
 
@@ -216,7 +216,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public greaterThan(path: Path, value: Value): this {
+	greaterThan(path: Path, value: Value): this {
 		return this.op('>', path, value)
 	}
 
@@ -227,7 +227,7 @@ export class HFilterBuilder {
 	 * @param value The value.
 	 * @returns The builder instance.
 	 */
-	public greaterThanEquals(path: Path, value: Value): this {
+	greaterThanEquals(path: Path, value: Value): this {
 		return this.op('>=', path, value)
 	}
 
@@ -237,7 +237,7 @@ export class HFilterBuilder {
 	 * @param filter The filter value to write.
 	 * @returns The builder instance.
 	 */
-	public filter(filter: string | Node | HFilter | HFilterBuilder): this {
+	filter(filter: string | Node | HFilter | HFilterBuilder): this {
 		let buf = ''
 
 		if (typeof filter === 'string') {
@@ -258,7 +258,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns True if the internal buffer is empty.
 	 */
-	public isEmpty(): boolean {
+	isEmpty(): boolean {
 		return this.buf.length === 0
 	}
 
@@ -267,7 +267,7 @@ export class HFilterBuilder {
 	 *
 	 * @returns The builder instance.
 	 */
-	public inspect(): this {
+	inspect(): this {
 		console.log(this.buf)
 		return this
 	}
@@ -277,7 +277,7 @@ export class HFilterBuilder {
 	 *
 	 * Please note, this method is only intended for debugging/testing purposes.
 	 */
-	public get internalBuffer(): string {
+	get internalBuffer(): string {
 		return this.buf
 	}
 
@@ -337,7 +337,7 @@ export class HFilterBuilder {
 	 * @returns The haystack filter.
 	 * @throws An error if the haystack filter is invalid.
 	 */
-	public build(): string {
+	build(): string {
 		// Validate the haystack filter.
 		HFilter.parse(this.buf)
 		return this.buf

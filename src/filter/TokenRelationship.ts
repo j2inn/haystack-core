@@ -13,17 +13,17 @@ export class TokenRelationship implements Token {
 	/**
 	 * The token type.
 	 */
-	public readonly type: TokenType = TokenType.rel
+	readonly type: TokenType = TokenType.rel
 
 	/**
 	 * The relationship.
 	 */
-	public readonly relationship: string
+	readonly relationship: string
 
 	/**
 	 * Flag used to identify a token relationship object.
 	 */
-	public readonly _isATokenRelationship = true
+	readonly _isATokenRelationship = true
 
 	/**
 	 * Contructs a new token value.
@@ -31,7 +31,7 @@ export class TokenRelationship implements Token {
 	 * @param relationship The relationship.
 	 * @param term The relationship term.
 	 */
-	public constructor(relationship: string) {
+	constructor(relationship: string) {
 		this.relationship = relationship
 	}
 
@@ -41,7 +41,7 @@ export class TokenRelationship implements Token {
 	 * @param type The token type.
 	 * @return True if the type matches.
 	 */
-	public is(type: TokenType): boolean {
+	is(type: TokenType): boolean {
 		return this.type === type
 	}
 
@@ -52,7 +52,7 @@ export class TokenRelationship implements Token {
 	 * @param text The text.
 	 * @return True if the objects are equal.
 	 */
-	public equals(token: Token): boolean {
+	equals(token: Token): boolean {
 		if (!_isATokenRelationship(token)) {
 			return false
 		}
@@ -71,21 +71,21 @@ export class TokenRelationship implements Token {
 	/**
 	 * @returns A string representation of the token.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.toFilter()
 	}
 
 	/**
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return `${this.relationship}?`
 	}
 
 	/**
 	 * @returns A JSON representation of the token.
 	 */
-	public toJSON(): {
+	toJSON(): {
 		type: string
 		[prop: string]: string | string[] | HaysonVal
 	} {

@@ -21,55 +21,55 @@ export class GridJsonUint8ArrayStore<DictVal extends HDict>
 {
 	#grid?: Uint8Array
 
-	#store?: GridStore<DictVal>
+	#store?: GridStore<DictVal>;
 
-	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
-	public constructor(grid: Uint8Array) {
+	constructor(grid: Uint8Array) {
 		this.#grid = grid
 	}
 
-	public get version(): string {
+	get version(): string {
 		return this.getStore().version
 	}
 
-	public set version(version: string) {
+	set version(version: string) {
 		this.getStore().version = version
 	}
 
-	public get meta(): HDict {
+	get meta(): HDict {
 		return this.getStore().meta
 	}
 
-	public set meta(meta: HDict) {
+	set meta(meta: HDict) {
 		this.getStore().meta = meta
 	}
 
-	public get columns(): GridColumn[] {
+	get columns(): GridColumn[] {
 		return this.getStore().columns
 	}
 
-	public set columns(columns: GridColumn[]) {
+	set columns(columns: GridColumn[]) {
 		this.getStore().columns = columns
 	}
 
-	public get rows(): DictVal[] {
+	get rows(): DictVal[] {
 		return this.getStore().rows
 	}
 
-	public set rows(rows: DictVal[]) {
+	set rows(rows: DictVal[]) {
 		this.getStore().rows = rows
 	}
 
-	public toJSON(): HaysonGrid {
+	toJSON(): HaysonGrid {
 		return this.getStore().toJSON()
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.getStore().toJSONString()
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return this.#store
 			? this.#store.toJSONUint8Array()
 			: this.#grid ?? new Uint8Array()

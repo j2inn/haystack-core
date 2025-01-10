@@ -30,7 +30,7 @@ export class UnitDatabase {
 	 *
 	 * @param unit The unit to define.
 	 */
-	public define(unit: HUnit): void {
+	define(unit: HUnit): void {
 		for (const id of unit.ids) {
 			this.#byId.set(id, unit)
 		}
@@ -54,21 +54,21 @@ export class UnitDatabase {
 	 * @param id The unit's id.
 	 * @returns The unit or undefined.
 	 */
-	public get(id: string): HUnit | undefined {
+	get(id: string): HUnit | undefined {
 		return this.#byId.get(id)
 	}
 
 	/**
 	 * @returns All the registered units in the database.
 	 */
-	public get units(): readonly HUnit[] {
+	get units(): readonly HUnit[] {
 		return Object.freeze([...this.#units.values()])
 	}
 
 	/**
 	 * @returns A list of all the quantities.
 	 */
-	public get quantities(): string[] {
+	get quantities(): string[] {
 		return [...this.#quantities.keys()]
 	}
 
@@ -78,7 +78,7 @@ export class UnitDatabase {
 	 * @param quanity The quantity to search for.
 	 * @returns An array of units.
 	 */
-	public getUnitsForQuantity(quanity: string): readonly HUnit[] {
+	getUnitsForQuantity(quanity: string): readonly HUnit[] {
 		const units = this.#quantities.get(quanity)
 		return Object.freeze(units ? [...units.values()] : [])
 	}
@@ -91,7 +91,7 @@ export class UnitDatabase {
 	 * @return The unit to multiply by.
 	 * @throws An error if the units can't be multiplied.
 	 */
-	public multiply(unit0: HUnit, unit1: HUnit): HUnit {
+	multiply(unit0: HUnit, unit1: HUnit): HUnit {
 		// If either is dimensionless give up immediately.
 		if (!unit0.dimensions || !unit1.dimensions) {
 			throw new Error(
@@ -131,7 +131,7 @@ export class UnitDatabase {
 	 * @return The unit to divide by.
 	 * @throws An error if the units can't be divided.
 	 */
-	public divide(unit0: HUnit, unit1: HUnit): HUnit {
+	divide(unit0: HUnit, unit1: HUnit): HUnit {
 		// If either is dimensionless give up immediately.
 		if (!unit0.dimensions || !unit1.dimensions) {
 			throw new Error(

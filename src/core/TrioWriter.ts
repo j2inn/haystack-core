@@ -50,7 +50,7 @@ export class TrioWriter {
 	 * @param item The item to add.
 	 * @returns The trio writer instance.
 	 */
-	public addDict(dict: HDict): this {
+	addDict(dict: HDict): this {
 		this.$items.push({ type: ItemType.Dict, dict })
 		return this
 	}
@@ -61,7 +61,7 @@ export class TrioWriter {
 	 * @param grid The grid to add.
 	 * @returns The trio writer instance.
 	 */
-	public addGrid(grid: HGrid): this {
+	addGrid(grid: HGrid): this {
 		for (const dict of grid.getRows()) {
 			this.addDict(dict)
 		}
@@ -74,7 +74,7 @@ export class TrioWriter {
 	 * @param comment The comment to add.
 	 * @returns The trio writer instance.
 	 */
-	public addComment(comment?: string): this {
+	addComment(comment?: string): this {
 		this.$items.push({ type: ItemType.Comment, text: comment || '' })
 		return this
 	}
@@ -84,7 +84,7 @@ export class TrioWriter {
 	 *
 	 * @retursn The trio write instance.
 	 */
-	public addNewLine(): this {
+	addNewLine(): this {
 		this.$items.push({ type: ItemType.NewLine })
 		return this
 	}
@@ -92,7 +92,7 @@ export class TrioWriter {
 	/**
 	 * @returns The trio document from the writer's items.
 	 */
-	public toTrio(): string {
+	toTrio(): string {
 		let trio = ''
 
 		for (const item of this.$items) {
@@ -120,7 +120,7 @@ export class TrioWriter {
 	 * @param dict The dict to encode.
 	 * @returns The trio encoded dict.
 	 */
-	public static toTrioDict(dict: HDict): string {
+	static toTrioDict(dict: HDict): string {
 		return dict.keys
 			.map((name: string): string => {
 				const value = dict.get(name)
@@ -142,7 +142,7 @@ export class TrioWriter {
 	/**
 	 * @returns The trio document from the writer's items.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.toTrio()
 	}
 }

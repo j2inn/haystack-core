@@ -82,7 +82,7 @@ export class HCoord implements HVal {
 	 * @returns A haystack coordinate.
 	 * @throws An error if the latitude or longitude are invalid.
 	 */
-	public static make(value: CoordObj | HaysonCoord | HCoord): HCoord {
+	static make(value: CoordObj | HaysonCoord | HCoord): HCoord {
 		if (valueIsKind<HCoord>(value, Kind.Coord)) {
 			return value
 		} else {
@@ -93,29 +93,29 @@ export class HCoord implements HVal {
 	/**
 	 * @returns The latitude value.
 	 */
-	public get latitude(): number {
+	get latitude(): number {
 		return this.#latitude
 	}
 
-	public set latitude(latitude: number) {
+	set latitude(latitude: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The longitude value.
 	 */
-	public get longitude(): number {
+	get longitude(): number {
 		return this.#longitude
 	}
 
-	public set longitude(longitude: number) {
+	set longitude(longitude: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Coord
 	}
 
@@ -125,7 +125,7 @@ export class HCoord implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HCoord>(this, kind)
 	}
 
@@ -136,7 +136,7 @@ export class HCoord implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -146,14 +146,14 @@ export class HCoord implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return `latitude: ${this.latitude}, longitude: ${this.longitude}`
 	}
 
@@ -165,7 +165,7 @@ export class HCoord implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		throw new Error(NOT_SUPPORTED_IN_FILTER_MSG)
 	}
 
@@ -174,7 +174,7 @@ export class HCoord implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return `C(${this.latitude},${this.longitude})`
 	}
 
@@ -184,7 +184,7 @@ export class HCoord implements HVal {
 	 * @param value The value to compare.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return (
 			valueIsKind<HCoord>(value, Kind.Coord) &&
 			value.latitude === this.latitude &&
@@ -198,7 +198,7 @@ export class HCoord implements HVal {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HCoord>(value, Kind.Coord)) {
 			return -1
 		}
@@ -218,7 +218,7 @@ export class HCoord implements HVal {
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonCoord {
+	toJSON(): HaysonCoord {
 		return {
 			_kind: Kind.Coord,
 			lat: this.latitude,
@@ -229,56 +229,56 @@ export class HCoord implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Coord {
+	toJSONv3(): JsonV3Coord {
 		return `c:${this.latitude},${this.longitude}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return `coord(${this.latitude},${this.longitude})`
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HCoord {
+	newCopy(): HCoord {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HCoord> {
+	toList(): HList<HCoord> {
 		return HList.make([this])
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 }

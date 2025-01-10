@@ -38,13 +38,13 @@ export class ListValueIterator<Value extends OptionalHVal>
 
 	private $index = 0
 
-	public constructor(list: HList<Value>) {
+	constructor(list: HList<Value>) {
 		// Make a defensive copy so the iterator doesn't screw up
 		// if the list is modified.
 		this.$values = list.toArray()
 	}
 
-	public next(): IteratorResult<Value> {
+	next(): IteratorResult<Value> {
 		if (this.$index >= this.$values.length) {
 			return {
 				done: true,
@@ -113,7 +113,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * The list values.
 	 */
-	public $store: ListStore<Value>;
+	$store: ListStore<Value>;
 
 	/**
 	 * Numerical index access.
@@ -134,7 +134,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @param value list values.
 	 */
-	public constructor(
+	constructor(
 		values?:
 			| (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
 			| ListStore<Value>
@@ -187,7 +187,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param values A value or list of values.
 	 * @returns A list.
 	 */
-	public static make<Value extends OptionalHVal = OptionalHVal>(
+	static make<Value extends OptionalHVal = OptionalHVal>(
 		...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
 	): HList<Value> {
 		return values.length === 1 &&
@@ -225,7 +225,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.List
 	}
 
@@ -235,14 +235,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HList>(this, kind)
 	}
 
 	/**
 	 * Return the length of the list.
 	 */
-	public get length(): number {
+	get length(): number {
 		return this.values.length
 	}
 
@@ -260,7 +260,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param index The index number of the value to get.
 	 * @return The value, null or undefined if it can't be found.
 	 */
-	public get(index: number): Value | undefined {
+	get(index: number): Value | undefined {
 		return this.values[index]
 	}
 
@@ -278,7 +278,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param value The haystack value or hayson value to set.
 	 * @returns The list instance.
 	 */
-	public set(index: number, value: Value | HaysonVal): this {
+	set(index: number, value: Value | HaysonVal): this {
 		this.values[index] = makeValue(value) as Value
 		return this
 	}
@@ -293,7 +293,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @param index The index of the item in the list.
 	 */
-	public remove(index: number): void {
+	remove(index: number): void {
 		this.values.splice(index, 1)
 	}
 
@@ -305,7 +305,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * list.clear()
 	 * ```
 	 */
-	public clear(): void {
+	clear(): void {
 		this.values.splice(0, this.values.length)
 	}
 
@@ -330,7 +330,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param values The values to add to the list.
 	 * @returns The list instance.
 	 */
-	public add(
+	add(
 		...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
 	): this {
 		const toAdd = HList.toValues(values)
@@ -352,7 +352,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param list The list to concatenate.
 	 * @returns The new list.
 	 */
-	public concat(list: HList<Value>): HList<Value> {
+	concat(list: HList<Value>): HList<Value> {
 		return HList.make(this.values.concat(list.values))
 	}
 
@@ -377,7 +377,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param values The values to insert into the list.
 	 * @returns The list instance.
 	 */
-	public insert(
+	insert(
 		index: number,
 		...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
 	): this {
@@ -415,7 +415,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param val The value to add to the list.
 	 * @returns The list instance.
 	 */
-	public push(val: Value | HaysonVal): this {
+	push(val: Value | HaysonVal): this {
 		return this.add(val)
 	}
 
@@ -433,7 +433,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns The popped value or undefined.
 	 */
-	public pop(): Value | undefined {
+	pop(): Value | undefined {
 		return this.values.pop()
 	}
 
@@ -446,7 +446,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns The list instance.
 	 */
-	public sort(): this {
+	sort(): this {
 		this.values.sort((first: Value, second: Value): number => {
 			if (!first && !second) {
 				return 0
@@ -471,7 +471,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns The list instance.
 	 */
-	public reverse(): this {
+	reverse(): this {
 		this.values.reverse()
 		return this
 	}
@@ -485,7 +485,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns True when there are no entries in the list.
 	 */
-	public isEmpty(): boolean {
+	isEmpty(): boolean {
 		return this.values.length === 0
 	}
 
@@ -514,7 +514,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the list contains the value.
 	 */
-	public any(val: Value | string | Node, cx?: Partial<EvalContext>): boolean {
+	any(val: Value | string | Node, cx?: Partial<EvalContext>): boolean {
 		let result = false
 
 		if (isHVal(val) || val === null) {
@@ -553,7 +553,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return this.any(filter, cx)
 	}
 
@@ -591,7 +591,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the list contains the value.
 	 */
-	public all(val: Value | string | Node, cx?: Partial<EvalContext>): boolean {
+	all(val: Value | string | Node, cx?: Partial<EvalContext>): boolean {
 		if (this.isEmpty()) {
 			return false
 		}
@@ -650,7 +650,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns A new haystack list.
 	 */
-	public filter(
+	filter(
 		filter: string | Node | FilterCallback<Value>,
 		cx?: Partial<EvalContext>
 	): HList<Value> {
@@ -727,7 +727,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param callback The map callback.
 	 * @returns A new list with the mapped value.
 	 */
-	public map<NewValue>(callback: MapCallback<Value, NewValue>): NewValue[] {
+	map<NewValue>(callback: MapCallback<Value, NewValue>): NewValue[] {
 		return this.values.map(callback)
 	}
 
@@ -746,7 +746,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param initialValue The initial value for the reduce operation.
 	 * @returns The reduced value.
 	 */
-	public reduce<NewValue = Value>(
+	reduce<NewValue = Value>(
 		callback: ReduceCallback<NewValue, Value>,
 		initialValue?: NewValue
 	): NewValue {
@@ -763,9 +763,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A flattened list.
 	 */
-	public flat<
-		NewValue extends OptionalHVal = OptionalHVal
-	>(): HList<NewValue> {
+	flat<NewValue extends OptionalHVal = OptionalHVal>(): HList<NewValue> {
 		const newValues: NewValue[] = []
 
 		for (const val of this.values) {
@@ -790,7 +788,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A new filtered list of unique values.
 	 */
-	public unique(): HList<Value> {
+	unique(): HList<Value> {
 		return HList.make<Value>(
 			this.values.filter((val: Value, index: number): boolean => {
 				for (let i = 0; i < index; ++i) {
@@ -818,7 +816,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param fromIndex Optional index number to search from.
 	 * @returns true if the value is found.
 	 */
-	public includes(val: Value | HaysonVal, fromIndex?: number): boolean {
+	includes(val: Value | HaysonVal, fromIndex?: number): boolean {
 		const newVal = makeValue(val)
 		let included = false
 
@@ -839,7 +837,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param callback The function to execute on each haystack value.
 	 * @param thisArg Optional value to use as this when executing callback.
 	 */
-	public forEach(
+	forEach(
 		callback: (value: Value, index: number, array: Value[]) => void,
 		thisArg?: any
 	): void {
@@ -857,10 +855,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param thisArg Optional this argument.
 	 * @returns The item or undefined.
 	 */
-	public find(
-		callback: FindCallback<Value>,
-		thisArg?: any
-	): Value | undefined {
+	find(callback: FindCallback<Value>, thisArg?: any): Value | undefined {
 		return this.values.find(callback, thisArg)
 	}
 
@@ -869,35 +864,35 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonList {
+	toJSON(): HaysonList {
 		return this.$store.toJSON()
 	}
 
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.$store.toJSONString()
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return this.$store.toJSONUint8Array()
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3List {
+	toJSONv3(): JsonV3List {
 		return this.values.map((val): JsonV3Val => val?.toJSONv3() ?? null)
 	}
 
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return `[${this.values
 			.map((val): string => val?.toString() ?? String(val))
 			.join(', ')}]`
@@ -911,14 +906,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		throw new Error(NOT_SUPPORTED_IN_FILTER_MSG)
 	}
 
 	/**
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return `[${this.values
 			.map((val): string => val?.toZinc(/*nested*/ true) ?? ZINC_NULL)
 			.join(',')}]`
@@ -927,7 +922,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * @returns An Axon encoded string.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return `[${this.values
 			.map((val): string => val?.toAxon() ?? AXON_NULL)
 			.join(',')}]`
@@ -939,7 +934,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		if (!valueIsKind<HList>(value, Kind.List)) {
 			return false
 		}
@@ -966,7 +961,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive.
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HList>(value, Kind.List)) {
 			return -1
 		}
@@ -986,7 +981,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * @returns A copy of the underlying array.
 	 */
-	public toArray(): Value[] {
+	toArray(): Value[] {
 		return this.values
 	}
 
@@ -1007,14 +1002,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * const array = [...list]
 	 * ```
 	 */
-	public [Symbol.iterator](): Iterator<Value> {
+	[Symbol.iterator](): Iterator<Value> {
 		return new ListValueIterator(this) as Iterator<Value>
 	}
 
 	/**
 	 * @returns The list as an array like object.
 	 */
-	public asArrayLike(): ArrayLike<HaysonVal | Value> {
+	asArrayLike(): ArrayLike<HaysonVal | Value> {
 		return this as unknown as ArrayLike<HaysonVal | Value>
 	}
 
@@ -1039,7 +1034,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A sum of all the numbers in the list.
 	 */
-	public get sum(): number {
+	get sum(): number {
 		return this.toNumbers().reduce(
 			(acc: number, cur: number): number => acc + cur,
 			/*initial value*/ 0
@@ -1058,7 +1053,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A maximum number in a list.
 	 */
-	public get max(): number {
+	get max(): number {
 		return this.toNumbers().reduce(
 			(acc: number, cur: number): number => (acc > cur ? acc : cur),
 			/*initial value*/ Number.MIN_SAFE_INTEGER
@@ -1077,7 +1072,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A minimum number in a list.
 	 */
-	public get min(): number {
+	get min(): number {
 		return this.toNumbers().reduce(
 			(acc: number, cur: number): number => (acc < cur ? acc : cur),
 			/*initial value*/ Number.MAX_SAFE_INTEGER
@@ -1096,7 +1091,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns The average of all the numbers.
 	 */
-	public get avg(): number {
+	get avg(): number {
 		const numbers = this.toNumbers()
 
 		if (numbers.length === 0) {
@@ -1118,7 +1113,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 
@@ -1129,14 +1124,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 *
 	 * @returns A grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<Value> {
+	toList(): HList<Value> {
 		return this
 	}
 
@@ -1146,7 +1141,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		if (message) {
 			console.log(String(message))
 		}
@@ -1158,7 +1153,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * @returns Returns a copy of the list.
 	 */
-	public newCopy(): HList<Value> {
+	newCopy(): HList<Value> {
 		return HList.make<Value>(
 			this.values.map(
 				(val): Value => (val === null ? null : val.newCopy()) as Value

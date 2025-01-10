@@ -58,15 +58,15 @@ export interface NormalizationLogger {
  * to the console without any localization.
  */
 export class DefaultNormalizationLogger implements NormalizationLogger {
-	public warning(message: string): void {
+	warning(message: string): void {
 		console.warn(message)
 	}
 
-	public error(message: string): void {
+	error(message: string): void {
 		console.error(message)
 	}
 
-	public fatal(message: string): void {
+	fatal(message: string): void {
 		console.error(message)
 	}
 }

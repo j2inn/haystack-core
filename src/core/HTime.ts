@@ -92,9 +92,7 @@ export class HTime implements HVal {
 	 * @param value The value.
 	 * @returns A haystack time.
 	 */
-	public static make(
-		value: string | Date | TimeObj | HaysonTime | HTime
-	): HTime {
+	static make(value: string | Date | TimeObj | HaysonTime | HTime): HTime {
 		if (valueIsKind<HTime>(value, Kind.Time)) {
 			return value
 		} else {
@@ -105,62 +103,62 @@ export class HTime implements HVal {
 	/**
 	 * @returns The time value.
 	 */
-	public get value(): string {
+	get value(): string {
 		return this.#value
 	}
 
-	public set value(value: string) {
+	set value(value: string) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The hours in a 24 hour format.
 	 */
-	public get hours(): number {
+	get hours(): number {
 		return this.date.getUTCHours()
 	}
 
-	public set hours(hours: number) {
+	set hours(hours: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The minutes.
 	 */
-	public get minutes(): number {
+	get minutes(): number {
 		return this.date.getMinutes()
 	}
 
-	public set minutes(minutes: number) {
+	set minutes(minutes: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The seconds.
 	 */
-	public get seconds(): number {
+	get seconds(): number {
 		return this.date.getSeconds()
 	}
 
-	public set seconds(seconds: number) {
+	set seconds(seconds: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The milliseconds.
 	 */
-	public get milliseconds(): number {
+	get milliseconds(): number {
 		return this.date.getMilliseconds()
 	}
 
-	public set milliseconds(milliseconds: number) {
+	set milliseconds(milliseconds: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Time
 	}
 
@@ -170,7 +168,7 @@ export class HTime implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HTime>(this, kind)
 	}
 
@@ -181,7 +179,7 @@ export class HTime implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -191,7 +189,7 @@ export class HTime implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
@@ -204,7 +202,7 @@ export class HTime implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.toZinc()
 	}
 
@@ -214,7 +212,7 @@ export class HTime implements HVal {
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return (
 			valueIsKind<HTime>(value, Kind.Time) && this.#value === value.#value
 		)
@@ -226,7 +224,7 @@ export class HTime implements HVal {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HTime>(value, Kind.Time)) {
 			return -1
 		}
@@ -243,14 +241,14 @@ export class HTime implements HVal {
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.#value
 	}
 
 	/**
 	 * @returns The encoded time value.
 	 */
-	public valueOf(): string {
+	valueOf(): string {
 		return this.#value
 	}
 
@@ -259,21 +257,21 @@ export class HTime implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return this.#value
 	}
 
 	/**
 	 * @returns The current time.
 	 */
-	public static now(): HTime {
+	static now(): HTime {
 		return HTime.make(new Date())
 	}
 
 	/**
 	 * @returns The Date for this time.
 	 */
-	public get date(): Date {
+	get date(): Date {
 		return this.#date
 	}
 
@@ -326,7 +324,7 @@ export class HTime implements HVal {
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonTime {
+	toJSON(): HaysonTime {
 		return {
 			_kind: this.getKind(),
 			val: this.#value,
@@ -336,56 +334,56 @@ export class HTime implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Time {
+	toJSONv3(): JsonV3Time {
 		return `h:${this.#value}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return this.toZinc()
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HTime {
+	newCopy(): HTime {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HTime> {
+	toList(): HList<HTime> {
 		return HList.make(this)
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 }

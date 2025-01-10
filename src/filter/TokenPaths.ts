@@ -15,17 +15,17 @@ export class TokenPaths implements Token {
 	/**
 	 * The token type.
 	 */
-	public readonly type: TokenType = TokenType.paths
+	readonly type: TokenType = TokenType.paths
 
 	/**
 	 * The token text value.
 	 */
-	public readonly paths: string[]
+	readonly paths: string[]
 
 	/**
 	 * Flag used to identify a token paths object.
 	 */
-	public readonly _isATokenPaths = true
+	readonly _isATokenPaths = true
 
 	/**
 	 * Contructs a new token value.
@@ -33,7 +33,7 @@ export class TokenPaths implements Token {
 	 * @param paths The paths.
 	 * @param value The tokens value.
 	 */
-	public constructor(paths: string[]) {
+	constructor(paths: string[]) {
 		this.paths = paths
 	}
 
@@ -43,7 +43,7 @@ export class TokenPaths implements Token {
 	 * @param type The token type.
 	 * @return True if the type matches.
 	 */
-	public is(type: TokenType): boolean {
+	is(type: TokenType): boolean {
 		return this.type === type
 	}
 
@@ -54,7 +54,7 @@ export class TokenPaths implements Token {
 	 * @param text The text.
 	 * @return True if the objects are equal.
 	 */
-	public equals(token: Token): boolean {
+	equals(token: Token): boolean {
 		if (!isTokenPaths(token)) {
 			return false
 		}
@@ -79,21 +79,21 @@ export class TokenPaths implements Token {
 	/**
 	 * @returns A string representation of the token.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.toFilter()
 	}
 
 	/**
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.paths.join('->')
 	}
 
 	/**
 	 * @returns A JSON representation of the token.
 	 */
-	public toJSON(): {
+	toJSON(): {
 		type: string
 		[prop: string]: string | string[] | HaysonVal
 	} {

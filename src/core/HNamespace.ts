@@ -40,19 +40,19 @@ export class Reflection {
 	/**
 	 * The resultant defs.
 	 */
-	public readonly defs: readonly HDict[]
+	readonly defs: readonly HDict[]
 
 	/**
 	 * The source dict analysed.
 	 */
-	public readonly subject: HDict
+	readonly subject: HDict
 
 	/**
 	 * The associated namespace.
 	 */
-	public readonly namespace: HNamespace
+	readonly namespace: HNamespace
 
-	public constructor(defs: HDict[], subject: HDict, namespace: HNamespace) {
+	constructor(defs: HDict[], subject: HDict, namespace: HNamespace) {
 		this.defs = defs
 		this.subject = subject
 		this.namespace = namespace
@@ -64,7 +64,7 @@ export class Reflection {
 	 * @param base The base def.
 	 * @returns True if the subject's tags fit the base.
 	 */
-	public fits(base: string | HSymbol): boolean {
+	fits(base: string | HSymbol): boolean {
 		for (const def of this.defs) {
 			if (this.namespace.fits(def.defName, base)) {
 				return true
@@ -76,7 +76,7 @@ export class Reflection {
 	/**
 	 * Return the reflection result as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make({ rows: this.defs as HDict[] })
 	}
 
@@ -85,7 +85,7 @@ export class Reflection {
 	 * are implemented.
 	 */
 	@memoize()
-	public get type(): HDict {
+	get type(): HDict {
 		const entity = this.namespace.byName('entity')
 
 		let type: HDict | undefined
@@ -164,14 +164,14 @@ export class HNamespace {
 	 *
 	 * @param defs A grid of normalized defined defs.
 	 */
-	public constructor(grid: HGrid) {
+	constructor(grid: HGrid) {
 		this.$grid = grid
 	}
 
 	/**
 	 * @returns The default namespace for the environment.
 	 */
-	public static get defaultNamespace(): HNamespace {
+	static get defaultNamespace(): HNamespace {
 		return (
 			defaultNamespace ??
 			(defaultNamespace = new HNamespace(HGrid.make({})))
@@ -183,7 +183,7 @@ export class HNamespace {
 	 *
 	 * @param namespace The new default namespace.
 	 */
-	public static set defaultNamespace(namespace: HNamespace) {
+	static set defaultNamespace(namespace: HNamespace) {
 		defaultNamespace = namespace
 	}
 
@@ -195,7 +195,7 @@ export class HNamespace {
 	 * @returns A object with key to value defs.
 	 */
 	@memoize()
-	public get defs(): Defs {
+	get defs(): Defs {
 		const defs: Defs = {}
 
 		// Create a cache of symbol to defs so we can
@@ -217,7 +217,7 @@ export class HNamespace {
 	 * @param name The name of the def to look up.
 	 * @returns The def or undefined if it can't be found.
 	 */
-	public byName(name: string | HSymbol): HDict | undefined {
+	byName(name: string | HSymbol): HDict | undefined {
 		return this.defs[String(name)]
 	}
 
@@ -229,7 +229,7 @@ export class HNamespace {
 	 * @param name The name of the def to look up.
 	 * @returns The def or undefined if it can't be found.
 	 */
-	public get(name: string | HSymbol): HDict | undefined {
+	get(name: string | HSymbol): HDict | undefined {
 		return this.byName(name)
 	}
 
@@ -239,7 +239,7 @@ export class HNamespace {
 	 * @param name The name of the def to look up.
 	 * @returns True if the def exists.
 	 */
-	public hasName(name: string | HSymbol): boolean {
+	hasName(name: string | HSymbol): boolean {
 		return !!this.defs[String(name)]
 	}
 
@@ -251,7 +251,7 @@ export class HNamespace {
 	 * @param name The name of the def to look up.
 	 * @returns True if the def exists.
 	 */
-	public has(name: string | HSymbol): boolean {
+	has(name: string | HSymbol): boolean {
 		return this.hasName(name)
 	}
 
@@ -263,9 +263,7 @@ export class HNamespace {
 	 * @returns A array of defs.
 	 * @throws An error if the def can't be found.
 	 */
-	public byAllNames(
-		...names: (string | string[] | HSymbol | HSymbol[])[]
-	): HDict[] {
+	byAllNames(...names: (string | string[] | HSymbol | HSymbol[])[]): HDict[] {
 		const nameList = names.reduce(
 			(
 				ns: string[],
@@ -300,7 +298,7 @@ export class HNamespace {
 	 * @returns A list of all available conjunct defs.
 	 */
 	@memoize()
-	public get conjuncts(): readonly HDict[] {
+	get conjuncts(): readonly HDict[] {
 		const defs = this.defs
 		return Object.keys(defs)
 			.filter(HNamespace.isConjunct)
@@ -313,7 +311,7 @@ export class HNamespace {
 	 * @param name The name to test.
 	 * @returns True if the name is for a conjunct.
 	 */
-	public static isConjunct(name: string | HSymbol): boolean {
+	static isConjunct(name: string | HSymbol): boolean {
 		return String(name).includes('-')
 	}
 
@@ -323,7 +321,7 @@ export class HNamespace {
 	 * @param name The name to split.
 	 * @returns The split marker tag names for the conjunct.
 	 */
-	public static splitConjunct(name: string | HSymbol): string[] {
+	static splitConjunct(name: string | HSymbol): string[] {
 		return String(name).split('-')
 	}
 
@@ -336,7 +334,7 @@ export class HNamespace {
 	 * @returns The defs the conjunct references.
 	 * @throws An error if any of the defs are invalid.
 	 */
-	public conjunctDefs(name: string | HSymbol): HDict[] {
+	conjunctDefs(name: string | HSymbol): HDict[] {
 		return this.byAllNames(HNamespace.splitConjunct(name))
 	}
 
@@ -402,7 +400,7 @@ export class HNamespace {
 	 * @returns A list of feature defs.
 	 */
 	@memoize()
-	public get features(): readonly HDict[] {
+	get features(): readonly HDict[] {
 		const defs = this.defs
 		return Object.keys(defs)
 			.filter(HNamespace.isFeature)
@@ -415,7 +413,7 @@ export class HNamespace {
 	 * @param name The name to test.
 	 * @returns True if the name is for a feature.
 	 */
-	public static isFeature(name: string | HSymbol): boolean {
+	static isFeature(name: string | HSymbol): boolean {
 		return String(name).includes(':')
 	}
 
@@ -428,7 +426,7 @@ export class HNamespace {
 	 * @param name The name to parse.
 	 * @returns The feature.
 	 */
-	public static getFeature(name: string | HSymbol): string {
+	static getFeature(name: string | HSymbol): string {
 		return HNamespace.isFeature(name) ? String(name).split(':')[0] : ''
 	}
 
@@ -441,7 +439,7 @@ export class HNamespace {
 	 * @param name The name to parse.
 	 * @returns The feature name.
 	 */
-	public static getFeatureName(name: string | HSymbol): string {
+	static getFeatureName(name: string | HSymbol): string {
 		return HNamespace.isFeature(name) ? String(name).split(':')[1] : ''
 	}
 
@@ -449,7 +447,7 @@ export class HNamespace {
 	 * @returns A list of all the libs implemented by this namespace.
 	 */
 	@memoize()
-	public get libs(): HDict[] {
+	get libs(): HDict[] {
 		return this.subTypesOf('lib')
 	}
 
@@ -459,7 +457,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns The subtypes.
 	 */
-	public subTypesOf(name: string | HSymbol): HDict[] {
+	subTypesOf(name: string | HSymbol): HDict[] {
 		return this.subTypes[String(name)] ?? []
 	}
 
@@ -469,7 +467,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns True if the def has subtypes.
 	 */
-	public hasSubTypes(name: string | HSymbol): boolean {
+	hasSubTypes(name: string | HSymbol): boolean {
 		return !!this.subTypes[String(name)]
 	}
 
@@ -479,7 +477,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns A list of subtypes.
 	 */
-	public allSubTypesOf(name: string | HSymbol): HDict[] {
+	allSubTypesOf(name: string | HSymbol): HDict[] {
 		const subTypes = new Set<HDict>()
 		this.findSubTypes(name, subTypes)
 		return [...subTypes]
@@ -541,7 +539,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns The supertype defs.
 	 */
-	public superTypesOf(name: string | HSymbol): HDict[] {
+	superTypesOf(name: string | HSymbol): HDict[] {
 		return this.has(name) ? this.doSuperTypesOf(name) : []
 	}
 
@@ -560,7 +558,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns A list of supertypes.
 	 */
-	public allSuperTypesOf(name: string | HSymbol): HDict[] {
+	allSuperTypesOf(name: string | HSymbol): HDict[] {
 		const superTypes = new Set<HDict>()
 		this.findSuperTypes(name, superTypes)
 		return [...superTypes]
@@ -590,7 +588,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns The choices for a def.
 	 */
-	public choicesFor(name: string | HSymbol): HDict[] {
+	choicesFor(name: string | HSymbol): HDict[] {
 		// Look for all the direct sub-types of a choice to find the actual choices.
 		return this.isChoice(name) ? this.subTypesOf(name) : []
 	}
@@ -600,7 +598,7 @@ export class HNamespace {
 	 * all defs that are choices.
 	 */
 	@memoize()
-	public get choices(): NameToDefs {
+	get choices(): NameToDefs {
 		const choices: NameToDefs = {}
 		const defs = this.defs
 
@@ -624,7 +622,7 @@ export class HNamespace {
 	 * @returns The name of the available features.
 	 */
 	@memoize()
-	public get featureNames(): string[] {
+	get featureNames(): string[] {
 		const names = new Set<string>()
 		const defs = this.defs
 
@@ -648,7 +646,7 @@ export class HNamespace {
 	 * @returns A list of all the tagOn names.
 	 */
 	@memoize()
-	public get tagOnNames(): string[] {
+	get tagOnNames(): string[] {
 		const names = new Set<string>()
 		const defs = this.defs
 
@@ -670,7 +668,7 @@ export class HNamespace {
 	 * @returns A object that maps def names to their respective tagOn defs.
 	 */
 	@memoize()
-	public get tagOnIndices(): NameToDefs {
+	get tagOnIndices(): NameToDefs {
 		return Object.keys(this.defs).reduce(
 			(obj: NameToDefs, name: string): NameToDefs => {
 				const defs = this.byName(name)
@@ -693,7 +691,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns The def's inheritance.
 	 */
-	public inheritance(name: string | HSymbol): HDict[] {
+	inheritance(name: string | HSymbol): HDict[] {
 		return this.has(name) ? this.doInheritance(name) : []
 	}
 
@@ -717,7 +715,7 @@ export class HNamespace {
 	 * @param association The association.
 	 * @returns An array of associated defs.
 	 */
-	public associations(
+	associations(
 		parent: string | HSymbol,
 		association: string | HSymbol
 	): HDict[] {
@@ -798,7 +796,7 @@ export class HNamespace {
 	 * @param parent The parent def.
 	 * @returns An array of associated defs.
 	 */
-	public is(parent: string | HSymbol): HDict[] {
+	is(parent: string | HSymbol): HDict[] {
 		return this.associations(parent, 'is')
 	}
 
@@ -808,7 +806,7 @@ export class HNamespace {
 	 * @param parent The parent def.
 	 * @returns An array of associated defs.
 	 */
-	public tagOn(parent: string | HSymbol): HDict[] {
+	tagOn(parent: string | HSymbol): HDict[] {
 		return this.associations(parent, 'tagOn')
 	}
 
@@ -818,7 +816,7 @@ export class HNamespace {
 	 * @param parent The parent def.
 	 * @returns An array of associated defs.
 	 */
-	public tags(parent: string | HSymbol): HDict[] {
+	tags(parent: string | HSymbol): HDict[] {
 		return this.associations(parent, 'tags')
 	}
 
@@ -828,7 +826,7 @@ export class HNamespace {
 	 * @param subject The subject dict.
 	 * @returns The reflected defs.
 	 */
-	public reflect(subject: HDict): Reflection {
+	reflect(subject: HDict): Reflection {
 		const foundDefs: HDict[] = []
 		const markers: string[] = []
 
@@ -851,7 +849,7 @@ export class HNamespace {
 	 * @param subject The subject dict.
 	 * @returns The entity def or `dict` if one cannot be found.
 	 */
-	public defOfDict(subject: HDict): HDict {
+	defOfDict(subject: HDict): HDict {
 		return this.reflect(subject).type
 	}
 
@@ -909,7 +907,7 @@ export class HNamespace {
 	 * @param base The name of the base def.
 	 * @returns True if the def fits.
 	 */
-	public fits(name: string | HSymbol, base: string | HSymbol): boolean {
+	fits(name: string | HSymbol, base: string | HSymbol): boolean {
 		const baseDef = this.byName(base)
 		return !!(baseDef && this.inheritance(name).includes(baseDef))
 	}
@@ -920,7 +918,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns True if the def is a marker.
 	 */
-	public fitsMarker(name: string | HSymbol): boolean {
+	fitsMarker(name: string | HSymbol): boolean {
 		return this.fits(name, 'marker')
 	}
 
@@ -930,7 +928,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns True if the def is a val.
 	 */
-	public fitsVal(name: string | HSymbol): boolean {
+	fitsVal(name: string | HSymbol): boolean {
 		return this.fits(name, 'val')
 	}
 
@@ -940,7 +938,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns True if the def is a choice.
 	 */
-	public fitsChoice(name: string | HSymbol): boolean {
+	fitsChoice(name: string | HSymbol): boolean {
 		return this.fits(name, 'choice')
 	}
 
@@ -950,7 +948,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns True if the def is a entity.
 	 */
-	public fitsEntity(name: string | HSymbol): boolean {
+	fitsEntity(name: string | HSymbol): boolean {
 		return this.fits(name, 'entity')
 	}
 
@@ -960,7 +958,7 @@ export class HNamespace {
 	 * @param name The def name.
 	 * @returns An array of defs to be added.
 	 */
-	public implementation(name: string | HSymbol): HDict[] {
+	implementation(name: string | HSymbol): HDict[] {
 		// 1.a Based on the tag name get the single def tag name.
 		// 1.b If this is a conjunct get each tag from it.
 		let dicts = this.conjunctDefs(name)
@@ -1006,7 +1004,7 @@ export class HNamespace {
 	 * @param name The name of the def to get the kind for.
 	 * @returns The kind or undefined it one cannot be found.
 	 */
-	public defToKind(name: string | HSymbol): Kind | undefined {
+	defToKind(name: string | HSymbol): Kind | undefined {
 		const def = this.byName(name)
 
 		if (!def) {
@@ -1062,7 +1060,7 @@ export class HNamespace {
 	 * @returns The defs for all of the core haystack value types.
 	 */
 	@memoize()
-	public get hsTypeDefs(): {
+	get hsTypeDefs(): {
 		bool: HDict
 		coord: HDict
 		date: HDict
@@ -1106,7 +1104,7 @@ export class HNamespace {
 	 * @param name The parent dict.
 	 * @returns An array of children.
 	 */
-	public protos(parent: HDict): HDict[] {
+	protos(parent: HDict): HDict[] {
 		return parent.keys
 			.map((name: string): HDict[] => this.protosForDef(parent, name))
 			.reduce((dicts: HDict[], children: HDict[]): HDict[] => {
@@ -1218,7 +1216,7 @@ export class HNamespace {
 	/**
 	 * @returns The underlying grid for the namespace.
 	 */
-	public get grid(): HGrid {
+	get grid(): HGrid {
 		return this.$grid
 	}
 
@@ -1227,7 +1225,7 @@ export class HNamespace {
 	 *
 	 * @returns A grid with all the definitions.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return this.grid
 	}
 
@@ -1235,7 +1233,7 @@ export class HNamespace {
 	 * @returns A list of available timezones.
 	 */
 	@memoize()
-	public get timezones(): HList<HStr> {
+	get timezones(): HList<HStr> {
 		return (
 			this.byName('tz')
 				?.get<HStr>('enum')
@@ -1261,7 +1259,7 @@ export class HNamespace {
 	 * @param options.queried An internally passed collection used for stopping infinite loops.
 	 * @returns True if a match is made.
 	 */
-	public hasRelationship({
+	hasRelationship({
 		subject,
 		relName,
 		relTerm,
@@ -1401,7 +1399,7 @@ export class HNamespace {
 	 * @param dict The dict to validate against.
 	 * @throws An error if the tags on the dict are not valid.
 	 */
-	public validate(name: string | HSymbol, dict: unknown): void {
+	validate(name: string | HSymbol, dict: unknown): void {
 		// 1. Make sure the dict is a real HDict.
 		if (!valueIsKind<HDict>(dict, Kind.Dict)) {
 			throw new LocalizedError({
@@ -1509,7 +1507,7 @@ export class HNamespace {
 	 * @param dict The dict to validate.
 	 * @throws An error if the tags on the dict are not valid.
 	 */
-	public validateAll(dict: unknown): void {
+	validateAll(dict: unknown): void {
 		if (!valueIsKind<HDict>(dict, Kind.Dict)) {
 			throw new LocalizedError({
 				message: 'Invalid dict',
@@ -1533,7 +1531,7 @@ export class HNamespace {
 	 * @param dict The dict to validate against.
 	 * @returns true if the dict is valid.
 	 */
-	public isValid(name: string | HSymbol, dict: unknown): boolean {
+	isValid(name: string | HSymbol, dict: unknown): boolean {
 		try {
 			this.validate(name, dict)
 			return true
@@ -1548,7 +1546,7 @@ export class HNamespace {
 	 * @param names The names of the tags to add.
 	 * @returns The new dict with all the default requirement tags.
 	 */
-	public newDict(names: (string | HSymbol)[]): HDict {
+	newDict(names: (string | HSymbol)[]): HDict {
 		const dict = new HDict()
 
 		for (const name of names) {
@@ -1575,7 +1573,7 @@ export class HNamespace {
 	 * @returns A list of all the containment refs.
 	 */
 	@memoize()
-	public getContainmentRefs(): HDict[] {
+	getContainmentRefs(): HDict[] {
 		return this.allSubTypesOf('ref').filter((def) => def.has('containedBy'))
 	}
 
@@ -1587,7 +1585,7 @@ export class HNamespace {
 	 * @param name The name of the def to search the ref for.
 	 * @returns The containment ref def.
 	 */
-	public findContainmentRef(name: string | HSymbol): HDict | undefined {
+	findContainmentRef(name: string | HSymbol): HDict | undefined {
 		return this.getContainmentRefs().find(
 			(def) =>
 				!def.has('deprecated') &&

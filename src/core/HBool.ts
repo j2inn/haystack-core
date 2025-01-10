@@ -44,7 +44,7 @@ export class HBool implements HVal {
 	 * @param value The value.
 	 * @returns A haystack boolean value.
 	 */
-	public static make(value: boolean | HBool): HBool {
+	static make(value: boolean | HBool): HBool {
 		if (typeof value === 'boolean') {
 			if (value) {
 				return (
@@ -65,18 +65,18 @@ export class HBool implements HVal {
 	/**
 	 * @returns The boolean value.
 	 */
-	public get value(): boolean {
+	get value(): boolean {
 		return this.#value
 	}
 
-	public set value(value: boolean) {
+	set value(value: boolean) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Bool
 	}
 
@@ -86,7 +86,7 @@ export class HBool implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HBool>(this, kind)
 	}
 
@@ -96,7 +96,7 @@ export class HBool implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -105,14 +105,14 @@ export class HBool implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
 	/*
 	 * @returns The object's value as a boolean string.
 	 */
-	public valueOf(): boolean {
+	valueOf(): boolean {
 		return this.#value
 	}
 
@@ -122,7 +122,7 @@ export class HBool implements HVal {
 	 * @param value The value to compare.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return (
 			valueIsKind<HBool>(value, Kind.Bool) &&
 			this.valueOf() === value.valueOf()
@@ -135,7 +135,7 @@ export class HBool implements HVal {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HBool>(value, Kind.Bool)) {
 			return -1
 		}
@@ -152,7 +152,7 @@ export class HBool implements HVal {
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return String(this.value)
 	}
 
@@ -165,7 +165,7 @@ export class HBool implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.valueOf() ? 'true' : 'false'
 	}
 
@@ -174,70 +174,70 @@ export class HBool implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return this.valueOf() ? 'T' : 'F'
 	}
 
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): boolean {
+	toJSON(): boolean {
 		return this.valueOf()
 	}
 
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): boolean {
+	toJSONv3(): boolean {
 		return this.toJSON()
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return String(this.valueOf())
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HBool {
+	newCopy(): HBool {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HBool> {
+	toList(): HList<HBool> {
 		return HList.make([this])
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 }

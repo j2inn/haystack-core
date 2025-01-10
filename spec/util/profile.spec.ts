@@ -5,30 +5,30 @@
 import { profile } from '../../src/util/profile'
 
 class TestProfile {
-	public num = 1
+	num = 1
 
 	@profile()
-	public add(a: number, b: number): number {
+	add(a: number, b: number): number {
 		return a + b
 	}
 
 	@profile()
-	public async addAsync(a: number, b: number): Promise<number> {
+	async addAsync(a: number, b: number): Promise<number> {
 		return a + b
 	}
 
 	@profile()
-	public async asyncError(): Promise<number> {
+	async asyncError(): Promise<number> {
 		throw new Error('Test error')
 	}
 
 	@profile()
-	public get numGetter(): number {
+	get numGetter(): number {
 		return this.num
 	}
 
 	@profile()
-	public set numSetter(num: number) {
+	set numSetter(num: number) {
 		this.num = num
 	}
 }

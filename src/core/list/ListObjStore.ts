@@ -20,15 +20,15 @@ export class ListObjStore<Value extends OptionalHVal>
 		this.values = values
 	}
 
-	public toJSON(): HaysonList {
+	toJSON(): HaysonList {
 		return this.values.map((value) => (value ? value.toJSON() : null))
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

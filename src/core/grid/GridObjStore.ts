@@ -16,17 +16,17 @@ import { GRID_STORE_SYMBOL, GRID_VERSION_NAME, GridStore } from './GridStore'
  * which could be backed by a native one
  */
 export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
-	public version: string
+	version: string
 
-	public meta: HDict
+	meta: HDict
 
-	public columns: GridColumn[]
+	columns: GridColumn[]
 
-	public rows: DictVal[]
+	rows: DictVal[];
 
-	public readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
+	readonly [GRID_STORE_SYMBOL] = GRID_STORE_SYMBOL
 
-	public constructor(
+	constructor(
 		version: string,
 		meta: HDict,
 		columns: GridColumn[],
@@ -38,7 +38,7 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 		this.rows = rows
 	}
 
-	public toJSON(): HaysonGrid {
+	toJSON(): HaysonGrid {
 		return {
 			_kind: Kind.Grid,
 			meta: {
@@ -53,11 +53,11 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 		}
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this.toJSON())
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 }

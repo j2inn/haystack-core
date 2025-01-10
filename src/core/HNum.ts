@@ -95,10 +95,7 @@ export class HNum implements HVal {
 	 * @param unit Optional units.
 	 * @returns A haystack number.
 	 */
-	public static make(
-		value: number | HaysonNum | HNum,
-		unit?: string | HUnit
-	): HNum {
+	static make(value: number | HaysonNum | HNum, unit?: string | HUnit): HNum {
 		let val = 0
 		if (typeof value === 'number') {
 			val = value as number
@@ -138,18 +135,18 @@ export class HNum implements HVal {
 	/**
 	 * @returns The numeric value.
 	 */
-	public get value(): number {
+	get value(): number {
 		return this.#value
 	}
 
-	public set value(value: number) {
+	set value(value: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns Optional unit value for a number.
 	 */
-	public get unit(): HUnit | undefined {
+	get unit(): HUnit | undefined {
 		// Always lazily look up the unit from the unit database
 		// just in case the unit was defined after the number was loaded.
 		// This can happen as the loading of the unit database is decoupled
@@ -169,14 +166,14 @@ export class HNum implements HVal {
 		return unit
 	}
 
-	public set unit(unit: HUnit | undefined) {
+	set unit(unit: HUnit | undefined) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Number
 	}
 
@@ -186,7 +183,7 @@ export class HNum implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HNum>(this, kind)
 	}
 
@@ -197,7 +194,7 @@ export class HNum implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -207,14 +204,14 @@ export class HNum implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
 	/**
 	 * @returns The object's value as a number.
 	 */
-	public valueOf(): number {
+	valueOf(): number {
 		return this.#value
 	}
 
@@ -225,7 +222,7 @@ export class HNum implements HVal {
 	 * to support backwards compatibility.
 	 * @returns A string representation of the value.
 	 */
-	public toString(options?: NumberFormatOptions | number): string {
+	toString(options?: NumberFormatOptions | number): string {
 		let precision = DEFAULT_PRECISION
 		let locale: string | undefined
 
@@ -262,7 +259,7 @@ export class HNum implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		if (
 			this.value === Number.POSITIVE_INFINITY ||
 			this.value === Number.NEGATIVE_INFINITY ||
@@ -279,7 +276,7 @@ export class HNum implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return this.encodeToZinc(/*unitSeparator*/ '')
 	}
 
@@ -309,7 +306,7 @@ export class HNum implements HVal {
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		if (!valueIsKind<HNum>(value, Kind.Number)) {
 			return false
 		}
@@ -331,7 +328,7 @@ export class HNum implements HVal {
 	 * @param value The number to compare.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HNum>(value, Kind.Number)) {
 			return -1
 		}
@@ -369,14 +366,14 @@ export class HNum implements HVal {
 	 *
 	 * @returns True if the number is a duration.
 	 */
-	public isDuration(): boolean {
+	isDuration(): boolean {
 		return this.unit?.quantity === 'time'
 	}
 
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonNum | number {
+	toJSON(): HaysonNum | number {
 		let val: HaysonNumVal
 
 		if (this.value === Number.POSITIVE_INFINITY) {
@@ -410,56 +407,56 @@ export class HNum implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Num {
+	toJSONv3(): JsonV3Num {
 		return `n:${this.encodeToZinc(/*unitSeparator*/ ' ')}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return this.toZinc()
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HNum {
+	newCopy(): HNum {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HNum> {
+	toList(): HList<HNum> {
 		return HList.make([this])
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 
@@ -470,7 +467,7 @@ export class HNum implements HVal {
 	 * @returns The new number.
 	 * @throws An error if the units are incompatible.
 	 */
-	public plus(num: HNum): HNum {
+	plus(num: HNum): HNum {
 		return HNum.make(
 			this.value + num.value,
 			this.checkPlusMinusUnit(num.unit, '+')
@@ -484,7 +481,7 @@ export class HNum implements HVal {
 	 * @returns The new number.
 	 * @throws An error if the units are incompatible.
 	 */
-	public minus(num: HNum): HNum {
+	minus(num: HNum): HNum {
 		return HNum.make(
 			this.value - num.value,
 			this.checkPlusMinusUnit(num.unit, '-')
@@ -516,7 +513,7 @@ export class HNum implements HVal {
 	 * @returns The new number.
 	 * @throws An error if the units are incompatible.
 	 */
-	public multiply(num: HNum): HNum {
+	multiply(num: HNum): HNum {
 		return HNum.make(
 			this.value * num.value,
 			this.checkMultiplyUnit(num.unit)
@@ -541,7 +538,7 @@ export class HNum implements HVal {
 	 * @returns The new number.
 	 * @throws An error if the units are incompatible.
 	 */
-	public divide(num: HNum): HNum {
+	divide(num: HNum): HNum {
 		return HNum.make(this.value / num.value, this.checkDivideUnit(num.unit))
 	}
 
@@ -569,7 +566,7 @@ export class HNum implements HVal {
 	 * @returns The new number with the new unit.
 	 * @throws An error if the number can't be converted with the unit.
 	 */
-	public convertTo(unit: HUnit): HNum {
+	convertTo(unit: HUnit): HNum {
 		const thisUnit = this.unit
 		return HNum.make(
 			thisUnit ? thisUnit.convertTo(this.value, unit) : this.value,

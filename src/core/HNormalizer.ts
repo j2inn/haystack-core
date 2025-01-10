@@ -188,7 +188,7 @@ class DefTree {
 	/**
 	 * The child roots.
 	 */
-	public readonly rootChildren: DefTreeNode[]
+	readonly rootChildren: DefTreeNode[]
 
 	/**
 	 * A map of all the def names to defs.
@@ -218,7 +218,7 @@ class DefTree {
 	 * @param name The def name.
 	 * @return The def tree node or undefined.
 	 */
-	public find(name: string): DefTreeNode | undefined {
+	find(name: string): DefTreeNode | undefined {
 		return this.#nodes.get(name)
 	}
 }
@@ -248,7 +248,7 @@ export class HNormalizer {
 	 * @param scanner A scanner for finding libs.
 	 * @param logger A logger used to handle any errors encountered during normalization.
 	 */
-	public constructor(scanner: LibScanner, logger?: NormalizationLogger) {
+	constructor(scanner: LibScanner, logger?: NormalizationLogger) {
 		this.#scanner = scanner
 		this.#logger = logger ?? new DefaultNormalizationLogger()
 	}
@@ -260,7 +260,7 @@ export class HNormalizer {
 	 *
 	 * @returns The normalized defs namespace.
 	 */
-	public async normalize(): Promise<HNamespace> {
+	async normalize(): Promise<HNamespace> {
 		// 1. Traverse input libs to find trio files.
 		const libs = await this.scan()
 

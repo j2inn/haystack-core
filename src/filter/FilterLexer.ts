@@ -69,7 +69,7 @@ export class FilterLexer {
 	 * @param scanner The scanner used for the input.
 	 * @param zinc Optional zinc lexer.
 	 */
-	public constructor(scanner: Scanner) {
+	constructor(scanner: Scanner) {
 		this.scanner = scanner
 		this.zinc = new ZincReader(scanner)
 	}
@@ -81,7 +81,7 @@ export class FilterLexer {
 	 *
 	 * @returns A function that when invoked, returns the next token.
 	 */
-	public toNextTokenFunc(): () => Token {
+	toNextTokenFunc(): () => Token {
 		return (): Token => this.nextToken()
 	}
 
@@ -90,7 +90,7 @@ export class FilterLexer {
 	 *
 	 * @returns The next token.
 	 */
-	public nextToken(): Token {
+	nextToken(): Token {
 		// Please note, this must match up with ZincLexer#nextToken()
 		while (!this.scanner.isEof()) {
 			switch (this.scanner.current) {

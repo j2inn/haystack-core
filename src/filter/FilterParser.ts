@@ -93,7 +93,7 @@ export class FilterParser {
 	 *
 	 * @param nextToken A function that supplies tokens for the parser to use.
 	 */
-	public constructor(nextToken: () => Token) {
+	constructor(nextToken: () => Token) {
 		this.nextToken = nextToken
 
 		// Prime
@@ -162,7 +162,7 @@ export class FilterParser {
 	 * @returns The abstract syntax tree for the filter.
 	 * @throws If there's an error parsing the filter.
 	 */
-	public parse(): Node {
+	parse(): Node {
 		const node = this.condOr()
 
 		// If we're finished parsing and there's still tokens left over

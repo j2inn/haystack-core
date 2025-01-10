@@ -33,15 +33,15 @@ export class DictJsonStore implements DictStore {
 	 * This cache is gradually added to if values are read from the JSON object.
 	 * If the dict is written too then all values are decoded.
 	 */
-	#hvals: HValObj = {}
+	#hvals: HValObj = {};
 
-	public readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
+	readonly [DICT_STORE_SYMBOL] = DICT_STORE_SYMBOL
 
 	constructor(values: HaysonDict) {
 		this.#values = values
 	}
 
-	public get(name: string): OptionalHVal | undefined {
+	get(name: string): OptionalHVal | undefined {
 		// Is the value already decoded?
 		const hval = this.#hvals[name]
 
@@ -78,45 +78,45 @@ export class DictJsonStore implements DictStore {
 		return undefined
 	}
 
-	public has(name: string): boolean {
+	has(name: string): boolean {
 		return this.#values
 			? this.#values[name] !== undefined
 			: this.#hvals[name] !== undefined
 	}
 
-	public set(name: string, value: OptionalHVal): void {
+	set(name: string, value: OptionalHVal): void {
 		this.decodeAll()
 		this.#hvals[name] = value
 	}
 
-	public remove(name: string): void {
+	remove(name: string): void {
 		delete this.#hvals[name]
 		delete this.#values?.[name]
 	}
 
-	public clear(): void {
+	clear(): void {
 		this.#values = undefined
 		this.#hvals = {}
 	}
 
-	public getKeys(): string[] {
+	getKeys(): string[] {
 		return Object.keys(this.#values ?? this.#hvals)
 	}
 
-	public toObj(): HValObj {
+	toObj(): HValObj {
 		this.decodeAll()
 		return this.#hvals
 	}
 
-	public toJSON(): HaysonDict {
+	toJSON(): HaysonDict {
 		return this.#values ?? hvalObjToJson(this.#hvals)
 	}
 
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this.toJSON())
 	}
 
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 

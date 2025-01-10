@@ -21,11 +21,11 @@ import {
 export class GenerateHaystackFilterVisitor implements Visitor {
 	protected $filter = ''
 
-	public get filter(): string {
+	get filter(): string {
 		return this.$filter
 	}
 
-	public visitCondOr(node: CondOrNode): void {
+	visitCondOr(node: CondOrNode): void {
 		const condAnds = node.condAnds
 		for (let i = 0; i < condAnds.length; ++i) {
 			if (i > 0) {
@@ -35,7 +35,7 @@ export class GenerateHaystackFilterVisitor implements Visitor {
 		}
 	}
 
-	public visitCondAnd(node: CondAndNode): void {
+	visitCondAnd(node: CondAndNode): void {
 		const terms = node.terms
 		for (let i = 0; i < terms.length; ++i) {
 			if (i > 0) {
@@ -45,32 +45,32 @@ export class GenerateHaystackFilterVisitor implements Visitor {
 		}
 	}
 
-	public visitParens(node: ParensNode): void {
+	visitParens(node: ParensNode): void {
 		this.append('(')
 		node.acceptChildNodes(this)
 		this.$filter += ')'
 	}
 
-	public visitHas(node: HasNode): void {
+	visitHas(node: HasNode): void {
 		this.append(node.path.toFilter())
 	}
 
-	public visitMissing(node: MissingNode): void {
+	visitMissing(node: MissingNode): void {
 		this.append('not')
 		this.append(node.path.toFilter())
 	}
 
-	public visitCmp(node: CmpNode): void {
+	visitCmp(node: CmpNode): void {
 		this.append(node.path.toFilter())
 		this.append(node.cmpOp.text)
 		this.append(node.val.toFilter())
 	}
 
-	public visitIsA(node: IsANode): void {
+	visitIsA(node: IsANode): void {
 		this.append(node.val.toFilter())
 	}
 
-	public visitRelationship(node: RelationshipNode): void {
+	visitRelationship(node: RelationshipNode): void {
 		this.append(node.rel.toFilter())
 
 		if (node.term) {
@@ -82,7 +82,7 @@ export class GenerateHaystackFilterVisitor implements Visitor {
 		}
 	}
 
-	public visitWildcardEquals(node: WildcardEqualsNode): void {
+	visitWildcardEquals(node: WildcardEqualsNode): void {
 		this.append(node.id.toFilter())
 		this.append('*==')
 		this.append(node.ref.toFilter())

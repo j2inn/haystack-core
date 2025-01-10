@@ -49,14 +49,14 @@ export class DictValueIterator implements Iterator<HValRow> {
 
 	private $index = 0
 
-	public constructor(dict: HDict) {
+	constructor(dict: HDict) {
 		// Make a defensive copy so the iterator doesn't screw up
 		// if the dict is modified.
 		this.$values = dict.toObj()
 		this.$keys = Object.keys(this.$values)
 	}
 
-	public next(): IteratorResult<HValRow> {
+	next(): IteratorResult<HValRow> {
 		if (this.$index >= this.$keys.length) {
 			return {
 				done: true,
@@ -139,7 +139,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param values dict values to create a dict with.
 	 * @returns A dict.
 	 */
-	public constructor(
+	constructor(
 		values?:
 			| { [prop: string]: OptionalHVal | HaysonVal }
 			| OptionalHVal
@@ -214,7 +214,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param values dict values to create a dict with.
 	 * @returns A dict.
 	 */
-	public static make<T extends HDict>(
+	static make<T extends HDict>(
 		values?: { [prop: string]: OptionalHVal | HaysonVal } | OptionalHVal
 	): T {
 		return (
@@ -225,7 +225,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Dict
 	}
 
@@ -235,7 +235,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HDict>(this, kind)
 	}
 
@@ -258,7 +258,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param name The name of the value to find.
 	 * @return The value or undefined if it can't be found.
 	 */
-	public get<Value extends OptionalHVal>(name: string): Value | undefined {
+	get<Value extends OptionalHVal>(name: string): Value | undefined {
 		return this.$store.get(name) as Value | undefined
 	}
 
@@ -276,7 +276,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param value The haystack value to set.
 	 * @returns The dict instance.
 	 */
-	public set(name: string, value: HVal | HaysonVal | null): this {
+	set(name: string, value: HVal | HaysonVal | null): this {
 		this.$store.set(name, makeValue(value))
 		return this
 	}
@@ -294,7 +294,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param dicts The dicts to update from.
 	 * @returns The dict instance.
 	 */
-	public update(...dicts: (HDict | HaysonDict)[]): this {
+	update(...dicts: (HDict | HaysonDict)[]): this {
 		for (const dict of dicts) {
 			const updateDict = makeValue(dict) as HDict
 			for (const name of updateDict.keys) {
@@ -320,7 +320,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param name The name of the key.
 	 * @returns True if the value exists in the dict.
 	 */
-	public has(name: string): boolean {
+	has(name: string): boolean {
 		return this.$store.has(name)
 	}
 
@@ -339,7 +339,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @returns True if the property value exists in the dict.
 	 * @throws An error for a invalid haystack filter.
 	 */
-	public any(
+	any(
 		filter: string | Node | OptionalHVal,
 		cx?: Partial<EvalContext>
 	): boolean {
@@ -381,7 +381,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return this.any(filter, cx)
 	}
 
@@ -395,7 +395,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @param name The property name.
 	 */
-	public remove(name: string): void {
+	remove(name: string): void {
 		this.$store.remove(name)
 	}
 
@@ -407,7 +407,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * dict.clear()
 	 * ```
 	 */
-	public clear(): void {
+	clear(): void {
 		this.$store.clear()
 	}
 
@@ -418,7 +418,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns The number of entries in the dict.
 	 */
-	public get length(): number {
+	get length(): number {
 		return this.keys.length
 	}
 
@@ -431,7 +431,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns All keys used in the dict.
 	 */
-	public get keys(): string[] {
+	get keys(): string[] {
 		return this.$store.getKeys()
 	}
 
@@ -443,7 +443,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * ```
 	 * @returns All values for the dict.
 	 */
-	public get values(): OptionalHVal[] {
+	get values(): OptionalHVal[] {
 		return this.keys.map(
 			(key: string): OptionalHVal => this.$store.get(key) as OptionalHVal
 		)
@@ -458,7 +458,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns True when there are no entries in the dict.
 	 */
-	public isEmpty(): boolean {
+	isEmpty(): boolean {
 		return this.$store.getKeys().length === 0
 	}
 
@@ -472,7 +472,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns A the underlying object.
 	 */
-	public toObj(): HValObj {
+	toObj(): HValObj {
 		return this.$store.toObj()
 	}
 
@@ -484,7 +484,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns All the dict's values as a haystack list
 	 */
-	public toList<Value extends HVal>(): HList<Value> {
+	toList<Value extends HVal>(): HList<Value> {
 		return HList.make(this.values as Value[])
 	}
 
@@ -495,42 +495,42 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * ```
 	 * @returns The dict as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make({ rows: [this] })
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return this
 	}
 
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonDict {
+	toJSON(): HaysonDict {
 		return this.$store.toJSON()
 	}
 
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return this.$store.toJSONString()
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return this.$store.toJSONUint8Array()
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Dict {
+	toJSONv3(): JsonV3Dict {
 		const obj: Record<string, JsonV3Val> = {}
 
 		for (const key of this.keys) {
@@ -548,7 +548,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		throw new Error(NOT_SUPPORTED_IN_FILTER_MSG)
 	}
 
@@ -557,7 +557,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		let zinc = '{'
 
 		for (const key of this.keys) {
@@ -579,7 +579,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	/**
 	 * @returns An Axon encoded string.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		let zinc = '{'
 
 		for (const key of this.keys) {
@@ -604,7 +604,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param value The value to test.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		if (!valueIsKind<HDict>(value, Kind.Dict)) {
 			return false
 		}
@@ -638,7 +638,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive.
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HDict>(value, Kind.Dict)) {
 			return -1
 		}
@@ -670,21 +670,21 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * }
 	 * ```
 	 */
-	public [Symbol.iterator](): Iterator<HValRow> {
+	[Symbol.iterator](): Iterator<HValRow> {
 		return new DictValueIterator(this)
 	}
 
 	/**
 	 * @returns The dict as an array like object.
 	 */
-	public asArrayLike(): ArrayLike<HValRow> {
+	asArrayLike(): ArrayLike<HValRow> {
 		return this as unknown as ArrayLike<HValRow>
 	}
 
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		let str = '{'
 
 		for (const key of this.keys) {
@@ -730,7 +730,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param options.short Optional flag to automatically shorten the display name.
 	 * @returns The display string.
 	 */
-	public toDis({
+	toDis({
 		name,
 		def,
 		i18n,
@@ -752,7 +752,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		if (message) {
 			console.log(String(message))
 		}
@@ -771,7 +771,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	/**
 	 * @returns Returns a copy of the dict.
 	 */
-	public newCopy(): HDict {
+	newCopy(): HDict {
 		const obj: HValObj = {}
 
 		for (const key of this.keys) {
@@ -793,7 +793,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param dicts The dicts to merge.
 	 * @returns A merged dict.
 	 */
-	public static merge(...dicts: HDict[]): HDict {
+	static merge(...dicts: HDict[]): HDict {
 		return (
 			dicts.reduce((acc: HDict, cur: HDict): HDict => {
 				for (const key of cur.keys) {
@@ -819,7 +819,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * These differences will be incorporated into the returned dict.
 	 * @returns A diff dict.
 	 */
-	public diff(dict: HDict): HDict {
+	diff(dict: HDict): HDict {
 		const diff = new HDict()
 
 		for (const name of HDict.merge(this, dict).keys) {
@@ -842,7 +842,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 *
 	 * @returns The def name or an empty string.
 	 */
-	public get defName(): string {
+	get defName(): string {
 		const val = this.get('def')
 		return val ? String(val) : ''
 	}
@@ -856,7 +856,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param namespace An optional namespace to perform the reflect from.
 	 * @returns An array of dicts.
 	 */
-	public reflect(namespace?: HNamespace): Reflection {
+	reflect(namespace?: HNamespace): Reflection {
 		const ns = namespace ?? HNamespace.defaultNamespace
 		return ns.reflect(this)
 	}
@@ -870,7 +870,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param namespace An optional namespace to perform the protos call from.
 	 * @returns An array of dicts.
 	 */
-	public protos(namespace?: HNamespace): HDict[] {
+	protos(namespace?: HNamespace): HDict[] {
 		const ns = namespace ?? HNamespace.defaultNamespace
 		return ns.protos(this)
 	}
@@ -882,7 +882,7 @@ export class HDict implements HVal, Iterable<HValRow> {
 	 * @param dict The other dict to compare to this dict.
 	 * @return True if this dict is newer.
 	 */
-	public isNewer(dict: HDict): boolean {
+	isNewer(dict: HDict): boolean {
 		const a = this.get<HDateTime>('mod') ?? HDateTime.make(new Date(0))
 		const b = dict.get<HDateTime>('mod') ?? HDateTime.make(new Date(0))
 

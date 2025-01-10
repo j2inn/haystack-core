@@ -97,9 +97,7 @@ export class HDate implements HVal {
 	 * literal with year, month and day values.
 	 * @returns The haystack date.
 	 */
-	public static make(
-		value: string | Date | DateObj | HaysonDate | HDate
-	): HDate {
+	static make(value: string | Date | DateObj | HaysonDate | HDate): HDate {
 		if (valueIsKind<HDate>(value, Kind.Date)) {
 			return value
 		} else {
@@ -110,18 +108,18 @@ export class HDate implements HVal {
 	/**
 	 * @returns The date value.
 	 */
-	public get value(): string {
+	get value(): string {
 		return this.#value
 	}
 
-	public set value(value: string) {
+	set value(value: string) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The value's kind.
 	 */
-	public getKind(): Kind {
+	getKind(): Kind {
 		return Kind.Date
 	}
 
@@ -131,7 +129,7 @@ export class HDate implements HVal {
 	 * @param kind The kind to compare against.
 	 * @returns True if the kind matches.
 	 */
-	public isKind(kind: Kind): boolean {
+	isKind(kind: Kind): boolean {
 		return valueIsKind<HDate>(this, kind)
 	}
 
@@ -142,7 +140,7 @@ export class HDate implements HVal {
 	 * @param cx Optional haystack filter evaluation context.
 	 * @returns True if the filter matches ok.
 	 */
-	public matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
+	matches(filter: string | Node, cx?: Partial<EvalContext>): boolean {
 		return valueMatches(this, filter, cx)
 	}
 
@@ -152,7 +150,7 @@ export class HDate implements HVal {
 	 * @param message An optional message to display before the value.
 	 * @returns The value instance.
 	 */
-	public inspect(message?: string): this {
+	inspect(message?: string): this {
 		return valueInspect(this, message)
 	}
 
@@ -162,7 +160,7 @@ export class HDate implements HVal {
 	 * @param value The value property.
 	 * @returns True if the value is the same.
 	 */
-	public equals(value: unknown): boolean {
+	equals(value: unknown): boolean {
 		return (
 			valueIsKind<HDate>(value, Kind.Date) && value.#value === this.#value
 		)
@@ -174,7 +172,7 @@ export class HDate implements HVal {
 	 * @param value The value to compare against.
 	 * @returns The sort order as negative, 0, or positive
 	 */
-	public compareTo(value: unknown): number {
+	compareTo(value: unknown): number {
 		if (!valueIsKind<HDate>(value, Kind.Date)) {
 			return -1
 		}
@@ -191,7 +189,7 @@ export class HDate implements HVal {
 	/**
 	 * @returns A string representation of the value.
 	 */
-	public toString(): string {
+	toString(): string {
 		return this.date.toLocaleDateString()
 	}
 
@@ -204,61 +202,61 @@ export class HDate implements HVal {
 	 *
 	 * @returns The encoded value that can be used in a haystack filter.
 	 */
-	public toFilter(): string {
+	toFilter(): string {
 		return this.toZinc()
 	}
 
 	/**
 	 * @returns The date as a string.
 	 */
-	public valueOf(): string {
+	valueOf(): string {
 		return this.value
 	}
 
 	/**
 	 * @returns A JS date object.
 	 */
-	public get date(): Date {
+	get date(): Date {
 		return this.#date
 	}
 
 	/**
 	 * @return Today's date.
 	 */
-	public static now(): HDate {
+	static now(): HDate {
 		return HDate.make(new Date())
 	}
 
 	/**
 	 * @returns The year for the date.
 	 */
-	public get year(): number {
+	get year(): number {
 		return this.date.getUTCFullYear()
 	}
 
-	public set year(year: number) {
+	set year(year: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The month for the date.
 	 */
-	public get month(): number {
+	get month(): number {
 		return this.date.getUTCMonth() + 1
 	}
 
-	public set month(month: number) {
+	set month(month: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
 	/**
 	 * @returns The day for the date.
 	 */
-	public get day(): number {
+	get day(): number {
 		return this.date.getUTCDate()
 	}
 
-	public set day(day: number) {
+	set day(day: number) {
 		throw new Error(CANNOT_CHANGE_READONLY_VALUE)
 	}
 
@@ -294,7 +292,7 @@ export class HDate implements HVal {
 	 *
 	 * @returns The encoded zinc string.
 	 */
-	public toZinc(): string {
+	toZinc(): string {
 		return this.#value
 	}
 
@@ -314,7 +312,7 @@ export class HDate implements HVal {
 	/**
 	 * @returns A JSON reprentation of the object.
 	 */
-	public toJSON(): HaysonDate {
+	toJSON(): HaysonDate {
 		return {
 			_kind: this.getKind(),
 			val: this.#value,
@@ -324,56 +322,56 @@ export class HDate implements HVal {
 	/**
 	 * @returns A string containing the JSON representation of the object.
 	 */
-	public toJSONString(): string {
+	toJSONString(): string {
 		return JSON.stringify(this)
 	}
 
 	/**
 	 * @returns A byte buffer that has an encoded JSON string representation of the object.
 	 */
-	public toJSONUint8Array(): Uint8Array {
+	toJSONUint8Array(): Uint8Array {
 		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
 	 * @returns A JSON v3 representation of the object.
 	 */
-	public toJSONv3(): JsonV3Date {
+	toJSONv3(): JsonV3Date {
 		return `d:${this.toZinc()}`
 	}
 
 	/**
 	 * @returns An Axon encoded string of the value.
 	 */
-	public toAxon(): string {
+	toAxon(): string {
 		return this.toZinc()
 	}
 
 	/**
 	 * @returns Returns the value instance.
 	 */
-	public newCopy(): HDate {
+	newCopy(): HDate {
 		return this
 	}
 
 	/**
 	 * @returns The value as a grid.
 	 */
-	public toGrid(): HGrid {
+	toGrid(): HGrid {
 		return HGrid.make(this)
 	}
 
 	/**
 	 * @returns The value as a list.
 	 */
-	public toList(): HList<HDate> {
+	toList(): HList<HDate> {
 		return HList.make([this])
 	}
 
 	/**
 	 * @returns The value as a dict.
 	 */
-	public toDict(): HDict {
+	toDict(): HDict {
 		return HDict.make(this)
 	}
 }
