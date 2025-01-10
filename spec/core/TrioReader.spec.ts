@@ -360,7 +360,7 @@ describe('TrioReader', function (): void {
 	})
 
 	describe('#readAllDicts()', function (): void {
-		it('foobar', function (): void {
+		it('returns an array of dicts', function (): void {
 			const dicts = new TrioReader(trioColls).readAllDicts()
 
 			expect(dicts.length).toBe(3)

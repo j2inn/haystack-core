@@ -12,11 +12,6 @@ async function run() {
 	function doGrid(grid) {
 		grid.meta.set('foo', 'bar')
 
-		grid.length
-		// for (const dict of grid.getRows()) {
-		// 	dict.get('def')
-		// }
-
 		grid.toJSON()
 	}
 

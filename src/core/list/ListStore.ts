@@ -5,7 +5,7 @@
 import { HaysonList } from '../hayson'
 import { OptionalHVal } from '../HVal'
 
-export const LIST_STORE_SYMBOL = Symbol.for('listStore')
+export const LIST_STORE_SYMBOL = Symbol.for('haystack-core.listStore')
 
 /**
  * Implements the storage for an HList.

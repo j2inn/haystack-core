@@ -6,7 +6,7 @@ import { HDict } from '../dict/HDict'
 import { HaysonGrid } from '../hayson'
 import { GridColumn } from './GridColumn'
 
-export const GRID_STORE_SYMBOL = Symbol.for('gridStore')
+export const GRID_STORE_SYMBOL = Symbol.for('haystack-core.gridStore')
 
 /**
  * The default grid version number.

@@ -7,7 +7,7 @@ import { HStr } from '../HStr'
 import { valueIsKind } from '../HVal'
 import { Kind } from '../Kind'
 
-export const GRID_COLUMN_SYMBOL = Symbol.for('gridColumn')
+export const GRID_COLUMN_SYMBOL = Symbol.for('haystack-core.gridColumn')
 
 /**
  * A grid column.

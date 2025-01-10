@@ -6,6 +6,9 @@ import { DictHValObjStore } from '../../../src/core/dict/DictHValObjStore'
 import { HMarker } from '../../../src/core/HMarker'
 import { HStr } from '../../../src/core/HStr'
 import { Kind } from '../../../src/core/Kind'
+import { HDict } from '../../../src/core/dict/HDict'
+import { HList } from '../../../src/core/list/HList'
+import { HGrid } from '../../../src/core/grid/HGrid'
 import { TEXT_ENCODER } from '../../../src/core/HVal'
 
 import '../../matchers'
@@ -19,6 +22,9 @@ describe('DictObjStore', () => {
 			site: HMarker.make(),
 			dis: HStr.make('A site'),
 			isNull: null,
+			dict: new HDict({ test: HMarker.make() }),
+			list: new HList([HMarker.make()]),
+			grid: new HGrid(),
 		})
 	})
 
@@ -69,7 +75,14 @@ describe('DictObjStore', () => {
 
 	describe('#getKeys()', () => {
 		it('returns all keys', () => {
-			expect(store.getKeys()).toEqual(['site', 'dis', 'isNull'])
+			expect(store.getKeys()).toEqual([
+				'site',
+				'dis',
+				'isNull',
+				'dict',
+				'list',
+				'grid',
+			])
 		})
 	}) // .#getKeys()
 
@@ -79,6 +92,9 @@ describe('DictObjStore', () => {
 				site: HMarker.make(),
 				dis: HStr.make('A site'),
 				isNull: null,
+				dict: new HDict({ test: HMarker.make() }),
+				list: new HList([HMarker.make()]),
+				grid: new HGrid(),
 			})
 		})
 	}) // .#toObj()
@@ -89,6 +105,14 @@ describe('DictObjStore', () => {
 				site: { _kind: Kind.Marker },
 				dis: 'A site',
 				isNull: null,
+				dict: { test: { _kind: Kind.Marker } },
+				list: [{ _kind: Kind.Marker }],
+				grid: {
+					_kind: Kind.Grid,
+					meta: { ver: '3.0' },
+					cols: [],
+					rows: [],
+				},
 			})
 		})
 	}) // .#toJSON()
@@ -100,6 +124,14 @@ describe('DictObjStore', () => {
 					site: { _kind: Kind.Marker },
 					dis: 'A site',
 					isNull: null,
+					dict: { test: { _kind: Kind.Marker } },
+					list: [{ _kind: Kind.Marker }],
+					grid: {
+						_kind: Kind.Grid,
+						meta: { ver: '3.0' },
+						cols: [],
+						rows: [],
+					},
 				})
 			)
 		})
@@ -113,6 +145,14 @@ describe('DictObjStore', () => {
 						site: { _kind: Kind.Marker },
 						dis: 'A site',
 						isNull: null,
+						dict: { test: { _kind: Kind.Marker } },
+						list: [{ _kind: Kind.Marker }],
+						grid: {
+							_kind: Kind.Grid,
+							meta: { ver: '3.0' },
+							cols: [],
+							rows: [],
+						},
 					})
 				)
 			)

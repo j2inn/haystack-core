@@ -6,7 +6,7 @@ import { HaysonDict } from '../hayson'
 import { OptionalHVal } from '../HVal'
 import { HValObj } from './HValObj'
 
-export const DICT_STORE_SYMBOL = Symbol.for('dictStore')
+export const DICT_STORE_SYMBOL = Symbol.for('haystack-core.dictStore')
 
 /**
  * Inner backing data store for a dict.
