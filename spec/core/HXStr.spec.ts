@@ -4,9 +4,11 @@
 
 import { HXStr } from '../../src/core/HXStr'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -170,6 +172,32 @@ describe('HXStr', function (): void {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HXStr.make('Type', 'value').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.XStr,
+					val: 'value',
+					type: 'Type',
+				})
+			)
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HXStr.make('Type', 'value').toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.XStr,
+						val: 'value',
+						type: 'Type',
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {

@@ -4,9 +4,11 @@
 
 import { HCoord } from '../../src/core/HCoord'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -170,6 +172,32 @@ describe('HCoord', function (): void {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(makeCoord(2, 4).toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Coord,
+					lat: 2,
+					lng: 4,
+				})
+			)
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(makeCoord(2, 4).toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.Coord,
+						lat: 2,
+						lng: 4,
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns a JSON string', function (): void {

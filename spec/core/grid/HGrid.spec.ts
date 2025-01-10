@@ -4,25 +4,27 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
+import { HGrid } from '../../../src/core/grid/HGrid'
+import { GridColumn } from '../../../src/core/grid/GridColumn'
+import { HDict } from '../../../src/core/dict/HDict'
+import { HStr } from '../../../src/core/HStr'
+import { Kind } from '../../../src/core/Kind'
+import { HNum } from '../../../src/core/HNum'
+import { HMarker } from '../../../src/core/HMarker'
+import { HList } from '../../../src/core/list/HList'
+import { HRef } from '../../../src/core/HRef'
+import { HFilter } from '../../../src/filter/HFilter'
+import { HaysonDict } from '../../../src/core/hayson'
+import { HBool } from '../../../src/core/HBool'
+import { ZincReader } from '../../../src/core/ZincReader'
+import { TEXT_ENCODER } from '../../../src/core/HVal'
 import {
-	HGrid,
 	DEFAULT_GRID_VERSION,
-	GridColumn,
 	GRID_VERSION_NAME,
-} from '../../src/core/HGrid'
-import { HDict } from '../../src/core/HDict'
-import { HStr } from '../../src/core/HStr'
-import { Kind } from '../../src/core/Kind'
-import { HNum } from '../../src/core/HNum'
-import { HMarker } from '../../src/core/HMarker'
-import { HList } from '../../src/core/HList'
-import { HRef } from '../../src/core/HRef'
-import { HFilter } from '../../src/filter/HFilter'
-import { HaysonDict } from '../../src/core/hayson'
-import '../matchers'
-import '../customMatchers'
-import { HBool } from '../../src/core/HBool'
-import { ZincReader } from '../../src/core/ZincReader'
+} from '../../../src/core/grid/GridStore'
+
+import '../../matchers'
+import '../../customMatchers'
 
 describe('HGrid', function (): void {
 	let grid: HGrid
@@ -142,16 +144,6 @@ describe('HGrid', function (): void {
 		}) // #equals()
 	}) // GridColumn
 
-	describe('row', function (): void {
-		it('adds a new column when setting value that does not exist in the dict', function (): void {
-			expect(grid.getColumns().length).toBe(1)
-			const dict = grid.get(0) as HDict
-			dict.set('boo', true)
-			expect(grid.getColumns().length).toBe(2)
-			expect(grid.getColumns()[1].name).toBe('boo')
-		})
-	}) // row
-
 	describe('grid', function (): void {
 		describe('#constructor()', function (): void {
 			it('creates a grid', function (): void {
@@ -194,8 +186,24 @@ describe('HGrid', function (): void {
 				).toEqual(grid)
 			})
 
+			it('creates a grid from a object with meta data', function (): void {
+				const metaGrid = new HGrid({
+					meta: {
+						boo: 'doo',
+					},
+					cols: [{ name: 'foo', meta: { this: 'that' } }],
+					rows: [{ foo: 'foo' }],
+				})
+
+				expect(metaGrid.meta.toJSON()).toEqual({ boo: 'doo' })
+				expect(metaGrid.getColumn(0)?.meta?.toJSON()).toEqual({
+					this: 'that',
+				})
+			})
+
 			it('creates a grid from a hayson object with meta data', function (): void {
 				const metaGrid = new HGrid({
+					_kind: Kind.Grid,
 					meta: {
 						boo: 'doo',
 					},
@@ -303,6 +311,7 @@ describe('HGrid', function (): void {
 		describe('#toJSON()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {
 				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
 
 				expect(grid.toJSON()).toEqual({
 					_kind: Kind.Grid,
@@ -325,38 +334,74 @@ describe('HGrid', function (): void {
 					],
 				})
 			})
-
-			it('lazily adds columns when generating JSON', function (): void {
-				grid.getRows().push(HDict.make({ boo: true }))
-
-				expect(grid.toJSON()).toEqual({
-					_kind: Kind.Grid,
-					meta: { ver: DEFAULT_GRID_VERSION },
-					cols: [
-						{
-							name: 'foo',
-							meta: {},
-						},
-						{
-							name: 'boo',
-							meta: {},
-						},
-					],
-					rows: [
-						{
-							foo: 'foo',
-						},
-						{
-							boo: true,
-						},
-					],
-				})
-			})
 		}) // #toJSON()
+
+		describe('#toJSONString()', function (): void {
+			it('returns a JSON string representation of a grid', function (): void {
+				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
+
+				expect(grid.toJSONString()).toBe(
+					JSON.stringify({
+						_kind: Kind.Grid,
+						meta: { ver: DEFAULT_GRID_VERSION },
+						cols: [
+							{
+								name: 'foo',
+								meta: {},
+							},
+							{
+								name: 'goo',
+								meta: {},
+							},
+						],
+						rows: [
+							{
+								foo: 'foo',
+								goo: null,
+							},
+						],
+					})
+				)
+			})
+		}) // #toJSONString()
+
+		describe('#toJSONUint8Array()', function (): void {
+			it('returns a JSON byte buffer', function (): void {
+				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
+
+				expect(grid.toJSONUint8Array()).toEqual(
+					TEXT_ENCODER.encode(
+						JSON.stringify({
+							_kind: Kind.Grid,
+							meta: { ver: DEFAULT_GRID_VERSION },
+							cols: [
+								{
+									name: 'foo',
+									meta: {},
+								},
+								{
+									name: 'goo',
+									meta: {},
+								},
+							],
+							rows: [
+								{
+									foo: 'foo',
+									goo: null,
+								},
+							],
+						})
+					)
+				)
+			})
+		}) // #toJSONUint8Array()
 
 		describe('#toJSONv3()', function (): void {
 			it('returns a JSON representation of a grid', function (): void {
 				grid.get(0)?.set('goo', null)
+				grid.refreshColumns()
 
 				expect(grid.toJSONv3()).toEqual({
 					meta: { ver: DEFAULT_GRID_VERSION },
@@ -477,6 +522,7 @@ type,val
 		describe('#toZinc()', function (): void {
 			it('returns a zinc encoded grid', function (): void {
 				grid[0]?.set('goo', null)
+				grid.refreshColumns()
 				const zinc = 'ver:"3.0"\nfoo,goo\n"foo",N\n'
 				expect(grid.toZinc()).toEqual(zinc)
 			})
@@ -535,51 +581,6 @@ type,val
 					'siteName dis:"Sites",val dis:"Value" unit:"kW"\n' +
 					'"Site 1",356.214kW\n' +
 					'"Site 2",463.028kW\n'
-
-				expect(grid.toZinc()).toEqual(zinc)
-			})
-
-			it('lazily adds columns when rows is added to outside of grid object', function (): void {
-				grid = HGrid.make({
-					meta: HDict.make({
-						database: HStr.make('test'),
-						dis: HStr.make('Site Energy Summary'),
-					}),
-					columns: [
-						{
-							name: 'siteName',
-							meta: HDict.make({
-								dis: HStr.make('Sites'),
-							}),
-						},
-						{
-							name: 'val',
-							meta: HDict.make({
-								dis: HStr.make('Value'),
-								unit: HStr.make('kW'),
-							}),
-						},
-					],
-					rows: [
-						HDict.make({
-							siteName: HStr.make('Site 1'),
-							val: HNum.make(356.214, 'kW'),
-						}),
-						HDict.make({
-							siteName: HStr.make('Site 2'),
-							val: HNum.make(463.028, 'kW'),
-						}),
-					],
-				})
-
-				grid.getRows().push(HDict.make({ foo: true }))
-
-				const zinc =
-					'ver:"3.0" database:"test" dis:"Site Energy Summary"\n' +
-					'siteName dis:"Sites",val dis:"Value" unit:"kW",foo\n' +
-					'"Site 1",356.214kW,\n' +
-					'"Site 2",463.028kW,\n' +
-					',,T\n'
 
 				expect(grid.toZinc()).toEqual(zinc)
 			})
@@ -1498,33 +1499,33 @@ type,val
 			it('returns a list from a column index number', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy(0)).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 
 			it('returns a list from a column name', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy('col0')).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 
 			it('returns a list from a column instance', function (): void {
 				makeGridWithRows()
 				expect(grid.listBy(grid.getColumns()[0])).toEqual(
-					HList.make(
+					HList.make([
 						HStr.make('row0'),
 						HStr.make('row1'),
-						HStr.make('row2')
-					)
+						HStr.make('row2'),
+					])
 				)
 			})
 		}) // #listBy()
@@ -2223,5 +2224,20 @@ type,val
 				)
 			})
 		}) // #toDict()
+
+		describe('#refreshColumns()', function (): void {
+			it('adds any missing columns after a dict has been added', function (): void {
+				expect(grid.getColumns().length).toBe(1)
+				const dict = grid.get(0) as HDict
+				dict.set('boo', true)
+
+				expect(grid.getColumns().length).toBe(1)
+
+				grid.refreshColumns()
+
+				expect(grid.getColumns().length).toBe(2)
+				expect(grid.getColumns()[1].name).toBe('boo')
+			})
+		}) // #refreshColumns()
 	}) // grid
 })

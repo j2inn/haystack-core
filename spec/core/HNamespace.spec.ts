@@ -3,13 +3,13 @@
  */
 
 import { HNamespace, Reflection } from '../../src/core/HNamespace'
-import { HGrid } from '../../src/core/HGrid'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HDict } from '../../src/core/dict/HDict'
 import { HSymbol } from '../../src/core/HSymbol'
 import { ZincReader } from '../../src/core/ZincReader'
 import { HRef } from '../../src/core/HRef'
 import { HStr } from '../../src/core/HStr'
-import { HList } from '../../src/core/HList'
+import { HList } from '../../src/core/list/HList'
 import { HMarker } from '../../src/core/HMarker'
 import { HNum } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'

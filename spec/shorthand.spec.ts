@@ -37,6 +37,9 @@ import {
 
 import { FALSE, MARKER, NA, REMOVE, TRUE } from './../src/shorthand'
 
+import './matchers'
+import './customMatchers'
+
 describe('shorthand', () => {
 	describe('make', () => {
 		it('makes bool', () => {
@@ -143,10 +146,12 @@ describe('shorthand', () => {
 
 			expect(
 				grid({
+					_kind: Kind.Grid,
+					meta: {},
 					cols: [{ name: 'foo' }],
 					rows: [{ foo: 'foo' }],
 				})
-			).toEqual(
+			).toValEqual(
 				new HGrid({
 					cols: [{ name: 'foo' }],
 					rows: [{ foo: 'foo' }],
@@ -156,11 +161,13 @@ describe('shorthand', () => {
 			expect(
 				grid(
 					grid({
+						_kind: Kind.Grid,
+						meta: {},
 						cols: [{ name: 'foo' }],
 						rows: [{ foo: 'foo' }],
 					})
 				)
-			).toEqual(
+			).toValEqual(
 				new HGrid({
 					cols: [{ name: 'foo' }],
 					rows: [{ foo: 'foo' }],

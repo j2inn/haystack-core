@@ -19,10 +19,13 @@ import { HCoord } from './HCoord'
 import { Kind } from './Kind'
 import { HBool } from './HBool'
 import { HXStr } from './HXStr'
-import { HDict, HValObj } from './HDict'
+import { HDict } from './dict/HDict'
+import { HValObj } from './dict/HValObj'
 import { HSymbol } from './HSymbol'
-import { HList } from './HList'
-import { HGrid } from './HGrid'
+import { HList } from './list/HList'
+import { HGrid } from './grid/HGrid'
+import { GridObjStore } from './grid/GridObjStore'
+import { GridColumn } from './grid/GridColumn'
 
 /**
  * A Zinc reader.
@@ -874,7 +877,7 @@ export class ZincReader {
 		this.scanner.expectAndConsumeNewLine(Kind.Grid)
 
 		// Grid columns
-		const columns: { name: string; meta: HDict }[] = []
+		const columns: GridColumn[] = []
 
 		while (!this.scanner.isEof()) {
 			this.scanner.consumeSpacesAndTabs()
@@ -882,10 +885,7 @@ export class ZincReader {
 			const name = this.tagName()
 			const meta = this.gridColumnMeta()
 
-			columns.push({
-				name,
-				meta,
-			})
+			columns.push(new GridColumn(name, meta))
 
 			this.scanner.consumeSpacesAndTabs()
 
@@ -983,7 +983,7 @@ export class ZincReader {
 			columns.splice(0, 1)
 		}
 
-		return HGrid.make({ meta, columns, rows, version }, /*skipChecks*/ true)
+		return new HGrid(new GridObjStore(version, meta, columns, rows))
 	}
 
 	/**

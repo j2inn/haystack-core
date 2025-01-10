@@ -4,9 +4,11 @@
 
 import { HDateTime } from '../../src/core/HDateTime'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 import { DateTime } from 'luxon'
@@ -204,6 +206,32 @@ describe('HDateTime', function (): void {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(HDateTime.make('2009-11-09T15:39:00Z').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.DateTime,
+					val: '2009-11-09T15:39:00Z',
+				})
+			)
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(
+				HDateTime.make('2009-11-09T15:39:00Z').toJSONUint8Array()
+			).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.DateTime,
+						val: '2009-11-09T15:39:00Z',
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', () => {
 		it('returns a string', function (): void {

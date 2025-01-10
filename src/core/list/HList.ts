@@ -4,7 +4,7 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off", @typescript-eslint/explicit-module-boundary-types: "off" */
 
-import { Kind } from './Kind'
+import { Kind } from '../Kind'
 import {
 	HVal,
 	NOT_SUPPORTED_IN_FILTER_MSG,
@@ -14,17 +14,19 @@ import {
 	OptionalHVal,
 	ZINC_NULL,
 	AXON_NULL,
-} from './HVal'
-import { HaysonVal, HaysonList } from './hayson'
-import { HFilter } from '../filter/HFilter'
-import { HMarker } from './HMarker'
-import { Node } from '../filter/Node'
-import { HDict } from './HDict'
-import { makeValue } from './util'
-import { HNum } from './HNum'
-import { HGrid } from './HGrid'
-import { EvalContext } from '../filter/EvalContext'
-import { JsonV3List, JsonV3Val } from './jsonv3'
+} from '../HVal'
+import { HaysonVal, HaysonList } from '../hayson'
+import { HFilter } from '../../filter/HFilter'
+import { HMarker } from '../HMarker'
+import { Node } from '../../filter/Node'
+import { HDict } from '../dict/HDict'
+import { makeValue } from '../util'
+import { HNum } from '../HNum'
+import { HGrid } from '../grid/HGrid'
+import { EvalContext } from '../../filter/EvalContext'
+import { JsonV3List, JsonV3Val } from '../jsonv3'
+import { isListStore, ListStore } from './ListStore'
+import { ListObjStore } from './ListObjStore'
 
 /**
  * An iterator for a list.
@@ -111,7 +113,7 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	/**
 	 * The list values.
 	 */
-	public values: Value[];
+	public $store: ListStore<Value>;
 
 	/**
 	 * Numerical index access.
@@ -125,9 +127,6 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * // A single haystack value array.
 	 * const list0 = new HList([HStr.make('foo), HMarker.make()])
 	 *
-	 * // Pass in multiple arguments instead of an array.
-	 * const list1 = new HList(HStr.make('foo'), HMarker.make())
-	 *
 	 * // Create a list using Hayson.
 	 * const list2 = new HList(['foo', { _kind: Kind.Marker }])
 	 * const list2 = new HList('foo', { _kind: Kind.Marker })
@@ -136,9 +135,13 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @param value list values.
 	 */
 	public constructor(
-		...values: (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
+		values?:
+			| (Value | HaysonVal | (Value | HaysonVal)[] | HaysonList)[]
+			| ListStore<Value>
 	) {
-		this.values = HList.toValues<Value>(values)
+		this.$store = isListStore(values)
+			? values
+			: new ListObjStore(HList.toValues<Value>(values ?? []))
 
 		// Implement proxy to make it easy to get and set internal values.
 		const handler = {
@@ -168,6 +171,14 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 		}
 
 		return new Proxy(this, handler)
+	}
+
+	get values(): Value[] {
+		return this.$store.values
+	}
+
+	set values(values: Value[]) {
+		this.$store.values = values
 	}
 
 	/**
@@ -859,7 +870,21 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 	 * @returns A JSON reprentation of the object.
 	 */
 	public toJSON(): HaysonList {
-		return this.values.map((val): HaysonVal => val?.toJSON() ?? null)
+		return this.$store.toJSON()
+	}
+
+	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	public toJSONString(): string {
+		return this.$store.toJSONString()
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return this.$store.toJSONUint8Array()
 	}
 
 	/**
@@ -1139,19 +1164,5 @@ export class HList<Value extends OptionalHVal = OptionalHVal>
 				(val): Value => (val === null ? null : val.newCopy()) as Value
 			)
 		)
-	}
-
-	/**
-	 * Iterates through the list to ensure we have a valid set of haystack values.
-	 *
-	 * As the list's array is directly exposed calling this method will ensure all the
-	 * values held in the list are haystack values.
-	 */
-	public validate(): void {
-		for (let i = 0; i < this.values.length; ++i) {
-			if (!isHVal(this.values[i])) {
-				this.values[i] = makeValue(this.values[i]) as Value
-			}
-		}
 	}
 }

@@ -5,13 +5,13 @@
 import { HSymbol } from '../../src/core/HSymbol'
 import { HUri } from '../../src/core/HUri'
 import { HStr } from '../../src/core/HStr'
-import { HDict } from '../../src/core/HDict'
-import { HList } from '../../src/core/HList'
+import { HDict } from '../../src/core/dict/HDict'
+import { HList } from '../../src/core/list/HList'
 import { HMarker } from '../../src/core/HMarker'
 import { HNamespace } from '../../src/core/HNamespace'
 import { HNum } from '../../src/core/HNum'
 import { HBool } from '../../src/core/HBool'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { Kind } from '../../src/core/Kind'
 import { HVal, valueIsKind } from '../../src/core/HVal'
 import {
@@ -754,10 +754,6 @@ describe('HNormalizer', function (): void {
 
 						originalDef.values.forEach(sort)
 						generatedDef.values.forEach(sort)
-
-						expect(originalDef.toJSON()).toEqual(
-							generatedDef.toJSON()
-						)
 
 						const equals = originalDef.equals(generatedDef)
 

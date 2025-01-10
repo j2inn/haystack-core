@@ -6,9 +6,9 @@ import { Kind } from './Kind'
 import { HaysonVal } from './hayson'
 import { HFilter } from '../filter/HFilter'
 import { Node } from '../filter/Node'
-import { HList } from './HList'
-import { HGrid } from './HGrid'
-import { HDict } from './HDict'
+import { HList } from './list/HList'
+import { HGrid } from './grid/HGrid'
+import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3Val } from './jsonv3'
 
@@ -144,6 +144,16 @@ export function valueToAxon(val: HVal | null): string {
 export type OptionalHVal<Value extends HVal | null = HVal | null> = Value | null
 
 /**
+ * A reusable text encoder.
+ */
+export const TEXT_ENCODER = new TextEncoder()
+
+/**
+ * A reusable text decoder.
+ */
+export const TEXT_DECODER = new TextDecoder()
+
+/**
  * The interface for a haystack value.
  *
  * Each haystack encoded value should declare a static factory 'make' method
@@ -203,6 +213,16 @@ export interface HVal {
 	 * @returns A JSON reprentation of the object.
 	 */
 	toJSON(): HaysonVal
+
+	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	toJSONString(): string
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	toJSONUint8Array(): Uint8Array
 
 	/**
 	 * Encode the value using the older Haystack version 3 JSON encoding.

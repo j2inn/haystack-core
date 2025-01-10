@@ -10,9 +10,9 @@ import {
 	DEFAULT_PRECISION,
 } from '../../src/core/HNum'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
 import { HUnit } from '../../src/core/HUnit'
 import {
 	celsius,
@@ -26,9 +26,11 @@ import {
 	second,
 	square_centimeter,
 } from './units'
+import { nanosecond, microsecond, year } from '../../src/core/duration'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
-import { nanosecond, microsecond, year } from '../../src/core/duration'
 
 describe('HNum', function (): void {
 	describe('.make()', function (): void {
@@ -402,6 +404,32 @@ describe('HNum', function (): void {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns JSON string', function (): void {
+			expect(HNum.make(123, 'm').toJSONString()).toBe(
+				JSON.stringify({
+					_kind: Kind.Number,
+					val: 123,
+					unit: 'm',
+				})
+			)
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HNum.make(123, 'm').toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						_kind: Kind.Number,
+						val: 123,
+						unit: 'm',
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns the number encoded as a string', function (): void {

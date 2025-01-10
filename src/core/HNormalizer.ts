@@ -2,9 +2,9 @@
  * Copyright (c) 2020, J2 Innovations. All Rights Reserved
  */
 
-import { HDict } from './HDict'
-import { HGrid } from './HGrid'
-import { HList } from './HList'
+import { HDict } from './dict/HDict'
+import { HGrid } from './grid/HGrid'
+import { HList } from './list/HList'
 import { HNamespace } from './HNamespace'
 import { HStr } from './HStr'
 import { HSymbol } from './HSymbol'

@@ -4,9 +4,11 @@
 
 import { HStr } from '../../src/core/HStr'
 import { Kind } from '../../src/core/Kind'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
+import { TEXT_ENCODER } from '../../src/core/HVal'
+
 import '../matchers'
 import '../customMatchers'
 
@@ -170,6 +172,20 @@ describe('HStr', function (): void {
 			expect(HStr.make('foo').toJSON()).toEqual('foo')
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns a string', function (): void {
+			expect(HStr.make('foo').toJSONString()).toEqual('"foo"')
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(HStr.make('foo').toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode('"foo"')
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns a string', function (): void {

@@ -36,9 +36,6 @@ export * from './core/HCoord'
 export * from './core/HDate'
 export * from './core/HDateTime'
 export * from './core/HSymbol'
-export * from './core/HDict'
-export * from './core/HGrid'
-export * from './core/HList'
 export * from './core/HMarker'
 export * from './core/HNa'
 export * from './core/HNum'
@@ -63,6 +60,32 @@ export * from './core/UnitDimensions'
 export * from './core/HSpan'
 export * from './core/jsonv3'
 export * from './core/EnumTag'
+
+// Core dict
+export * from './core/dict/DictJsonStore'
+export * from './core/dict/DictJsonStringStore'
+export * from './core/dict/DictJsonUint8ArrayStore'
+export * from './core/dict/DictHValObjStore'
+export * from './core/dict/DictStore'
+export * from './core/dict/HDict'
+export * from './core/dict/HValObj'
+
+// Core grid
+export * from './core/grid/GridColumn'
+export * from './core/grid/GridJsonStore'
+export * from './core/grid/GridJsonStringStore'
+export * from './core/grid/GridJsonUint8ArrayStore'
+export * from './core/grid/GridObjStore'
+export * from './core/grid/GridStore'
+export * from './core/grid/HGrid'
+
+// Core list
+export * from './core/list/ListStore'
+export * from './core/list/ListObjStore'
+export * from './core/list/ListJsonStore'
+export * from './core/list/ListJsonStringStore'
+export * from './core/list/ListJsonUint8ArrayStore'
+export * from './core/list/HList'
 
 // Shorthand
 export * from './shorthand'

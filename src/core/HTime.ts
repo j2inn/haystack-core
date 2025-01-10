@@ -9,12 +9,13 @@ import {
 	valueInspect,
 	valueIsKind,
 	valueMatches,
+	TEXT_ENCODER,
 } from './HVal'
 import { HaysonTime } from './hayson'
 import { Node } from '../filter/Node'
-import { HGrid } from './HGrid'
-import { HList } from './HList'
-import { HDict } from './HDict'
+import { HGrid } from './grid/HGrid'
+import { HList } from './list/HList'
+import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3Time } from './jsonv3'
 
@@ -330,6 +331,20 @@ export class HTime implements HVal {
 			_kind: this.getKind(),
 			val: this.#value,
 		}
+	}
+
+	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	public toJSONString(): string {
+		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**

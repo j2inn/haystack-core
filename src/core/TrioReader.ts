@@ -3,14 +3,15 @@
  */
 
 import { Scanner } from '../util/Scanner'
-import { HDict, HValObj } from './HDict'
+import { HDict } from './dict/HDict'
+import { HValObj } from './dict/HValObj'
 import { ZincReader } from './ZincReader'
 import { LocalizedError } from '../util/LocalizedError'
 import { HMarker } from './HMarker'
 import { HStr } from './HStr'
 import { HVal, valueIsKind } from './HVal'
-import { HGrid } from './HGrid'
-import { HList } from './HList'
+import { HGrid } from './grid/HGrid'
+import { HList } from './list/HList'
 import { Kind } from './Kind'
 
 /**

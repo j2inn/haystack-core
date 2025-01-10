@@ -10,9 +10,9 @@
  * @module
  */
 
-import { HGrid } from './HGrid'
-import { HList } from './HList'
-import { HDict } from './HDict'
+import { HGrid } from './grid/HGrid'
+import { HList } from './list/HList'
+import { HDict } from './dict/HDict'
 import { HVal } from './HVal'
 import { makeValue } from './util'
 import { HaysonVal, HaysonDict } from './hayson'
@@ -71,8 +71,7 @@ Object.defineProperties(Array.prototype, {
 		configurable: true,
 		writable: true,
 		value: function (): HaysonVal {
-			const val = makeValue(this as HaysonVal)
-			return val ? val.toJSON() : val
+			return HList.make(this as HaysonVal).toJSON()
 		},
 	},
 })

@@ -3,7 +3,7 @@
  */
 
 import { HRef } from '../core/HRef'
-import { HDict } from '../core/HDict'
+import { HDict } from '../core/dict/HDict'
 import { HNamespace } from '../core/HNamespace'
 
 export interface EvalContextResolve {

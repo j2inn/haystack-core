@@ -88,10 +88,10 @@ export interface HaysonDict {
 }
 
 export interface HaysonGrid {
-	_kind?: Kind
-	meta?: HaysonDict
-	cols?: { name: string; meta?: HaysonDict }[]
-	rows?: HaysonDict[]
+	_kind: Kind
+	meta: HaysonDict
+	cols: { name: string; meta?: HaysonDict }[]
+	rows: HaysonDict[]
 }
 
 /**

@@ -4,23 +4,25 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HDict, HValObj } from '../../src/core/HDict'
-import { HNum } from '../../src/core/HNum'
-import { Kind } from '../../src/core/Kind'
-import { HStr } from '../../src/core/HStr'
-import { HMarker } from '../../src/core/HMarker'
-import { HBool } from '../../src/core/HBool'
-import { HList } from '../../src/core/HList'
-import { HGrid } from '../../src/core/HGrid'
-import { HVal } from '../../src/core/HVal'
-import { HSymbol } from '../../src/core/HSymbol'
-import { HNamespace } from '../../src/core/HNamespace'
-import { HRef } from '../../src/core/HRef'
-import { HaysonDict } from '../../src/core/hayson'
-import { HFilter } from '../../src/filter/HFilter'
-import '../matchers'
-import '../customMatchers'
-import { HDateTime } from '../../src/core/HDateTime'
+import { HDict } from '../../../src/core/dict/HDict'
+import { HValObj } from '../../../src/core/dict/HValObj'
+import { HNum } from '../../../src/core/HNum'
+import { Kind } from '../../../src/core/Kind'
+import { HStr } from '../../../src/core/HStr'
+import { HMarker } from '../../../src/core/HMarker'
+import { HBool } from '../../../src/core/HBool'
+import { HList } from '../../../src/core/list/HList'
+import { HGrid } from '../../../src/core/grid/HGrid'
+import { HVal, TEXT_ENCODER } from '../../../src/core/HVal'
+import { HSymbol } from '../../../src/core/HSymbol'
+import { HNamespace } from '../../../src/core/HNamespace'
+import { HRef } from '../../../src/core/HRef'
+import { HaysonDict } from '../../../src/core/hayson'
+import { HFilter } from '../../../src/filter/HFilter'
+import { HDateTime } from '../../../src/core/HDateTime'
+
+import '../../matchers'
+import '../../customMatchers'
 
 describe('HDict', function (): void {
 	let dict: HDict
@@ -101,7 +103,7 @@ describe('HDict', function (): void {
 		})
 
 		it('creates a dict from a haystack list', function (): void {
-			const list = HList.make('foo', 123)
+			const list = HList.make(['foo', 123])
 
 			const newDict = new HDict({
 				val: list,
@@ -195,6 +197,32 @@ describe('HDict', function (): void {
 			})
 		})
 	}) // #toJSON()
+
+	describe('#toJSONString()', function (): void {
+		it('returns a JSON string', function (): void {
+			expect(dict.toJSONString()).toBe(
+				JSON.stringify({
+					foo: 'foovalue',
+					goo: 99,
+					soo: { _kind: 'marker' },
+				})
+			)
+		})
+	}) // #toJSONString()
+
+	describe('#toJSONUint8Array()', function (): void {
+		it('returns a JSON byte buffer', function (): void {
+			expect(dict.toJSONUint8Array()).toEqual(
+				TEXT_ENCODER.encode(
+					JSON.stringify({
+						foo: 'foovalue',
+						goo: 99,
+						soo: { _kind: 'marker' },
+					})
+				)
+			)
+		})
+	}) // #toJSONUint8Array()
 
 	describe('#toJSONv3()', function (): void {
 		it('returns a JSON Object', function (): void {
@@ -524,11 +552,11 @@ describe('HDict', function (): void {
 
 	describe('#toList()', function (): void {
 		it('returns a haystack list from a dict', function (): void {
-			const list = HList.make<HVal>(
+			const list = HList.make<HVal>([
 				HStr.make('foovalue'),
 				HNum.make(99),
-				HMarker.make()
-			)
+				HMarker.make(),
+			])
 			expect(dict.toList()).toEqual(list)
 		})
 	}) // #toList()
@@ -574,22 +602,6 @@ describe('HDict', function (): void {
 			expect(dict).not.toBe(copy)
 		})
 	}) // #newCopy()
-
-	describe('#validate()', function (): void {
-		it('validates the dict to ensure we have a valid set of haystack values', function (): void {
-			const obj = dict.toObj() as unknown as { [prop: string]: number }
-
-			obj.goo = 100
-
-			dict.validate()
-
-			expect(obj).toEqual({
-				foo: HStr.make('foovalue'),
-				goo: HNum.make(100),
-				soo: HMarker.make(),
-			})
-		})
-	}) // #validate()
 
 	describe('#defName', function (): void {
 		it('returns the name of a def', function (): void {

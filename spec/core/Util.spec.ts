@@ -28,13 +28,16 @@ import { HRemove } from '../../src/core/HRemove'
 import { HCoord } from '../../src/core/HCoord'
 import { HXStr } from '../../src/core/HXStr'
 import { HSymbol } from '../../src/core/HSymbol'
-import { HList } from '../../src/core/HList'
-import { HDict } from '../../src/core/HDict'
+import { HList } from '../../src/core/list/HList'
+import { HDict } from '../../src/core/dict/HDict'
 import { HVal } from '../../src/core/HVal'
 import { HNa } from '../../src/core/HNa'
-import { HGrid } from '../../src/core/HGrid'
+import { HGrid } from '../../src/core/grid/HGrid'
 import { HNamespace } from '../../src/core/HNamespace'
 import { makeProjectHaystackNormalizer } from '../readDefs'
+
+import '../matchers'
+import '../customMatchers'
 
 describe('util', function (): void {
 	describe('makeValue()', function (): void {
@@ -215,7 +218,7 @@ describe('util', function (): void {
 		})
 
 		it('returns a list from an array of haystack values', function (): void {
-			expect(makeValue(['foo'])).toEqual(HList.make(HStr.make('foo')))
+			expect(makeValue(['foo'])).toValEqual(HList.make(HStr.make('foo')))
 		})
 
 		it('returns null for a null value', function (): void {

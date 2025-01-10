@@ -10,10 +10,10 @@ import { HStr } from '../../src/core/HStr'
 import { HUri } from '../../src/core/HUri'
 import { HRef } from '../../src/core/HRef'
 import { HDate } from '../../src/core/HDate'
-import { HDict } from '../../src/core/HDict'
+import { HDict } from '../../src/core/dict/HDict'
 import { HSymbol } from '../../src/core/HSymbol'
-import { HGrid } from '../../src/core/HGrid'
-import { HList } from '../../src/core/HList'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HList } from '../../src/core/list/HList'
 import { Kind } from '../../src/core/Kind'
 import '../matchers'
 import '../customMatchers'
@@ -50,6 +50,8 @@ describe('TrioReader', function (): void {
 			type: 'grid',
 			val: {
 				_kind: Kind.Grid,
+				meta: {},
+				cols: [{ name: 'b' }, { name: 'a' }],
 				rows: [{ b: 20, a: 10 }],
 			},
 		})

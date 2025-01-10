@@ -4,12 +4,12 @@
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
-import { HGrid } from '../src/core/HGrid'
+import { HGrid } from '../src/core/grid/HGrid'
 import { forEach, fill } from 'lodash'
 import './matchers'
 import './customMatchers'
-import { HDict, HValRow } from '../src/core/HDict'
-import { HList } from '../src/core/HList'
+import { HDict, HValRow } from '../src/core/dict/HDict'
+import { HList } from '../src/core/list/HList'
 import { HVal } from '../src/core/HVal'
 import { HStr } from '../src/core/HStr'
 import { HNum } from '../src/core/HNum'

@@ -15,11 +15,11 @@ import { EvalContext } from './EvalContext'
 import { HVal } from '../core/HVal'
 import { valueIsKind } from '../core/HVal'
 import { Kind } from '../core/Kind'
-import { HDict } from '../core/HDict'
+import { HDict } from '../core/dict/HDict'
 import { HRef } from '../core/HRef'
 import { HSymbol } from '../core/HSymbol'
 import { TokenRelationship } from './TokenRelationship'
-import { HList } from '../core/HList'
+import { HList } from '../core/list/HList'
 
 /**
  * AWT Node Implementation for a Haystack Filter.

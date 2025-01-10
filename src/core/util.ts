@@ -17,7 +17,7 @@ import { HRef } from './HRef'
 import { HStr } from './HStr'
 import { HTime } from './HTime'
 import { HUri } from './HUri'
-import { HDict } from './HDict'
+import { HDict } from './dict/HDict'
 import {
 	HaysonDict,
 	HaysonVal,
@@ -40,10 +40,13 @@ import { HNa } from './HNa'
 import { HCoord } from './HCoord'
 import { HXStr } from './HXStr'
 import { HSymbol } from './HSymbol'
-import { HList } from './HList'
-import { HGrid } from './HGrid'
+import { HList } from './list/HList'
+import { HGrid } from './grid/HGrid'
 import { Scanner } from '../util/Scanner'
 import { HNamespace } from './HNamespace'
+import { DictJsonStore } from './dict/DictJsonStore'
+import { GridJsonStore } from './grid/GridJsonStore'
+import { ListJsonStore } from './list/ListJsonStore'
 
 /**
  * Make the haystack value based on the supplied data.
@@ -77,7 +80,7 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 	}
 
 	if (Array.isArray(val)) {
-		return HList.make(val as HaysonList)
+		return new HList(new ListJsonStore(val as HaysonList))
 	}
 
 	const obj = val as { _kind?: string }
@@ -111,9 +114,9 @@ export function makeValue(val: HaysonVal | HVal | undefined): OptionalHVal {
 			return HUri.make(obj as HaysonUri)
 		case Kind.Dict:
 		case undefined:
-			return HDict.make(obj as HaysonDict)
+			return new HDict(new DictJsonStore(obj as HaysonDict))
 		case Kind.Grid:
-			return HGrid.make(obj as HaysonGrid)
+			return new HGrid(new GridJsonStore(obj as HaysonGrid))
 		default:
 			throw new Error('Could not resolve value from kind: ' + obj._kind)
 	}

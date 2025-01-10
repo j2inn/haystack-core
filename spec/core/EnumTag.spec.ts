@@ -3,8 +3,8 @@
  */
 
 import { HStr } from '../../src/core/HStr'
-import { HGrid } from '../../src/core/HGrid'
-import { HDict } from '../../src/core/HDict'
+import { HGrid } from '../../src/core/grid/HGrid'
+import { HDict } from '../../src/core/dict/HDict'
 import { HNum } from '../../src/core/HNum'
 import { HBool } from '../../src/core/HBool'
 import { EnumTag } from '../../src/core/EnumTag'

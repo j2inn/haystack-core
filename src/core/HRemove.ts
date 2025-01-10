@@ -8,15 +8,16 @@ import { Kind } from './Kind'
 import {
 	HVal,
 	NOT_SUPPORTED_IN_FILTER_MSG,
+	TEXT_ENCODER,
 	valueInspect,
 	valueIsKind,
 	valueMatches,
 } from './HVal'
 import { HaysonRemove } from './hayson'
 import { Node } from '../filter/Node'
-import { HGrid } from './HGrid'
-import { HList } from './HList'
-import { HDict } from './HDict'
+import { HGrid } from './grid/HGrid'
+import { HList } from './list/HList'
+import { HDict } from './dict/HDict'
 import { EvalContext } from '../filter/EvalContext'
 import { JsonV3Remove } from './jsonv3'
 
@@ -145,6 +146,20 @@ export class HRemove implements HVal {
 	 */
 	public toJSON(): HaysonRemove {
 		return JSON_REMOVE
+	}
+
+	/**
+	 * @returns A string containing the JSON representation of the object.
+	 */
+	public toJSONString(): string {
+		return JSON.stringify(this)
+	}
+
+	/**
+	 * @returns A byte buffer that has an encoded JSON string representation of the object.
+	 */
+	public toJSONUint8Array(): Uint8Array {
+		return TEXT_ENCODER.encode(this.toJSONString())
 	}
 
 	/**
