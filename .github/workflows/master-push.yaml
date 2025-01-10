@@ -24,6 +24,8 @@ jobs:
       - run: npm ci --no-optional
       - run: npm run lint
       - run: npm test
+      # A build isn't needed here but we want to make sure it works ok before try this during a publish.
+      - run: npm run build
 
       - name: Configure AWS credentials for uploading docs
         uses: aws-actions/configure-aws-credentials@v1
