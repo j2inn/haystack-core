@@ -729,9 +729,10 @@ export class HNamespace {
 		) {
 			return []
 		}
+
 		// If the assocation isn't computed then just get the associated defs.
 		// For instance, this will return here if the association is 'tagOn'.
-		if (!assocDef.has('computedFromReciprocal')) {
+		if (!this.hasComputedFromReciprocal(assocDef)) {
 			return (
 				this.byName(parent)
 					?.get<HList<HSymbol | null>>(String(association))
@@ -753,6 +754,23 @@ export class HNamespace {
 		// If searching for a computed assocation (i.e. tags) then more work is required.
 		// Search for all tagOns and match against the parent's inheritance.
 		return this.findReciprocalAssociations(parent, reciprocalOf)
+	}
+
+	/**
+	 * Return true if the def has the `computedFromReciprocal` tag.
+	 *
+	 * If the `computedFromReciprocal` tag is not found at all then assume we're using
+	 * an older version of haystack and look for the `computed` tag instead.
+	 *
+	 * @param def The def to check.
+	 * @returns True if the `computedFromReciprocal` tag is found.
+	 */
+	private hasComputedFromReciprocal(def: HDict): boolean {
+		return def.has(
+			this.has('computedFromReciprocal')
+				? 'computedFromReciprocal'
+				: 'computed'
+		)
 	}
 
 	/**

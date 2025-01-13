@@ -18,6 +18,7 @@ import '../matchers'
 import '../customMatchers'
 import { makeProjectHaystackNormalizer } from '../readDefs'
 import { valueIsKind } from '../../src/core/HVal'
+import { readFile } from '../file'
 
 describe('HNamespace', function (): void {
 	let defs: HNamespace
@@ -526,6 +527,47 @@ describe('HNamespace', function (): void {
 				'mlModel',
 				'mlVar',
 				'tank',
+				'weather-point',
+			])
+		})
+
+		it('returns the feature names using an older version of defs', async () => {
+			defs = new HNamespace(
+				ZincReader.readValue(await readFile('oldDefs.zinc')) as HGrid
+			)
+
+			expect(defs.tagOnNames).toEqual([
+				'air-input',
+				'site',
+				'space',
+				'lib',
+				'blowdown-water-input',
+				'chilled-water-input',
+				'condensate-input',
+				'condenser-water-input',
+				'chiller',
+				'point',
+				'cur-point',
+				'entity',
+				'def',
+				'domestic-water-input',
+				'elec-input',
+				'controller',
+				'equip',
+				'filetype',
+				'floor',
+				'fuelOil-input',
+				'gasoline-input',
+				'geoPlace',
+				'his-point',
+				'hot-water-input',
+				'makeup-water-input',
+				'naturalGas-input',
+				'refrig-input',
+				'steam-input',
+				'meter',
+				'weatherStation',
+				'motor',
 				'weather-point',
 			])
 		})
