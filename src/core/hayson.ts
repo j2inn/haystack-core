@@ -81,7 +81,8 @@ export type HaysonVal =
 	| HaysonGrid
 	| null
 
-export type HaysonList = Array<HaysonVal>
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface HaysonList extends Array<HaysonVal> {}
 
 export interface HaysonDict {
 	[prop: string]: HaysonVal
