@@ -140,6 +140,38 @@ describe('TrioWriter', function (): void {
 					'dict: {foo:"bar"}'
 			)
 		})
+
+		it('writes multi-line strings', function (): void {
+			const dict = HDict.make({
+				bool: true,
+				str: HStr.make('{\n  "foo": "bar"\n}'),
+				num: 42,
+			})
+
+			const trio = TrioWriter.toTrioDict(dict, { multilineStrings: true })
+
+			expect(trio).toBe(`bool: T
+str: 
+  {
+    "foo": "bar"
+  }
+num: 42`)
+		})
+
+		it('writes multi-line strings for an empty string', function (): void {
+			const dict = HDict.make({
+				bool: true,
+				str: HStr.make(''),
+				num: 42,
+			})
+
+			const trio = TrioWriter.toTrioDict(dict, { multilineStrings: true })
+
+			expect(trio).toBe(`bool: T
+str: 
+  
+num: 42`)
+		})
 	}) // .toTrioDict()
 
 	describe('#toString()', function (): void {

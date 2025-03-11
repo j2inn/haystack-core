@@ -7,6 +7,7 @@ import { Kind } from './Kind'
 import { HDict } from './dict/HDict'
 import { HGrid } from './grid/HGrid'
 import { HMarker } from './HMarker'
+import { HStr } from './HStr'
 
 /**
  * The type of item in the trio document.
@@ -27,6 +28,18 @@ interface Item {
 }
 
 /**
+ * Additional options for when writing trio.
+ */
+export interface TrioWriterOptions {
+	/**
+	 * True if multi-line strings should be used when writing the trio file.
+	 */
+	multilineStrings?: boolean
+}
+
+const MULTILINE_STRING_INDENTATION = '  '
+
+/**
  * Writes a trio document.
  *
  * ```typescript
@@ -42,7 +55,16 @@ export class TrioWriter {
 	/**
 	 * The items used to create the trio document.
 	 */
-	private readonly $items: Item[] = []
+	readonly #items: Item[] = []
+
+	/**
+	 * Additional options when writing trio.
+	 */
+	readonly #options?: TrioWriterOptions
+
+	constructor(options?: TrioWriterOptions) {
+		this.#options = options
+	}
 
 	/**
 	 * Add a dict to be written out into the trio document.
@@ -51,7 +73,7 @@ export class TrioWriter {
 	 * @returns The trio writer instance.
 	 */
 	addDict(dict: HDict): this {
-		this.$items.push({ type: ItemType.Dict, dict })
+		this.#items.push({ type: ItemType.Dict, dict })
 		return this
 	}
 
@@ -75,7 +97,7 @@ export class TrioWriter {
 	 * @returns The trio writer instance.
 	 */
 	addComment(comment?: string): this {
-		this.$items.push({ type: ItemType.Comment, text: comment || '' })
+		this.#items.push({ type: ItemType.Comment, text: comment || '' })
 		return this
 	}
 
@@ -85,7 +107,7 @@ export class TrioWriter {
 	 * @retursn The trio write instance.
 	 */
 	addNewLine(): this {
-		this.$items.push({ type: ItemType.NewLine })
+		this.#items.push({ type: ItemType.NewLine })
 		return this
 	}
 
@@ -95,7 +117,7 @@ export class TrioWriter {
 	toTrio(): string {
 		let trio = ''
 
-		for (const item of this.$items) {
+		for (const item of this.#items) {
 			if (trio) {
 				trio += '\n'
 			}
@@ -105,7 +127,10 @@ export class TrioWriter {
 					trio += item.text ? `// ${item.text}` : '//'
 					break
 				case ItemType.Dict:
-					trio += TrioWriter.toTrioDict(item.dict || HDict.make())
+					trio += TrioWriter.toTrioDict(
+						item.dict || HDict.make(),
+						this.#options
+					)
 					trio += '\n---'
 					break
 			}
@@ -118,9 +143,10 @@ export class TrioWriter {
 	 * @returns The dict as trio encoded.
 	 *
 	 * @param dict The dict to encode.
+	 * @param options Additional options for writing trio.
 	 * @returns The trio encoded dict.
 	 */
-	static toTrioDict(dict: HDict): string {
+	static toTrioDict(dict: HDict, options?: TrioWriterOptions): string {
 		return dict.keys
 			.map((name: string): string => {
 				const value = dict.get(name)
@@ -132,6 +158,14 @@ export class TrioWriter {
 						.toZinc()
 						.trim()
 						.replace(/\n/g, '\n  ')}`
+				} else if (
+					options?.multilineStrings &&
+					valueIsKind<HStr>(value, Kind.Str)
+				) {
+					return `${name}: \n${MULTILINE_STRING_INDENTATION}${value.value.replaceAll(
+						'\n',
+						`\n${MULTILINE_STRING_INDENTATION}`
+					)}`
 				} else {
 					return `${name}: ${value?.toZinc() ?? ZINC_NULL}`
 				}

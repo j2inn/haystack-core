@@ -157,6 +157,14 @@ describe('TrioReader', function (): void {
 						})
 					)
 				})
+
+				it('parses an empty multi-line string', function (): void {
+					expect(new TrioReader('str:\n	').readDict()).toValEqual(
+						HDict.make({
+							str: HStr.make(''),
+						})
+					)
+				})
 			}) // string
 
 			it('uri', function (): void {
