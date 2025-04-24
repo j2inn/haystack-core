@@ -11,12 +11,33 @@ import { Kind } from '../core/Kind'
 import { HFilterBuilder } from '../filter/HFilterBuilder'
 
 /**
+ * Relativization options.
+ */
+export interface RelativizeOptions {
+	/**
+	 * True (or undefined) if the display name should be used in the relativization.
+	 */
+	useDisplayName?: boolean
+
+	/**
+	 * True (or undefined) if the point's kind should be used in the relativization.
+	 */
+	useKind?: boolean
+}
+
+/**
  * Makes a relative haystack filter from a record.
  *
  * @param record The record.
  * @returns A haystack filter.
  */
-export function makeRelativeHaystackFilter(record: HDict): string {
+export function makeRelativeHaystackFilter(
+	record: HDict,
+	options?: RelativizeOptions
+): string {
+	const useDisplayName = options?.useDisplayName ?? true
+	const useKind = options?.useKind ?? true
+
 	const builder = new HFilterBuilder()
 
 	// Build the marker tags.
@@ -30,17 +51,19 @@ export function makeRelativeHaystackFilter(record: HDict): string {
 		}
 	}
 
-	// Build the display name match if one is available.
-	if (!addDisplayNameToFilter(record, builder, 'dis')) {
-		if (!addDisplayNameToFilter(record, builder, 'name')) {
-			if (!addDisplayNameToFilter(record, builder, 'tag')) {
-				addDisplayNameToFilter(record, builder, 'navName')
+	if (useDisplayName) {
+		// Build the display name match if one is available.
+		if (!addDisplayNameToFilter(record, builder, 'dis')) {
+			if (!addDisplayNameToFilter(record, builder, 'name')) {
+				if (!addDisplayNameToFilter(record, builder, 'tag')) {
+					addDisplayNameToFilter(record, builder, 'navName')
+				}
 			}
 		}
 	}
 
 	// Include a point's kind if available.
-	if (record.has('point') && record.has('kind')) {
+	if (useKind && record.has('point') && record.has('kind')) {
 		const kind = record.get<HStr>('kind')?.value
 		if (kind) {
 			if (!builder.isEmpty()) {

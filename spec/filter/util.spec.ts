@@ -22,6 +22,21 @@ describe('haystack', () => {
 			).toEqual('equip and dis == "an equip"')
 		})
 
+		it('returns a haystack filter without a display name with the option disabled', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						dis: 'an equip',
+						equip: HMarker.make(),
+					}),
+					{
+						useDisplayName: false,
+					}
+				)
+			).toEqual('equip')
+		})
+
 		it('returns a haystack filter with a nav name', () => {
 			expect(
 				makeRelativeHaystackFilter(
@@ -45,6 +60,22 @@ describe('haystack', () => {
 					})
 				)
 			).toEqual('point and navName == "a point" and kind == "Number"')
+		})
+
+		it('returns a haystack filter without the point kind and the option disabled', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						navName: 'a point',
+						point: HMarker.make(),
+						kind: HStr.make('Number'),
+					}),
+					{
+						useKind: false,
+					}
+				)
+			).toEqual('point and navName == "a point"')
 		})
 
 		it('returns a haystack filter with an absolute id as a fallback', () => {
