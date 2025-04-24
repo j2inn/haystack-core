@@ -20,7 +20,7 @@ export interface RelativizeOptions {
 	useDisplayName?: boolean
 
 	/**
-	 * True (or undefined) if the point's kind should be used in the relativization.
+	 * True (or undefined) if a point's kind should be used in the relativization.
 	 */
 	useKind?: boolean
 }
@@ -62,15 +62,8 @@ export function makeRelativeHaystackFilter(
 		}
 	}
 
-	// Include a point's kind if available.
 	if (useKind && record.has('point') && record.has('kind')) {
-		const kind = record.get<HStr>('kind')?.value
-		if (kind) {
-			if (!builder.isEmpty()) {
-				builder.and()
-			}
-			builder.equals('kind', kind)
-		}
+		addPointKindToFilter(record, builder)
 	}
 
 	if (builder.isEmpty() && record.has('id')) {
@@ -78,6 +71,16 @@ export function makeRelativeHaystackFilter(
 	}
 
 	return builder.build()
+}
+
+function addPointKindToFilter(record: HDict, builder: HFilterBuilder): void {
+	const kind = record.get<HStr>('kind')?.value
+	if (kind) {
+		if (!builder.isEmpty()) {
+			builder.and()
+		}
+		builder.equals('kind', kind)
+	}
 }
 
 function addDisplayNameToFilter(
