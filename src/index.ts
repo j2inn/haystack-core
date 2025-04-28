@@ -21,6 +21,7 @@ export * from './filter/tokens'
 export * from './filter/TokenType'
 export * from './filter/TokenValue'
 export * from './filter/HFilterBuilder'
+export * from './filter/util'
 
 // Util
 export * from './util/LocalizedError'
