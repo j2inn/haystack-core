@@ -657,6 +657,19 @@ describe('FilterLexer', function (): void {
 				)
 			})
 
+			it('parses a path token with an array followed by other tokens', function (): void {
+				const lexer = makeLexer('foo->boo and goo')
+
+				const token0 = lexer.nextToken() as TokenPaths
+				expect(token0.paths).toEqual(['foo', 'boo'])
+
+				const token1 = lexer.nextToken() as TokenPaths
+				expect(token1.paths).toEqual(['and'])
+
+				const token2 = lexer.nextToken() as TokenPaths
+				expect(token2.paths).toEqual(['goo'])
+			})
+
 			it('parses a path token with two paths', function (): void {
 				const token = makeLexer('foo->boo').nextToken() as TokenPaths
 				expect(token.paths).toEqual(['foo', 'boo'])
