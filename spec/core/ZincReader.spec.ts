@@ -445,31 +445,42 @@ describe('ZincReader', function (): void {
 			})
 
 			it('parses a date time with timezone containing -', function (): void {
-				expect(
-					makeReader(
-						'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
-					).readValue()
-				).toEqual(
-					HDateTime.make(
-						'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
-					)
+				const parsedVal = makeReader(
+					'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
+				).readValue()
+				const expectedVal = HDateTime.make(
+					'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
+				)
+				expect(parsedVal).toEqual(expectedVal)
+				expect((parsedVal as HDateTime).timezone).toBe(
+					expectedVal.timezone
 				)
 			})
 
 			it('parses a date time with GMT-n timezone', function (): void {
-				expect(
-					makeReader(
-						'2025-06-12T15:22:11.518+02:00 GMT-2'
-					).readValue()
-				).toEqual(HDateTime.make('2025-06-12T15:22:11.518+02:00 GMT-2'))
+				const parsedVal = makeReader(
+					'2025-06-12T15:22:11.518+02:00 GMT-2'
+				).readValue()
+				const expectedVal = HDateTime.make(
+					'2025-06-12T15:22:11.518+02:00 GMT-2'
+				)
+				expect(parsedVal).toEqual(expectedVal)
+				expect((parsedVal as HDateTime).timezone).toBe(
+					expectedVal.timezone
+				)
 			})
 
 			it('parses a date time with GMT+n timezone', function (): void {
-				expect(
-					makeReader(
-						'2025-06-12T11:23:32.488-02:00 GMT+2'
-					).readValue()
-				).toEqual(HDateTime.make('2025-06-12T11:23:32.488-02:00 GMT+2'))
+				const parsedVal = makeReader(
+					'2025-06-12T11:23:32.488-02:00 GMT+2'
+				).readValue()
+				const expectedVal = HDateTime.make(
+					'2025-06-12T11:23:32.488-02:00 GMT+2'
+				)
+				expect(parsedVal).toEqual(expectedVal)
+				expect((parsedVal as HDateTime).timezone).toBe(
+					expectedVal.timezone
+				)
 			})
 		}) // date time
 
