@@ -443,6 +443,34 @@ describe('ZincReader', function (): void {
 					HDateTime.make('2010-11-28T07:23:02.773-08:00 Los_Angeles')
 				)
 			})
+
+			it('parses a date time with timezone containing -', function (): void {
+				expect(
+					makeReader(
+						'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
+					).readValue()
+				).toEqual(
+					HDateTime.make(
+						'2010-11-28T07:23:02.773-04:00 Port-au-Prince'
+					)
+				)
+			})
+
+			it('parses a date time with GMT-n timezone', function (): void {
+				expect(
+					makeReader(
+						'2025-06-12T15:22:11.518+02:00 GMT-2'
+					).readValue()
+				).toEqual(HDateTime.make('2025-06-12T15:22:11.518+02:00 GMT-2'))
+			})
+
+			it('parses a date time with GMT+n timezone', function (): void {
+				expect(
+					makeReader(
+						'2025-06-12T11:23:32.488-02:00 GMT+2'
+					).readValue()
+				).toEqual(HDateTime.make('2025-06-12T11:23:32.488-02:00 GMT+2'))
+			})
 		}) // date time
 
 		describe('null', function (): void {
@@ -1323,6 +1351,84 @@ describe('ZincReader', function (): void {
 				})
 
 				const value = ZincReader.readValue(zinc)
+				expect(value && value.equals(grid)).toBe(true)
+			})
+
+			it('parses a grid with a datetime and timezone containing -', function (): void {
+				const zinc =
+					'<<ver:"3.0"\n' +
+					'val\n' +
+					'2025-06-12T08:24:25.631-04:00 Port-au-Prince\n' +
+					'>>'
+
+				const grid = HGrid.make({
+					columns: [
+						{
+							name: 'val',
+						},
+					],
+					rows: [
+						HDict.make({
+							val: HDateTime.make(
+								'2025-06-12T08:24:25.631-04:00 Port-au-Prince'
+							),
+						}),
+					],
+				})
+
+				const value = makeReader(zinc).readValue()
+				expect(value && value.equals(grid)).toBe(true)
+			})
+
+			it('parses a grid with a datetime and GMT-n timezone val', function (): void {
+				const zinc =
+					'<<ver:"3.0"\n' +
+					'val\n' +
+					'2025-06-12T14:54:00.88+02:00 GMT-2\n' +
+					'>>'
+
+				const grid = HGrid.make({
+					columns: [
+						{
+							name: 'val',
+						},
+					],
+					rows: [
+						HDict.make({
+							val: HDateTime.make(
+								'2025-06-12T14:54:00.88+02:00 GMT-2'
+							),
+						}),
+					],
+				})
+
+				const value = makeReader(zinc).readValue()
+				expect(value && value.equals(grid)).toBe(true)
+			})
+
+			it('parses a grid with a datetime and GMT+n timezone val', function (): void {
+				const zinc =
+					'<<ver:"3.0"\n' +
+					'val\n' +
+					'2025-06-12T14:54:00.88-02:00 GMT+2\n' +
+					'>>'
+
+				const grid = HGrid.make({
+					columns: [
+						{
+							name: 'val',
+						},
+					],
+					rows: [
+						HDict.make({
+							val: HDateTime.make(
+								'2025-06-12T14:54:00.88-02:00 GMT+2'
+							),
+						}),
+					],
+				})
+
+				const value = makeReader(zinc).readValue()
 				expect(value && value.equals(grid)).toBe(true)
 			})
 		}) // grid
