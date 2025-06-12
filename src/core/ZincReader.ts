@@ -555,21 +555,9 @@ export class ZincReader {
 			while (
 				this.scanner.isLetter() ||
 				this.scanner.isDigit() ||
-				this.scanner.is('_')
-			) {
-				dateTime += this.scanner.current
-				this.scanner.consume()
-
-				while (this.scanner.isDigit()) {
-					dateTime += this.scanner.current
-					this.scanner.consume()
-				}
-			}
-
-			// handle GMT+xx or GMT-xx
-			if (
-				(this.scanner.is('+') || this.scanner.is('-')) &&
-				dateTime.endsWith('GMT')
+				this.scanner.is('_') || // Tz containing "_" (ex.: Los_Angeles)
+				this.scanner.is('-') || // GMT-n or tz containing "-" (ex.: Port-au-Prince)
+				this.scanner.is('+') // GMT+n
 			) {
 				dateTime += this.scanner.current
 				this.scanner.consume()
