@@ -11,7 +11,7 @@
 	"author": "Gareth Johnson",
 	"homepage": "https://github.com/j2inn/haystack-core",
 	"email": "support@j2innovations.com",
-	"version": "3.0.4",
+	"version": "3.0.5",
 	"module": "dist/index.es.js",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
