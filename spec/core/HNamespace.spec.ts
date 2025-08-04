@@ -1608,6 +1608,7 @@ describe('HNamespace', function (): void {
 		})
 
 		describe('transitive relationships', function (): void {
+			let site: HDict
 			let ahu: HDict
 			let fan: HDict
 			let status: HDict
@@ -1617,6 +1618,13 @@ describe('HNamespace', function (): void {
 
 			beforeEach(function (): void {
 				map = new Map<string, HDict>()
+
+				site = HDict.make({
+					id: HRef.make('site'),
+					site: HMarker.make(),
+				})
+
+				map.set('site', site)
 
 				ahu = HDict.make({
 					id: HRef.make('ahu'),
@@ -1631,6 +1639,8 @@ describe('HNamespace', function (): void {
 					discharge: HMarker.make(),
 					fan: HMarker.make(),
 					equip: HMarker.make(),
+					// Not typically done but used for indirectly multiple transitive relationships.
+					siteRef: HRef.make('site'),
 					equipRef: HRef.make('ahu'),
 				})
 
@@ -1700,6 +1710,19 @@ describe('HNamespace', function (): void {
 						resolve,
 					})
 				).toBe(false)
+			})
+
+			it('returns true for a point that indirectly references a site', function (): void {
+				//The fan has a siteRef that also needs to be traversed as well as the equipRef. This
+				// tests multiple transitive relationships on the same dict.
+				expect(
+					defs.hasRelationship({
+						subject: status,
+						relName: 'containedBy',
+						ref: HRef.make('site'),
+						resolve,
+					})
+				).toBe(true)
 			})
 		}) // transitive relationships
 
