@@ -48,6 +48,10 @@ const TIMEZONE_PREFIXES = [
 	'Mexico',
 	'Pacific',
 	'US',
+	'America/Argentina',
+	'America/Indiana',
+	'America/Kentucky',
+	'America/North_Dakota',
 ]
 
 /**

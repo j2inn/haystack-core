@@ -398,6 +398,10 @@ describe('HDateTime', function (): void {
 				expect(getTimeZone('New_York')).toBe('America/New_York')
 			})
 
+			it('returns a timezone that contains multiple segements', () => {
+				expect(getTimeZone('Knox')).toBe('America/Indiana/Knox')
+			})
+
 			it('returns an empty string for an invalid timezone', function (): void {
 				expect(getTimeZone('FooBar')).toBe('')
 			})
@@ -413,6 +417,12 @@ describe('HDateTime', function (): void {
 			it('returns a valid timezone from an alias', function (): void {
 				expect(HDateTime.getIANATimeZone('New_York')).toBe(
 					'America/New_York'
+				)
+			})
+
+			it('returns a valid timezone that contains multiple segements', () => {
+				expect(HDateTime.getIANATimeZone('La_Rioja')).toBe(
+					'America/Argentina/La_Rioja'
 				)
 			})
 
