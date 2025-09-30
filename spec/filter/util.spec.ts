@@ -87,5 +87,35 @@ describe('haystack', () => {
 				)
 			).toEqual('id == @id')
 		})
+
+		it('returns a haystack filter without excluded tags', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						dis: 'an equip',
+						equip: HMarker.make(),
+						his: HMarker.make(),
+						aux: HMarker.make(),
+					})
+				)
+			).toEqual('equip and dis == "an equip"')
+		})
+
+		it('returns a haystack filter without custom excluded tags', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						dis: 'an equip',
+						equip: HMarker.make(),
+						customTag: HMarker.make(),
+					}),
+					{
+						excludeTags: ['customTag'],
+					}
+				)
+			).toEqual('equip and dis == "an equip"')
+		})
 	}) // makeRelativeHaystackFilter()
 })

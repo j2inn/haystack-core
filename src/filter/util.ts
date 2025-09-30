@@ -11,6 +11,22 @@ import { Kind } from '../core/Kind'
 import { HFilterBuilder } from '../filter/HFilterBuilder'
 
 /**
+ * Default list of tags to exclude from the relativization.
+ */
+export const RELATIVE_FILTER_EXCLUDED_TAGS = [
+	'aux',
+	'his',
+	'hisCollectCOV',
+	'hisCollectNA',
+	'hisTotalized',
+	'haystackPoint',
+	'bacnetPoint',
+	'axStatus',
+	'axAnnotated',
+	'demoPoint',
+]
+
+/**
  * Relativization options.
  */
 export interface RelativizeOptions {
@@ -23,6 +39,11 @@ export interface RelativizeOptions {
 	 * True (or undefined) if a point's kind should be used in the relativization.
 	 */
 	useKind?: boolean
+
+	/**
+	 * List of tags to exclude from the relativization.
+	 */
+	excludeTags?: string[]
 }
 
 /**
@@ -37,12 +58,17 @@ export function makeRelativeHaystackFilter(
 ): string {
 	const useDisplayName = options?.useDisplayName ?? true
 	const useKind = options?.useKind ?? true
+	const excludeTags = options?.excludeTags ?? RELATIVE_FILTER_EXCLUDED_TAGS
+	const excludedTagSet = new Set(excludeTags)
 
 	const builder = new HFilterBuilder()
 
 	// Build the marker tags.
 	for (const { name, value } of record) {
-		if (valueIsKind<HMarker>(value, Kind.Marker)) {
+		if (
+			valueIsKind<HMarker>(value, Kind.Marker) &&
+			!excludedTagSet.has(name)
+		) {
 			if (!builder.isEmpty()) {
 				builder.and()
 			}
