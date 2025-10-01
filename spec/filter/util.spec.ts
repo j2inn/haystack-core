@@ -7,6 +7,8 @@ import { HRef } from '../../src/core/HRef'
 import { makeRelativeHaystackFilter } from '../../src/filter/util'
 import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
+import { HSymbol } from '../../src/core/HSymbol'
+import { HNamespace } from '../../src/core/HNamespace'
 
 describe('haystack', () => {
 	describe('makeRelativeHaystackFilter()', () => {
@@ -102,6 +104,28 @@ describe('haystack', () => {
 			).toEqual('equip and dis == "an equip"')
 		})
 
+		it('returns a haystack filter without connPoint subtype tags', () => {
+			const mockNamespace = {
+				allSubTypesOf: () => [
+					HDict.make({ def: HSymbol.make('demoPoint') }),
+				],
+			} as unknown as HNamespace
+
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						dis: 'an equip',
+						equip: HMarker.make(),
+						demoPoint: HMarker.make(),
+					}),
+					{
+						namespace: mockNamespace,
+					}
+				)
+			).toEqual('equip and dis == "an equip"')
+		})
+
 		it('returns a haystack filter without custom excluded tags', () => {
 			expect(
 				makeRelativeHaystackFilter(
@@ -112,7 +136,7 @@ describe('haystack', () => {
 						customTag: HMarker.make(),
 					}),
 					{
-						excludeTags: ['customTag'],
+						getExcludedTags: () => ['customTag'],
 					}
 				)
 			).toEqual('equip and dis == "an equip"')
