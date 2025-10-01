@@ -2,6 +2,7 @@
  * Copyright (c) 2025, J2 Innovations. All Rights Reserved
  */
 
+import { HNamespace } from '../core/HNamespace'
 import { HDict } from '../core/dict/HDict'
 import { HMarker } from '../core/HMarker'
 import { HRef } from '../core/HRef'
@@ -15,14 +16,24 @@ import { HFilterBuilder } from '../filter/HFilterBuilder'
  */
 export interface RelativizeOptions {
 	/**
-	 * True (or undefined) if the display name should be used in the relativization.
+	 * True (or undefined) if the display name should be used in the relative filter.
 	 */
 	useDisplayName?: boolean
 
 	/**
-	 * True (or undefined) if a point's kind should be used in the relativization.
+	 * True (or undefined) if a point's kind should be used in the relative filter.
 	 */
 	useKind?: boolean
+
+	/**
+	 * The namespace to use for determining excluded tags.
+	 */
+	namespace?: HNamespace
+
+	/**
+	 * Optional function to determine the list of tags that should be excluded from the relative filter.
+	 */
+	getExcludedTags?: (namespace?: HNamespace) => string[]
 }
 
 /**
@@ -37,12 +48,18 @@ export function makeRelativeHaystackFilter(
 ): string {
 	const useDisplayName = options?.useDisplayName ?? true
 	const useKind = options?.useKind ?? true
+	const getExcludedTags =
+		options?.getExcludedTags ?? getDefaultRelativizationExcludedTags
+	const excludedTags = new Set(getExcludedTags(options?.namespace))
 
 	const builder = new HFilterBuilder()
 
 	// Build the marker tags.
 	for (const { name, value } of record) {
-		if (valueIsKind<HMarker>(value, Kind.Marker)) {
+		if (
+			valueIsKind<HMarker>(value, Kind.Marker) &&
+			!excludedTags.has(name)
+		) {
 			if (!builder.isEmpty()) {
 				builder.and()
 			}
@@ -71,6 +88,30 @@ export function makeRelativeHaystackFilter(
 	}
 
 	return builder.build()
+}
+
+export function getDefaultRelativizationExcludedTags(
+	namespace?: HNamespace
+): string[] {
+	const excludedTags = [
+		'aux',
+		'his',
+		'hisCollectCOV',
+		'hisCollectNA',
+		'hisTotalized',
+		'axStatus',
+		'axAnnotated',
+	]
+
+	if (namespace) {
+		const connectorPointTags = namespace
+			.allSubTypesOf('connPoint')
+			.map((def) => def.defName)
+
+		excludedTags.push(...connectorPointTags)
+	}
+
+	return excludedTags
 }
 
 function addPointKindToFilter(record: HDict, builder: HFilterBuilder): void {
