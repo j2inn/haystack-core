@@ -36,6 +36,7 @@ export interface PartialHaysonDateTime {
 const TIMEZONE_PREFIXES = [
 	'Africa',
 	'America',
+	'Antarctica',
 	'Asia',
 	'Atlantic',
 	'Australia',
