@@ -405,6 +405,10 @@ describe('HDateTime', function (): void {
 			it('returns an empty string for an invalid timezone', function (): void {
 				expect(getTimeZone('FooBar')).toBe('')
 			})
+
+			it('returns a valid timezone for Antarctica', () => {
+				expect(getTimeZone('Casey')).toBe('Antarctica/Casey')
+			})
 		}) // luxon
 
 		describe('Intl', function (): void {
