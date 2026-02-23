@@ -26,7 +26,6 @@ describe('GridJsonStore', () => {
 			cols: [
 				{
 					name: 'foo',
-					meta: {},
 				},
 				{
 					name: 'boo',
@@ -100,11 +99,9 @@ describe('GridJsonStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -125,11 +122,9 @@ describe('GridJsonStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -151,11 +146,9 @@ describe('GridJsonStore', () => {
 					cols: [
 						{
 							name: 'foo',
-							meta: {},
 						},
 						{
 							name: 'boo',
-							meta: {},
 						},
 					],
 					rows: [
@@ -179,11 +172,9 @@ describe('GridJsonStore', () => {
 						cols: [
 							{
 								name: 'foo',
-								meta: {},
 							},
 							{
 								name: 'boo',
-								meta: {},
 							},
 						],
 						rows: [

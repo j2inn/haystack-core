@@ -27,11 +27,9 @@ describe('GridJsonStringStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -102,11 +100,9 @@ describe('GridJsonStringStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -127,11 +123,9 @@ describe('GridJsonStringStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -153,11 +147,9 @@ describe('GridJsonStringStore', () => {
 					cols: [
 						{
 							name: 'foo',
-							meta: {},
 						},
 						{
 							name: 'boo',
-							meta: {},
 						},
 					],
 					rows: [
@@ -176,15 +168,13 @@ describe('GridJsonStringStore', () => {
 			expect(store.toJSONString()).toBe(
 				JSON.stringify({
 					_kind: Kind.Grid,
-					meta: { ver: '4.0', foo: 'bar' },
+					meta: { foo: 'bar', ver: '4.0' },
 					cols: [
 						{
 							name: 'foo',
-							meta: {},
 						},
 						{
 							name: 'boo',
-							meta: {},
 						},
 					],
 					rows: [
@@ -208,11 +198,9 @@ describe('GridJsonStringStore', () => {
 						cols: [
 							{
 								name: 'foo',
-								meta: {},
 							},
 							{
 								name: 'boo',
-								meta: {},
 							},
 						],
 						rows: [

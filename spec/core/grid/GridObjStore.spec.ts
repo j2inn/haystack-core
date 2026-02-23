@@ -88,11 +88,9 @@ describe('GridObjStore', () => {
 				cols: [
 					{
 						name: 'foo',
-						meta: {},
 					},
 					{
 						name: 'boo',
-						meta: {},
 					},
 				],
 				rows: [
@@ -114,11 +112,9 @@ describe('GridObjStore', () => {
 					cols: [
 						{
 							name: 'foo',
-							meta: {},
 						},
 						{
 							name: 'boo',
-							meta: {},
 						},
 					],
 					rows: [
@@ -142,11 +138,9 @@ describe('GridObjStore', () => {
 						cols: [
 							{
 								name: 'foo',
-								meta: {},
 							},
 							{
 								name: 'boo',
-								meta: {},
 							},
 						],
 						rows: [
