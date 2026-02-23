@@ -40,6 +40,8 @@ export class GridJsonStore<DictVal extends HDict>
 		this.#metaJson = grid.meta
 		this.#columnsJson = grid.cols
 		this.#rowsJson = grid.rows
+
+		this.removeEmptyColumnMeta()
 	}
 
 	get version(): string {
@@ -65,6 +67,12 @@ export class GridJsonStore<DictVal extends HDict>
 				// adds the version number to the grid's meta data. We need to remove the version so
 				// comparisons (i.e. `equals`) still work as expected.
 				if (this.#meta.has(GRID_VERSION_NAME)) {
+					if (!this.#version) {
+						this.#version = this.#meta
+							.get(GRID_VERSION_NAME)
+							?.toString()
+					}
+
 					this.#meta.remove(GRID_VERSION_NAME)
 				}
 			} else {
@@ -123,24 +131,41 @@ export class GridJsonStore<DictVal extends HDict>
 
 	toJSON(): HaysonGrid {
 		// Return a new grid only with the parts of the grid that have changed.
+		const meta =
+			this.#meta || this.#version
+				? { ...this.meta.toJSON() }
+				: this.#metaJson ?? {}
+
+		// Ensure the grid meta is always present. It always needs to be present in
+		// the JSON encoding.
+		if (!meta[GRID_VERSION_NAME]) {
+			meta[GRID_VERSION_NAME] = this.version
+		}
+
 		return {
 			_kind: Kind.Grid,
-			meta:
-				this.#meta || this.#version
-					? {
-							[GRID_VERSION_NAME]: this.version,
-							...this.meta.toJSON(),
-					  }
-					: this.#metaJson ?? {},
+			meta,
 			cols: this.#columns
 				? this.#columns.map((column: GridColumn) => ({
 						name: column.name,
-						meta: column.meta.toJSON(),
+						meta: column.meta.isEmpty()
+							? undefined
+							: column.meta.toJSON(),
 				  }))
 				: this.#columnsJson ?? [],
 			rows: this.#rows
 				? this.#rows.map((row: DictVal): HaysonDict => row.toJSON())
 				: this.#rowsJson ?? [],
+		}
+	}
+
+	private removeEmptyColumnMeta() {
+		if (this.#columnsJson) {
+			for (const column of this.#columnsJson) {
+				if (column.meta && !Object.keys(column.meta).length) {
+					column.meta = undefined
+				}
+			}
 		}
 	}
 

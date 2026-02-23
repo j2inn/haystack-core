@@ -47,7 +47,7 @@ export class GridObjStore<DictVal extends HDict> implements GridStore<DictVal> {
 			},
 			cols: this.columns.map((column: GridColumn) => ({
 				name: column.name,
-				meta: column.meta.toJSON(),
+				meta: column.meta.isEmpty() ? undefined : column.meta.toJSON(),
 			})),
 			rows: this.rows.map((row: DictVal): HaysonDict => row.toJSON()),
 		}

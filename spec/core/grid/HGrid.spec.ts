@@ -319,11 +319,9 @@ describe('HGrid', function (): void {
 					cols: [
 						{
 							name: 'foo',
-							meta: {},
 						},
 						{
 							name: 'goo',
-							meta: {},
 						},
 					],
 					rows: [
@@ -348,11 +346,9 @@ describe('HGrid', function (): void {
 						cols: [
 							{
 								name: 'foo',
-								meta: {},
 							},
 							{
 								name: 'goo',
-								meta: {},
 							},
 						],
 						rows: [
@@ -379,11 +375,9 @@ describe('HGrid', function (): void {
 							cols: [
 								{
 									name: 'foo',
-									meta: {},
 								},
 								{
 									name: 'goo',
-									meta: {},
 								},
 							],
 							rows: [
@@ -1587,10 +1581,10 @@ type,val
 				grid.reorderColumns(['a', 'b', 'c', 'd'])
 
 				expect(grid.toJSON().cols).toEqual([
-					{ name: 'a', meta: {} },
-					{ name: 'b', meta: {} },
-					{ name: 'c', meta: {} },
-					{ name: 'd', meta: {} },
+					{ name: 'a' },
+					{ name: 'b' },
+					{ name: 'c' },
+					{ name: 'd' },
 				])
 			})
 
@@ -1598,10 +1592,10 @@ type,val
 				grid.reorderColumns(['d', 'c', 'b', 'a'])
 
 				expect(grid.toJSON().cols).toEqual([
-					{ name: 'd', meta: {} },
-					{ name: 'c', meta: {} },
-					{ name: 'b', meta: {} },
-					{ name: 'a', meta: {} },
+					{ name: 'd' },
+					{ name: 'c' },
+					{ name: 'b' },
+					{ name: 'a' },
 				])
 			})
 		}) // #reorderColumns()
