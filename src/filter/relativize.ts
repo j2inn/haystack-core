@@ -25,9 +25,39 @@ const DISPLAY_TAGS = ['dis', 'name', 'tag', 'navName']
 const CONTAINMENT_DEPTH = 10
 
 /**
+ * The display name to expand the display name tags when relativizing a filter.
+ */
+export const DISPLAY_NAME_RELATIVIZE_ON_ID = '{dis}'
+
+/**
+ * The kind of a point to expand when relativizing a filter.
+ */
+export const POINT_KIND_RELATIVIZE_ON_ID = '{kind}'
+
+/**
+ * The markers to expand the marker tags when relativizing a filter.
+ */
+export const MARKERS_RELATIVIZE_ON_ID = '{markers}'
+
+/**
  * Relativization options.
  */
 export interface RelativizeOptions {
+	/**
+	 * True (or undefined) if the relativization should be looked up on the record.
+	 *
+	 * A record can define a `relativizeOn` tag that is a list of tags that should
+	 * be used for relativization. This is used to provide a hint on how relativation for a
+	 * certain record is defined.
+	 *
+	 * The {dis} id can be used to add the first known display name tag on the record.
+	 *
+	 * The {kind} id can be used to add the kind tag when the record is a point.
+	 *
+	 * The {markers} id can be used to expand all marker tags on the record.
+	 */
+	useRelativizeOn?: boolean
+
 	/**
 	 * True (or undefined) if the display name should be used in the relative filter.
 	 */
@@ -37,6 +67,11 @@ export interface RelativizeOptions {
 	 * True (or undefined) if a point's kind should be used in the relative filter.
 	 */
 	useKind?: boolean
+
+	/**
+	 * True (or undefined) if the relative filter should use markers.
+	 */
+	useMarkers?: boolean
 
 	/**
 	 * The namespace to use for determining excluded tags.
@@ -52,15 +87,6 @@ export interface RelativizeOptions {
 	 * Optional prefix path.
 	 */
 	prefixPath?: string[]
-
-	/**
-	 * True (or undefined) if the relativization should be looked up on the record.
-	 *
-	 * A record can define a `relativizeOn` tag that is a list of tags that should
-	 * be used for relativization. This is used to provide a hint on how relativation for a
-	 * certain record is defined.
-	 */
-	useRelativizeOn?: boolean
 }
 
 export type RelativizeResolveFunc = (ref: HRef) => Promise<HDict | undefined>
@@ -267,56 +293,47 @@ export function makeRelativeHaystackFilterUsingBuilder(
 	record: HDict,
 	options?: RelativizeOptions
 ): void {
-	const useDisplayName = options?.useDisplayName ?? true
-	const useKind = options?.useKind ?? true
-
 	const getExcludedTags =
 		options?.getExcludedTags ?? getDefaultRelativizationExcludedTags
 
 	const excludedTags = new Set(getExcludedTags(options?.namespace))
 
-	// If the record has a relativizeOn tag, use that to build the filter
-	// instead of the default defined here.
-	if (addRelativizeOnToFilter(builder, record, excludedTags, options)) {
-		return
-	}
-
-	for (const { name, value } of record) {
-		if (valueIsKind<HMarker>(value, Kind.Marker)) {
-			addTagToFilter(
-				name,
-				record,
-				builder,
-				excludedTags,
-				options?.prefixPath
-			)
-		}
-	}
-
-	if (useDisplayName) {
-		for (const tag of DISPLAY_TAGS) {
-			if (
-				addTagToFilter(
-					tag,
-					record,
-					builder,
-					excludedTags,
-					options?.prefixPath
+	const applyRelativizationTags = (tags: string[]) => {
+		const expanded = tags.flatMap((tag) => {
+			// Expand out selected ids to their corresponding tags.
+			if (tag === DISPLAY_NAME_RELATIVIZE_ON_ID) {
+				if (!(options?.useDisplayName ?? true)) return []
+				for (const disTag of DISPLAY_TAGS) {
+					if (record.has(disTag)) {
+						return [disTag]
+					}
+				}
+				return []
+			} else if (tag === POINT_KIND_RELATIVIZE_ON_ID) {
+				if (!(options?.useKind ?? true)) return []
+				return record.has('point') && record.has('kind') ? ['kind'] : []
+			} else if (tag === MARKERS_RELATIVIZE_ON_ID) {
+				if (!(options?.useMarkers ?? true)) return []
+				return record.keys.filter((key) =>
+					valueIsKind<HMarker>(record.get(key), Kind.Marker)
 				)
-			) {
-				break
 			}
+			return tag
+		})
+
+		for (const tag of expanded) {
+			addTagToFilter(tag, record, builder, excludedTags, options?.prefixPath)
 		}
 	}
 
-	if (useKind && record.has('point') && record.has('kind')) {
-		addTagToFilter(
-			'kind',
-			record,
-			builder,
-			excludedTags,
-			options?.prefixPath
-		)
+	const { tags, fromRecord } = getRelativizationOnFromRecord(record, options)
+	applyRelativizationTags(tags)
+
+	// If the record provided a custom relativizeOn list but none of its tags
+	// produced a filter match, fall back gently to the default behaviour
+	// rather than jumping straight to the id.
+	if (builder.isEmpty() && fromRecord) {
+		applyRelativizationTags(getDefaultRelativizationOnTags(options))
 	}
 
 	if (builder.isEmpty() && record.has('id')) {
@@ -324,37 +341,49 @@ export function makeRelativeHaystackFilterUsingBuilder(
 	}
 }
 
-function addRelativizeOnToFilter(
-	builder: HFilterBuilder,
+function getRelativizationOnFromRecord(
 	record: HDict,
-	excludedTags: Set<string>,
 	options?: RelativizeOptions
-): boolean {
-	let added = false
-
+): { tags: string[]; fromRecord: boolean } {
 	const useRelativizeOn = options?.useRelativizeOn ?? true
 
 	if (useRelativizeOn) {
-		const relativizeOn = record.get<HList<HStr>>('relativizeOn')
+		const relativizeOnList = record.get<HList<HStr>>('relativizeOn')
 
-		if (valueIsKind<HList<HStr>>(relativizeOn, Kind.List)) {
-			for (const tag of relativizeOn) {
-				if (
-					addTagToFilter(
-						tag.value,
-						record,
-						builder,
-						excludedTags,
-						options?.prefixPath
-					)
-				) {
-					added = true
-				}
+		if (
+			valueIsKind<HList<HStr>>(relativizeOnList, Kind.List) &&
+			relativizeOnList.length > 0
+		) {
+			return {
+				tags: relativizeOnList.values.map((v) => v.value),
+				fromRecord: true,
 			}
 		}
 	}
 
-	return added
+	return { tags: getDefaultRelativizationOnTags(options), fromRecord: false }
+}
+
+function getDefaultRelativizationOnTags(options?: RelativizeOptions): string[] {
+	const defaultRelativizeOnTags: string[] = []
+
+	const useDisplayName = options?.useDisplayName ?? true
+	const useKind = options?.useKind ?? true
+	const useMarkers = options?.useMarkers ?? true
+
+	if (useDisplayName) {
+		defaultRelativizeOnTags.push(DISPLAY_NAME_RELATIVIZE_ON_ID)
+	}
+
+	if (useKind) {
+		defaultRelativizeOnTags.push(POINT_KIND_RELATIVIZE_ON_ID)
+	}
+
+	if (useMarkers) {
+		defaultRelativizeOnTags.push(MARKERS_RELATIVIZE_ON_ID)
+	}
+
+	return defaultRelativizeOnTags
 }
 
 export function getDefaultRelativizationExcludedTags(
@@ -417,7 +446,7 @@ function addTagToFilter(
 				addAnd()
 				builder.equals(
 					addPathPrefix(tagName, prefixPath),
-					value as HStr
+					value as HRef | HStr
 				)
 				return true
 			default:

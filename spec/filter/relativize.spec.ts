@@ -26,7 +26,7 @@ describe('haystack', () => {
 						equip: HMarker.make(),
 					})
 				)
-			).toEqual('equip and dis == "an equip"')
+			).toEqual('dis == "an equip" and equip')
 		})
 
 		it('returns a haystack filter without a display name with the option disabled', () => {
@@ -53,7 +53,7 @@ describe('haystack', () => {
 						equip: HMarker.make(),
 					})
 				)
-			).toEqual('equip and navName == "an equip"')
+			).toEqual('navName == "an equip" and equip')
 		})
 
 		it('returns a haystack filter with a point kind', () => {
@@ -66,7 +66,7 @@ describe('haystack', () => {
 						kind: HStr.make('Number'),
 					})
 				)
-			).toEqual('point and navName == "a point" and kind == "Number"')
+			).toEqual('navName == "a point" and kind == "Number" and point')
 		})
 
 		it('returns a haystack filter with a point kind and path', () => {
@@ -81,7 +81,7 @@ describe('haystack', () => {
 					{ prefixPath: ['foo', 'bar'] }
 				)
 			).toEqual(
-				'foo->bar->point and foo->bar->navName == "a point" and foo->bar->kind == "Number"'
+				'foo->bar->navName == "a point" and foo->bar->kind == "Number" and foo->bar->point'
 			)
 		})
 
@@ -98,7 +98,36 @@ describe('haystack', () => {
 						useKind: false,
 					}
 				)
-			).toEqual('point and navName == "a point"')
+			).toEqual('navName == "a point" and point')
+		})
+
+		it('returns a haystack filter without markers with the option disabled', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						navName: 'a point',
+						point: HMarker.make(),
+						kind: HStr.make('Number'),
+					}),
+					{
+						useMarkers: false,
+					}
+				)
+			).toEqual('navName == "a point" and kind == "Number"')
+		})
+
+		it('does not include kind for non-point records', () => {
+			expect(
+				makeRelativeHaystackFilter(
+					new HDict({
+						id: HRef.make('id'),
+						dis: 'an equip',
+						equip: HMarker.make(),
+						kind: HStr.make('Dict'),
+					})
+				)
+			).toEqual('dis == "an equip" and equip')
 		})
 
 		it('returns a haystack filter with an absolute id as a fallback', () => {
@@ -122,7 +151,7 @@ describe('haystack', () => {
 						aux: HMarker.make(),
 					})
 				)
-			).toEqual('equip and dis == "an equip"')
+			).toEqual('dis == "an equip" and equip')
 		})
 
 		it('returns a haystack filter without connPoint subtype tags', () => {
@@ -144,7 +173,7 @@ describe('haystack', () => {
 						namespace: mockNamespace,
 					}
 				)
-			).toEqual('equip and dis == "an equip"')
+			).toEqual('dis == "an equip" and equip')
 		})
 
 		it('returns a haystack filter without custom excluded tags', () => {
@@ -160,7 +189,7 @@ describe('haystack', () => {
 						getExcludedTags: () => ['customTag'],
 					}
 				)
-			).toEqual('equip and dis == "an equip"')
+			).toEqual('dis == "an equip" and equip')
 		})
 		describe('addRelativizeOnToFilter()', () => {
 			it('uses relativizeOn tags instead of default behavior', () => {
@@ -204,7 +233,7 @@ describe('haystack', () => {
 						}),
 						{ useRelativizeOn: false }
 					)
-				).toEqual('equip and dis == "an equip"')
+				).toEqual('dis == "an equip" and equip')
 			})
 
 			it('falls through to default behavior when relativizeOn is not a list', () => {
@@ -217,7 +246,7 @@ describe('haystack', () => {
 							relativizeOn: HStr.make('notAList'),
 						})
 					)
-				).toEqual('equip and dis == "an equip"')
+				).toEqual('dis == "an equip" and equip')
 			})
 
 			it('skips excluded tags in relativizeOn', () => {
@@ -264,7 +293,7 @@ describe('haystack', () => {
 				).toEqual('equipRef->equip and equipRef->code == "HVAC-001"')
 			})
 
-			it('falls back to default behavior when relativizeOn tags are missing', () => {
+			it('falls back to defaults when relativizeOn tags are all missing', () => {
 				expect(
 					makeRelativeHaystackFilter(
 						new HDict({
@@ -274,7 +303,7 @@ describe('haystack', () => {
 							relativizeOn: HList.make(HStr.make('missingTag')),
 						})
 					)
-				).toEqual('equip and dis == "an equip"')
+				).toEqual('dis == "an equip" and equip')
 			})
 
 			it('uses id when relativizeOn and default behavior produce empty filter', () => {
@@ -302,6 +331,265 @@ describe('haystack', () => {
 					)
 				).toEqual('code == "TX-001"')
 			})
+
+			describe('{dis} expansion', () => {
+				it('expands {dis} to dis when present', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('dis == "an equip"')
+				})
+
+				it('expands {dis} to name when dis is absent', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								name: HStr.make('my equip'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('name == "my equip"')
+				})
+
+				it('expands {dis} to tag when dis and name are absent', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								tag: HStr.make('my-tag'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('tag == "my-tag"')
+				})
+
+				it('expands {dis} to navName when dis, name, and tag are absent', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								navName: HStr.make('nav equip'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('navName == "nav equip"')
+				})
+
+				it('prefers dis over name when both are present', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('display name'),
+								name: HStr.make('name tag'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('dis == "display name"')
+				})
+
+				it('falls back to defaults when {dis} expands to nothing', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							})
+						)
+					).toEqual('equip')
+				})
+
+				it('respects useDisplayName: false when {dis} is in relativizeOn', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{dis}')),
+							}),
+							{ useDisplayName: false }
+						)
+					).toEqual('equip')
+				})
+			}) // {dis} expansion
+
+			describe('{markers} expansion', () => {
+				it('expands {markers} to all marker tags on the record', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								equip: HMarker.make(),
+								ahu: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							})
+						)
+					).toEqual('equip and ahu')
+				})
+
+				it('does not include non-marker values in {markers} expansion', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								equip: HMarker.make(),
+								kind: HStr.make('Number'),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							})
+						)
+					).toEqual('equip')
+				})
+
+				it('skips excluded marker tags in {markers} expansion', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								equip: HMarker.make(),
+								his: HMarker.make(),
+								ahu: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							})
+						)
+					).toEqual('equip and ahu')
+				})
+
+				it('falls back to defaults when {markers} expands to nothing', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							})
+						)
+					).toEqual('dis == "an equip"')
+				})
+
+				it('respects useMarkers: false when {markers} is in relativizeOn', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								equip: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							}),
+							{ useMarkers: false }
+						)
+					).toEqual('dis == "an equip"')
+				})
+
+				it('skips excluded marker tags with custom getExcludedTags in {markers} expansion', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								equip: HMarker.make(),
+								secret: HMarker.make(),
+								ahu: HMarker.make(),
+								relativizeOn: HList.make(HStr.make('{markers}')),
+							}),
+							{ getExcludedTags: () => ['secret'] }
+						)
+					).toEqual('equip and ahu')
+				})
+			}) // {markers} expansion
+
+			describe('{kind} expansion', () => {
+				it('expands {kind} to kind when record is a point with kind', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								point: HMarker.make(),
+								kind: HStr.make('Number'),
+								relativizeOn: HList.make(HStr.make('{kind}')),
+							})
+						)
+					).toEqual('kind == "Number"')
+				})
+
+				it('expands {kind} to nothing when the record is not a point', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								equip: HMarker.make(),
+								kind: HStr.make('Dict'),
+								relativizeOn: HList.make(HStr.make('{kind}')),
+							})
+						)
+					).toEqual('equip')
+				})
+
+				it('respects useKind: false when {kind} is in relativizeOn', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: 'a point',
+								point: HMarker.make(),
+								kind: HStr.make('Number'),
+								relativizeOn: HList.make(HStr.make('{kind}')),
+							}),
+							{ useKind: false }
+						)
+					).toEqual('dis == "a point" and point')
+				})
+			}) // {kind} expansion
+
+			describe('{dis} and {markers} combined', () => {
+				it('expands both {dis} and {markers} in a single relativizeOn list', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('an equip'),
+								equip: HMarker.make(),
+								ahu: HMarker.make(),
+								relativizeOn: HList.make(
+									HStr.make('{dis}'),
+									HStr.make('{markers}')
+								),
+							})
+						)
+					).toEqual('dis == "an equip" and equip and ahu')
+				})
+
+				it('works with prefixPath when using {dis} and {markers}', () => {
+					expect(
+						makeRelativeHaystackFilter(
+							new HDict({
+								id: HRef.make('id'),
+								dis: HStr.make('a point'),
+								point: HMarker.make(),
+								relativizeOn: HList.make(
+									HStr.make('{dis}'),
+									HStr.make('{markers}')
+								),
+							}),
+							{ prefixPath: ['equipRef'] }
+						)
+					).toEqual(
+						'equipRef->dis == "a point" and equipRef->point'
+					)
+				})
+			}) // {dis} and {markers} combined
 		}) // addRelativizeOnToFilter()
 	}) // makeRelativeHaystackFilter()
 
@@ -330,7 +618,7 @@ describe('haystack', () => {
 				expect(
 					await makeRelativeHaystackFilterForTarget(equip, point)
 				).toBe(
-					'equipRef == $id and point and dis == "a point" and kind == "Number"'
+					'equipRef == $id and dis == "a point" and kind == "Number" and point'
 				)
 			})
 		}) // for equip and a point
@@ -389,7 +677,7 @@ describe('haystack', () => {
 						resolve,
 					})
 				).toBe(
-					'equipRef->spaceRef == $id and point and dis == "a point" and kind == "Number" and equipRef->equip and equipRef->dis == "an equip"'
+					'equipRef->spaceRef == $id and dis == "a point" and kind == "Number" and point and equipRef->dis == "an equip" and equipRef->equip'
 				)
 			})
 
@@ -399,7 +687,7 @@ describe('haystack', () => {
 						resolve,
 					})
 				).toBe(
-					'equipRef == $id and point and dis == "a point" and kind == "Number"'
+					'equipRef == $id and dis == "a point" and kind == "Number" and point'
 				)
 			})
 		}) // for equip and a point
@@ -463,7 +751,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef->spaceRef == $id and point and dis == "nested point" and kind == "Number"'
+					'equipRef->spaceRef == $id and dis == "nested point" and kind == "Number" and point'
 				)
 			})
 
@@ -477,7 +765,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'point and dis == "a point" and kind == "Number"'
+					'dis == "a point" and kind == "Number" and point'
 				)
 			})
 
@@ -492,7 +780,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'point and dis == "a point" and kind == "Number"'
+					'dis == "a point" and kind == "Number" and point'
 				)
 			})
 
@@ -506,7 +794,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef == $id and point and kind == "Number"'
+					'equipRef == $id and kind == "Number" and point'
 				)
 			})
 
@@ -520,7 +808,21 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef == $id and point and dis == "a point"'
+					'equipRef == $id and dis == "a point" and point'
+				)
+			})
+
+			it('respects useMarkers option', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					equip,
+					point,
+					{
+						useMarkers: false,
+					}
+				)
+
+				expect(result).toBe(
+					'equipRef == $id and dis == "a point" and kind == "Number"'
 				)
 			})
 		}) // options
@@ -657,7 +959,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'spaceRef == $id and equip and dis == "an equip"'
+					'spaceRef == $id and dis == "an equip" and equip'
 				)
 			})
 
@@ -681,7 +983,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'siteRef == $id and equip and dis == "an equip"'
+					'siteRef == $id and dis == "an equip" and equip'
 				)
 			})
 
@@ -705,7 +1007,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'floorRef == $id and equip and dis == "an equip"'
+					'floorRef == $id and dis == "an equip" and equip'
 				)
 			})
 
@@ -744,7 +1046,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef->siteRef == $id and point and dis == "a point" and kind == "Status" and equipRef->equip and equipRef->dis == "an equip"'
+					'equipRef->siteRef == $id and dis == "a point" and kind == "Status" and point and equipRef->dis == "an equip" and equipRef->equip'
 				)
 			})
 		}) // edge cases
@@ -1045,7 +1347,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef->spaceRef == $id and point and dis == "a point" and kind == "Number" and equipRef->equip and equipRef->dis == "cached equip"'
+					'equipRef->spaceRef == $id and dis == "a point" and kind == "Number" and point and equipRef->dis == "cached equip" and equipRef->equip'
 				)
 			})
 
@@ -1085,7 +1387,7 @@ describe('haystack', () => {
 				)
 
 				expect(result).toBe(
-					'equipRef->spaceRef == $id and point and dis == "a point" and kind == "Number" and equipRef->equip and equipRef->dis == "an equip"'
+					'equipRef->spaceRef == $id and dis == "a point" and kind == "Number" and point and equipRef->dis == "an equip" and equipRef->equip'
 				)
 			})
 		}) // resolveCache
