@@ -7,12 +7,21 @@ import { HDict } from '../core/dict/HDict'
 import { HMarker } from '../core/HMarker'
 import { HRef } from '../core/HRef'
 import { HStr } from '../core/HStr'
+import { HList } from '../core/list/HList'
 import { valueIsKind } from '../core/HVal'
 import { Kind } from '../core/Kind'
 import { HFilterBuilder } from './HFilterBuilder'
 
-const DIS_TAGS = ['dis', 'name', 'tag', 'navName']
+/**
+ * The tags used for display name relativization.
+ */
+const DISPLAY_TAGS = ['dis', 'name', 'tag', 'navName']
 
+/**
+ * The maximum depth of the containment hierarchy to traverse when relativizing a filter.
+ *
+ * This is a safeguard to prevent infinite loops in case of circular references.
+ */
 const CONTAINMENT_DEPTH = 10
 
 /**
@@ -43,6 +52,15 @@ export interface RelativizeOptions {
 	 * Optional prefix path.
 	 */
 	prefixPath?: string[]
+
+	/**
+	 * True (or undefined) if the relativization should be looked up on the record.
+	 *
+	 * A record can define a `relativizeOn` tag that is a list of tags that should
+	 * be used for relativization. This is used to provide a hint on how relativation for a
+	 * certain record is defined.
+	 */
+	useRelativizeOn?: boolean
 }
 
 export type RelativizeResolveFunc = (ref: HRef) => Promise<HDict | undefined>
@@ -174,15 +192,7 @@ async function resolveDictPath(
 			break
 		}
 
-		const promise =
-			options?.resolveCache?.get(parentRef.value) ??
-			options?.resolve?.(parentRef)
-
-		if (options?.resolveCache && promise !== undefined) {
-			options.resolveCache.set(parentRef.value, promise)
-		}
-
-		const parentDict = await promise
+		const parentDict = await resolveParentDict(parentRef, options)
 
 		if (parentDict) {
 			currentRecord = parentDict
@@ -198,6 +208,21 @@ async function resolveDictPath(
 	}
 
 	return dictPathInfo
+}
+
+async function resolveParentDict(
+	parentRef: HRef,
+	options?: RelativizeForTargetOptions
+): Promise<HDict | undefined> {
+	const promise =
+		options?.resolveCache?.get(parentRef.value) ??
+		options?.resolve?.(parentRef)
+
+	if (options?.resolveCache && promise !== undefined) {
+		options.resolveCache.set(parentRef.value, promise)
+	}
+
+	return promise
 }
 
 function getParentRefTag(record: HDict): string | undefined {
@@ -242,13 +267,19 @@ export function makeRelativeHaystackFilterUsingBuilder(
 	record: HDict,
 	options?: RelativizeOptions
 ): void {
+	const useDisplayName = options?.useDisplayName ?? true
+	const useKind = options?.useKind ?? true
+
 	const getExcludedTags =
 		options?.getExcludedTags ?? getDefaultRelativizationExcludedTags
 
 	const excludedTags = new Set(getExcludedTags(options?.namespace))
 
-	const useDisplayName = options?.useDisplayName ?? true
-	const useKind = options?.useKind ?? true
+	// If the record has a relativizeOn tag, use that to build the filter
+	// instead of the default defined here.
+	if (addRelativizeOnToFilter(builder, record, excludedTags, options)) {
+		return
+	}
 
 	for (const { name, value } of record) {
 		if (valueIsKind<HMarker>(value, Kind.Marker)) {
@@ -263,7 +294,7 @@ export function makeRelativeHaystackFilterUsingBuilder(
 	}
 
 	if (useDisplayName) {
-		for (const tag of DIS_TAGS) {
+		for (const tag of DISPLAY_TAGS) {
 			if (
 				addTagToFilter(
 					tag,
@@ -291,6 +322,39 @@ export function makeRelativeHaystackFilterUsingBuilder(
 	if (builder.isEmpty() && record.has('id')) {
 		addTagToFilter('id', record, builder, excludedTags, options?.prefixPath)
 	}
+}
+
+function addRelativizeOnToFilter(
+	builder: HFilterBuilder,
+	record: HDict,
+	excludedTags: Set<string>,
+	options?: RelativizeOptions
+): boolean {
+	let added = false
+
+	const useRelativizeOn = options?.useRelativizeOn ?? true
+
+	if (useRelativizeOn) {
+		const relativizeOn = record.get<HList<HStr>>('relativizeOn')
+
+		if (valueIsKind<HList<HStr>>(relativizeOn, Kind.List)) {
+			for (const tag of relativizeOn) {
+				if (
+					addTagToFilter(
+						tag.value,
+						record,
+						builder,
+						excludedTags,
+						options?.prefixPath
+					)
+				) {
+					added = true
+				}
+			}
+		}
+	}
+
+	return added
 }
 
 export function getDefaultRelativizationExcludedTags(

@@ -13,6 +13,7 @@ import { HMarker } from '../../src/core/HMarker'
 import { HStr } from '../../src/core/HStr'
 import { HSymbol } from '../../src/core/HSymbol'
 import { HNamespace } from '../../src/core/HNamespace'
+import { HList } from '../../src/core/list/HList'
 
 describe('haystack', () => {
 	describe('makeRelativeHaystackFilter()', () => {
@@ -161,6 +162,147 @@ describe('haystack', () => {
 				)
 			).toEqual('equip and dis == "an equip"')
 		})
+		describe('addRelativizeOnToFilter()', () => {
+			it('uses relativizeOn tags instead of default behavior', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							area: HMarker.make(),
+							zone: HStr.make('A1'),
+							relativizeOn: HList.make(HStr.make('area'), HStr.make('zone')),
+						})
+					)
+				).toEqual('area and zone == "A1"')
+			})
+
+			it('uses single tag from relativizeOn', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							code: HStr.make('HVAC-001'),
+							relativizeOn: HList.make(HStr.make('code')),
+						})
+					)
+				).toEqual('code == "HVAC-001"')
+			})
+
+			it('ignores relativizeOn when useRelativizeOn is false', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							code: HStr.make('HVAC-001'),
+							relativizeOn: HList.make(HStr.make('code')),
+						}),
+						{ useRelativizeOn: false }
+					)
+				).toEqual('equip and dis == "an equip"')
+			})
+
+			it('falls through to default behavior when relativizeOn is not a list', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							relativizeOn: HStr.make('notAList'),
+						})
+					)
+				).toEqual('equip and dis == "an equip"')
+			})
+
+			it('skips excluded tags in relativizeOn', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							his: HMarker.make(),
+							code: HStr.make('HVAC-001'),
+							relativizeOn: HList.make(HStr.make('his'), HStr.make('code')),
+						})
+					)
+				).toEqual('code == "HVAC-001"')
+			})
+
+			it('skips tags in relativizeOn that are not present on the record', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							code: HStr.make('HVAC-001'),
+							relativizeOn: HList.make(HStr.make('missingTag'), HStr.make('code')),
+						})
+					)
+				).toEqual('code == "HVAC-001"')
+			})
+
+			it('respects prefixPath with relativizeOn', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							code: HStr.make('HVAC-001'),
+							relativizeOn: HList.make(HStr.make('equip'), HStr.make('code')),
+						}),
+						{ prefixPath: ['equipRef'] }
+					)
+				).toEqual('equipRef->equip and equipRef->code == "HVAC-001"')
+			})
+
+			it('falls back to default behavior when relativizeOn tags are missing', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'an equip',
+							equip: HMarker.make(),
+							relativizeOn: HList.make(HStr.make('missingTag')),
+						})
+					)
+				).toEqual('equip and dis == "an equip"')
+			})
+
+			it('uses id when relativizeOn and default behavior produce empty filter', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							relativizeOn: HList.make(HStr.make('missingTag')),
+						})
+					)
+				).toEqual('id == @id')
+			})
+
+			it('does not add display name or kind when relativizeOn provides tags', () => {
+				expect(
+					makeRelativeHaystackFilter(
+						new HDict({
+							id: HRef.make('id'),
+							dis: 'a point',
+							point: HMarker.make(),
+							kind: HStr.make('Number'),
+							code: HStr.make('TX-001'),
+							relativizeOn: HList.make(HStr.make('code')),
+						})
+					)
+				).toEqual('code == "TX-001"')
+			})
+		}) // addRelativizeOnToFilter()
 	}) // makeRelativeHaystackFilter()
 
 	describe('makeRelativeHaystackFilterForTarget()', () => {
