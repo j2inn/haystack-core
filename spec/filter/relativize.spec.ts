@@ -201,7 +201,10 @@ describe('haystack', () => {
 							equip: HMarker.make(),
 							area: HMarker.make(),
 							zone: HStr.make('A1'),
-							relativizeOn: HList.make(HStr.make('area'), HStr.make('zone')),
+							relativizeOn: HList.make(
+								HStr.make('area'),
+								HStr.make('zone')
+							),
 						})
 					)
 				).toEqual('area and zone == "A1"')
@@ -258,7 +261,10 @@ describe('haystack', () => {
 							equip: HMarker.make(),
 							his: HMarker.make(),
 							code: HStr.make('HVAC-001'),
-							relativizeOn: HList.make(HStr.make('his'), HStr.make('code')),
+							relativizeOn: HList.make(
+								HStr.make('his'),
+								HStr.make('code')
+							),
 						})
 					)
 				).toEqual('code == "HVAC-001"')
@@ -272,7 +278,10 @@ describe('haystack', () => {
 							dis: 'an equip',
 							equip: HMarker.make(),
 							code: HStr.make('HVAC-001'),
-							relativizeOn: HList.make(HStr.make('missingTag'), HStr.make('code')),
+							relativizeOn: HList.make(
+								HStr.make('missingTag'),
+								HStr.make('code')
+							),
 						})
 					)
 				).toEqual('code == "HVAC-001"')
@@ -286,7 +295,10 @@ describe('haystack', () => {
 							dis: 'an equip',
 							equip: HMarker.make(),
 							code: HStr.make('HVAC-001'),
-							relativizeOn: HList.make(HStr.make('equip'), HStr.make('code')),
+							relativizeOn: HList.make(
+								HStr.make('equip'),
+								HStr.make('code')
+							),
 						}),
 						{ prefixPath: ['equipRef'] }
 					)
@@ -434,7 +446,9 @@ describe('haystack', () => {
 								id: HRef.make('id'),
 								equip: HMarker.make(),
 								ahu: HMarker.make(),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							})
 						)
 					).toEqual('equip and ahu')
@@ -448,7 +462,9 @@ describe('haystack', () => {
 								dis: HStr.make('an equip'),
 								equip: HMarker.make(),
 								kind: HStr.make('Number'),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							})
 						)
 					).toEqual('equip')
@@ -462,7 +478,9 @@ describe('haystack', () => {
 								equip: HMarker.make(),
 								his: HMarker.make(),
 								ahu: HMarker.make(),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							})
 						)
 					).toEqual('equip and ahu')
@@ -474,7 +492,9 @@ describe('haystack', () => {
 							new HDict({
 								id: HRef.make('id'),
 								dis: HStr.make('an equip'),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							})
 						)
 					).toEqual('dis == "an equip"')
@@ -487,7 +507,9 @@ describe('haystack', () => {
 								id: HRef.make('id'),
 								dis: HStr.make('an equip'),
 								equip: HMarker.make(),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							}),
 							{ useMarkers: false }
 						)
@@ -502,7 +524,9 @@ describe('haystack', () => {
 								equip: HMarker.make(),
 								secret: HMarker.make(),
 								ahu: HMarker.make(),
-								relativizeOn: HList.make(HStr.make('{markers}')),
+								relativizeOn: HList.make(
+									HStr.make('{markers}')
+								),
 							}),
 							{ getExcludedTags: () => ['secret'] }
 						)
@@ -585,9 +609,7 @@ describe('haystack', () => {
 							}),
 							{ prefixPath: ['equipRef'] }
 						)
-					).toEqual(
-						'equipRef->dis == "a point" and equipRef->point'
-					)
+					).toEqual('equipRef->dis == "a point" and equipRef->point')
 				})
 			}) // {dis} and {markers} combined
 		}) // addRelativizeOnToFilter()
@@ -877,7 +899,9 @@ describe('haystack', () => {
 
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, orphanRecord)
-				).rejects.toThrow('Record myOrphanId does not have a parent reference')
+				).rejects.toThrow(
+					'Record myOrphanId does not have a parent reference'
+				)
 			})
 
 			it('throws when parent ref cannot be resolved', async () => {
@@ -1091,7 +1115,10 @@ describe('haystack', () => {
 					spaceRef: HRef.make('parentId'),
 				})
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 				resolveCache.set(
 					'parentId',
 					Promise.reject(new Error('Cached resolve failed'))
@@ -1111,13 +1138,6 @@ describe('haystack', () => {
 					space: HMarker.make(),
 				})
 
-				const equipChild = new HDict({
-					id: HRef.make('equipId'),
-					dis: 'equip',
-					equip: HMarker.make(),
-					spaceRef: HRef.make('targetId'),
-				})
-
 				const point = new HDict({
 					id: HRef.make('pointId'),
 					dis: 'point',
@@ -1128,7 +1148,9 @@ describe('haystack', () => {
 
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, point)
-				).rejects.toThrow('Could not resolve parent record for ref equipId')
+				).rejects.toThrow(
+					'Could not resolve parent record for ref equipId'
+				)
 			})
 
 			it('throws when record id is missing in parent ref error', async () => {
@@ -1178,7 +1200,10 @@ describe('haystack', () => {
 					equipRef: HRef.make('equipId'),
 				})
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 
 				const resolve: RelativizeResolveFunc = async (ref: HRef) => {
 					if (ref.value === 'equipId') return equip
@@ -1229,7 +1254,10 @@ describe('haystack', () => {
 					return undefined
 				}
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 				resolveCache.set('equipId', Promise.resolve(equip))
 
 				await makeRelativeHaystackFilterForTarget(room, point, {
@@ -1280,7 +1308,10 @@ describe('haystack', () => {
 					return undefined
 				}
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 
 				await makeRelativeHaystackFilterForTarget(room, point1, {
 					resolve,
@@ -1318,7 +1349,10 @@ describe('haystack', () => {
 					return undefined
 				}
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 
 				const cachedEquip = new HDict({
 					id: HRef.make('equipId'),
@@ -1374,7 +1408,10 @@ describe('haystack', () => {
 					equipRef: HRef.make('equipId'),
 				})
 
-				const resolveCache = new Map<string, Promise<HDict | undefined>>()
+				const resolveCache = new Map<
+					string,
+					Promise<HDict | undefined>
+				>()
 				resolveCache.set('equipId', Promise.resolve(equip))
 				resolveCache.set('roomId', Promise.resolve(room))
 

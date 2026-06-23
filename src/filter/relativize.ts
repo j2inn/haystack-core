@@ -322,7 +322,13 @@ export function makeRelativeHaystackFilterUsingBuilder(
 		})
 
 		for (const tag of expanded) {
-			addTagToFilter(tag, record, builder, excludedTags, options?.prefixPath)
+			addTagToFilter(
+				tag,
+				record,
+				builder,
+				excludedTags,
+				options?.prefixPath
+			)
 		}
 	}
 
