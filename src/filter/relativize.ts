@@ -403,6 +403,7 @@ export function getDefaultRelativizationExcludedTags(
 		'hisTotalized',
 		'axStatus',
 		'axAnnotated',
+		'cur',
 	]
 
 	if (namespace) {

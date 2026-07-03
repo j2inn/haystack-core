@@ -149,6 +149,7 @@ describe('haystack', () => {
 						equip: HMarker.make(),
 						his: HMarker.make(),
 						aux: HMarker.make(),
+						cur: HMarker.make(),
 					})
 				)
 			).toEqual('dis == "an equip" and equip')
