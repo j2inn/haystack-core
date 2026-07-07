@@ -715,6 +715,239 @@ describe('haystack', () => {
 			})
 		}) // for equip and a point
 
+		describe('other refs', () => {
+			let target: HDict
+			let record: HDict
+			let resolve: RelativizeResolveFunc
+
+			beforeEach(() => {
+				target = new HDict({
+					id: HRef.make('targetId'),
+					dis: 'a target',
+					equip: HMarker.make(),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				record = new HDict({
+					id: HRef.make('recordId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				resolve = async (ref: HRef) => {
+					let result: HDict | undefined
+
+					switch (ref.value) {
+						case 'targetId':
+							result = target
+							break
+						case 'recordId':
+							result = record
+							break
+					}
+
+					return result
+				}
+			})
+
+			it('resolves other refs when they are present on the target', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					target,
+					record,
+					{
+						resolve,
+					}
+				)
+
+				expect(result).toBe(
+					'chillerRef == $chillerRef and dis == "a record" and kind == "Number" and point'
+				)
+			})
+
+			it('ignores other refs when includeOtherRefs is false', async () => {
+				await expect(
+					makeRelativeHaystackFilterForTarget(target, record, {
+						resolve,
+						includeOtherRefs: false,
+					})
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
+			})
+
+			it('does not match when the other ref values are different', async () => {
+				const otherRecord = new HDict({
+					id: HRef.make('recordId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+					chillerRef: HRef.make('anotherChillerId'),
+				})
+
+				await expect(
+					makeRelativeHaystackFilterForTarget(target, otherRecord, {
+						resolve,
+					})
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
+			})
+
+			it('does not match when the record is missing the ref tag', async () => {
+				const otherRecord = new HDict({
+					id: HRef.make('recordId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+				})
+
+				await expect(
+					makeRelativeHaystackFilterForTarget(target, otherRecord, {
+						resolve,
+					})
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
+			})
+
+			it('ignores containment ref tags when searching for other refs', async () => {
+				const containmentTarget = new HDict({
+					id: HRef.make('targetId'),
+					dis: 'a target',
+					equip: HMarker.make(),
+					spaceRef: HRef.make('sameSpaceId'),
+				})
+
+				const containmentRecord = new HDict({
+					id: HRef.make('recordId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+					spaceRef: HRef.make('sameSpaceId'),
+				})
+
+				await expect(
+					makeRelativeHaystackFilterForTarget(
+						containmentTarget,
+						containmentRecord,
+						{ resolve }
+					)
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
+			})
+
+			it('ignores the id tag when searching for other refs', async () => {
+				const sameIdTarget = new HDict({
+					id: HRef.make('sharedId'),
+					dis: 'a target',
+					equip: HMarker.make(),
+				})
+
+				const sameIdRecord = new HDict({
+					id: HRef.make('sharedId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+				})
+
+				await expect(
+					makeRelativeHaystackFilterForTarget(
+						sameIdTarget,
+						sameIdRecord,
+						{ resolve }
+					)
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
+			})
+
+			it('uses the first matching other ref found on the target', async () => {
+				const multiRefTarget = new HDict({
+					id: HRef.make('targetId'),
+					dis: 'a target',
+					equip: HMarker.make(),
+					boilerRef: HRef.make('boilerId'),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				const multiRefRecord = new HDict({
+					id: HRef.make('recordId'),
+					dis: 'a record',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+					boilerRef: HRef.make('boilerId'),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				const result = await makeRelativeHaystackFilterForTarget(
+					multiRefTarget,
+					multiRefRecord,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'boilerRef == $boilerRef and dis == "a record" and kind == "Number" and point'
+				)
+			})
+
+			it('falls back to containment when it succeeds before other refs are considered', async () => {
+				const equip = new HDict({
+					id: HRef.make('equipId'),
+					dis: 'an equip',
+					equip: HMarker.make(),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				const point = new HDict({
+					id: HRef.make('pointId'),
+					dis: 'a point',
+					point: HMarker.make(),
+					kind: HStr.make('Number'),
+					equipRef: HRef.make('equipId'),
+					chillerRef: HRef.make('chillerId'),
+				})
+
+				const result = await makeRelativeHaystackFilterForTarget(
+					equip,
+					point,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'equipRef == $id and dis == "a point" and kind == "Number" and point'
+				)
+			})
+
+			it('excludes the target macro for other refs when includeTargetMacro is false', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					target,
+					record,
+					{
+						resolve,
+						includeTargetMacro: false,
+					}
+				)
+
+				expect(result).toBe(
+					'dis == "a record" and kind == "Number" and point'
+				)
+			})
+
+			it('does not require a resolve function for other ref matches', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					target,
+					record
+				)
+
+				expect(result).toBe(
+					'chillerRef == $chillerRef and dis == "a record" and kind == "Number" and point'
+				)
+			})
+		}) // other refs
+
 		describe('options', () => {
 			let equip: HDict
 			let point: HDict
@@ -866,7 +1099,9 @@ describe('haystack', () => {
 
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, point)
-				).rejects.toThrow('Target record must have an id')
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
 			})
 
 			it('throws when record has no parent ref', async () => {
@@ -883,7 +1118,9 @@ describe('haystack', () => {
 
 				await expect(
 					makeRelativeHaystackFilterForTarget(equip, orphanRecord)
-				).rejects.toThrow('does not have a parent reference')
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
 			})
 
 			it('includes record id in no-parent-ref error message', async () => {
@@ -901,7 +1138,7 @@ describe('haystack', () => {
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, orphanRecord)
 				).rejects.toThrow(
-					'Record myOrphanId does not have a parent reference'
+					'Could not resolve relative path for target record'
 				)
 			})
 
@@ -926,7 +1163,7 @@ describe('haystack', () => {
 						resolve,
 					})
 				).rejects.toThrow(
-					'Could not resolve parent record for ref unknownId'
+					'Could not resolve relative path for target record'
 				)
 			})
 
@@ -1150,7 +1387,7 @@ describe('haystack', () => {
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, point)
 				).rejects.toThrow(
-					'Could not resolve parent record for ref equipId'
+					'Could not resolve relative path for target record'
 				)
 			})
 
@@ -1167,7 +1404,9 @@ describe('haystack', () => {
 
 				await expect(
 					makeRelativeHaystackFilterForTarget(target, orphanRecord)
-				).rejects.toThrow('does not have a parent reference')
+				).rejects.toThrow(
+					'Could not resolve relative path for target record'
+				)
 			})
 		}) // error propagation
 		describe('resolveCache', () => {

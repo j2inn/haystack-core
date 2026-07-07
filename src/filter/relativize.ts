@@ -114,6 +114,15 @@ export interface RelativizeForTargetOptions extends RelativizeOptions {
 	 * True (or undefined) if the target record macro reference should be included in the relative filters.
 	 */
 	includeTargetMacro?: boolean
+
+	/**
+	 * True (or undefined) if other references on the target record should be included when relativizing.
+	 *
+	 * If this is false, only the containment references will be used to relativize the filter.
+	 * If this is true, other references on the target record will be used to relativize the filter
+	 * if they match the record being relativized.
+	 */
+	includeOtherRefs?: boolean
 }
 
 /**
@@ -132,10 +141,32 @@ export async function makeRelativeHaystackFilterForTarget(
 	record: HDict,
 	options?: RelativizeForTargetOptions
 ): Promise<string> {
-	const dictPathInfo = await resolveDictPath(target, record, options)
+	let refMacroName = 'id'
+
+	// 1. Resolve a path to the target record using containment.
+	let dictPathInfo = await resolveDictPathForId(target, record, options)
+
+	const includeOtherRefs = options?.includeOtherRefs ?? true
+
+	// 2. If that can't be found then search through the target for other refs that could be used
+	// for relativization.
+	if (includeOtherRefs && !dictPathInfo) {
+		for (const refName of extractRefNamesFromTarget(target)) {
+			if (record.get<HRef>(refName)?.equals(target.get<HRef>(refName))) {
+				refMacroName = refName
+
+				dictPathInfo = {
+					dicts: [record],
+					path: [refName],
+				}
+
+				break
+			}
+		}
+	}
 
 	if (!dictPathInfo) {
-		return ''
+		throw new Error('Could not resolve relative path for target record')
 	}
 
 	const includeTargetMacro = options?.includeTargetMacro ?? true
@@ -147,7 +178,7 @@ export async function makeRelativeHaystackFilterForTarget(
 	const builder = new HFilterBuilder()
 
 	const prefix = includeTargetMacro
-		? dictPathInfo.path.join('->') + ' == $id and '
+		? dictPathInfo.path.join('->') + ` == $${refMacroName} and `
 		: ''
 
 	for (let i = 0; i < dicts.length; ++i) {
@@ -171,17 +202,17 @@ interface DictPathInfo {
 	path: string[]
 }
 
-async function resolveDictPath(
+async function resolveDictPathForId(
 	target: HDict,
 	record: HDict,
 	options?: RelativizeForTargetOptions
-): Promise<DictPathInfo> {
+): Promise<DictPathInfo | undefined> {
 	// Follow the containment refs to build a tree of records
 	// with the target as the root.
 	const targetRef = target.get<HRef>('id')
 
 	if (!targetRef) {
-		throw new Error('Target record must have an id')
+		return undefined
 	}
 
 	let dictPathInfo: DictPathInfo | undefined = undefined
@@ -197,18 +228,12 @@ async function resolveDictPath(
 		const parentRefTag = getParentRefTag(currentRecord)
 
 		if (!parentRefTag) {
-			throw new Error(
-				`Record ${
-					currentRecord.get<HRef>('id')?.value
-				} does not have a parent reference`
-			)
+			return undefined
 		}
 
 		const parentRef = currentRecord.get<HRef>(parentRefTag) as HRef
 
-		if (!dictPathInfo) {
-			dictPathInfo = { dicts: [], path: [] }
-		}
+		dictPathInfo ??= { dicts: [], path: [] }
 
 		dictPathInfo.dicts.push(currentRecord)
 		dictPathInfo.path.push(parentRefTag)
@@ -223,14 +248,8 @@ async function resolveDictPath(
 		if (parentDict) {
 			currentRecord = parentDict
 		} else {
-			throw new Error(
-				`Could not resolve parent record for ref ${parentRef.value}`
-			)
+			return undefined
 		}
-	}
-
-	if (!dictPathInfo) {
-		throw new Error('Could not find a path to the target record')
 	}
 
 	return dictPathInfo
@@ -273,6 +292,22 @@ function getParentRefTag(record: HDict): string | undefined {
 	return undefined
 }
 
+const IGNORE_REF_NAMES = new Set([
+	'id',
+	'equipRef',
+	'spaceRef',
+	'floorRef',
+	'siteRef',
+])
+
+function extractRefNamesFromTarget(target: HDict): string[] {
+	return target.keys.filter(
+		(key) =>
+			!IGNORE_REF_NAMES.has(key) &&
+			valueIsKind<HRef>(target.get(key), Kind.Ref)
+	)
+}
+
 /**
  * Makes a relative haystack filter from a record.
  *
@@ -302,7 +337,9 @@ export function makeRelativeHaystackFilterUsingBuilder(
 		const expanded = tags.flatMap((tag) => {
 			// Expand out selected ids to their corresponding tags.
 			if (tag === DISPLAY_NAME_RELATIVIZE_ON_ID) {
-				if (!(options?.useDisplayName ?? true)) return []
+				if (!(options?.useDisplayName ?? true)) {
+					return []
+				}
 				for (const disTag of DISPLAY_TAGS) {
 					if (record.has(disTag)) {
 						return [disTag]
@@ -310,10 +347,14 @@ export function makeRelativeHaystackFilterUsingBuilder(
 				}
 				return []
 			} else if (tag === POINT_KIND_RELATIVIZE_ON_ID) {
-				if (!(options?.useKind ?? true)) return []
+				if (!(options?.useKind ?? true)) {
+					return []
+				}
 				return record.has('point') && record.has('kind') ? ['kind'] : []
 			} else if (tag === MARKERS_RELATIVIZE_ON_ID) {
-				if (!(options?.useMarkers ?? true)) return []
+				if (!(options?.useMarkers ?? true)) {
+					return []
+				}
 				return record.keys.filter((key) =>
 					valueIsKind<HMarker>(record.get(key), Kind.Marker)
 				)
