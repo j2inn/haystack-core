@@ -75,7 +75,7 @@ export class HFilter {
 	 * @param context The evaluation context.
 	 * @returns The result of the evaluation.
 	 */
-	static eval(node: Node, context: EvalContext): boolean {
+	static eval(node: Node, context: EvalContext<unknown>): boolean {
 		return node.eval(context)
 	}
 
@@ -86,7 +86,7 @@ export class HFilter {
 	 * @param context The evaluation context.
 	 * @returns The result of the evaluation.
 	 */
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		return HFilter.eval(this.node, context)
 	}
 

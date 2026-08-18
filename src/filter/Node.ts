@@ -12,14 +12,13 @@ import { TokenType } from './TokenType'
 import { TokenPaths } from './TokenPaths'
 import { HaysonVal } from '../core/hayson'
 import { EvalContext } from './EvalContext'
-import { HVal } from '../core/HVal'
 import { valueIsKind } from '../core/HVal'
 import { Kind } from '../core/Kind'
 import { HDict } from '../core/dict/HDict'
 import { HRef } from '../core/HRef'
 import { HSymbol } from '../core/HSymbol'
 import { TokenRelationship } from './TokenRelationship'
-import { HList } from '../core/list/HList'
+import { FilterAdapter, DEFAULT_FILTER_ADAPTER } from './FilterAdapter'
 
 /**
  * AWT Node Implementation for a Haystack Filter.
@@ -110,7 +109,20 @@ export function isNode(node: any): node is Node {
 	)
 }
 
-const EMPTY_HVAL_ARRAY: readonly HVal[] = Object.freeze([])
+const EMPTY_VALUE_ARRAY: readonly unknown[] = Object.freeze([])
+
+/**
+ * @param context The evaluation context.
+ * @returns The adapter to use, defaulting to the real `HVal` based implementation.
+ */
+function getAdapter<Subject>(
+	context: EvalContext<Subject>
+): FilterAdapter<Subject> {
+	return (
+		context.adapter ??
+		(DEFAULT_FILTER_ADAPTER as unknown as FilterAdapter<Subject>)
+	)
+}
 
 /**
  * Get all the values from a path.
@@ -119,48 +131,66 @@ const EMPTY_HVAL_ARRAY: readonly HVal[] = Object.freeze([])
  * @param paths The path to find.
  * @returns The values found.
  */
-function get(context: EvalContext, paths: string[]): readonly HVal[] {
+function get(
+	context: EvalContext<unknown>,
+	paths: string[]
+): readonly unknown[] {
 	if (!paths.length) {
-		return EMPTY_HVAL_ARRAY
+		return EMPTY_VALUE_ARRAY
 	}
 
-	const hvalue = context.dict.get(paths[0])
+	const adapter = getAdapter(context)
+	const value = adapter.get(context.dict, paths[0])
 
-	if (!hvalue) {
-		return EMPTY_HVAL_ARRAY
+	if (value === undefined || value === null) {
+		return EMPTY_VALUE_ARRAY
 	}
 
-	let hvalList: HVal[] = [hvalue]
+	let valueList: unknown[] = [value]
 
 	for (let i = 1; i < paths.length; ++i) {
-		const newHvalList: HVal[] = []
+		const newValueList: unknown[] = []
 
-		for (const hval of hvalList) {
-			if (valueIsKind<HDict>(hval, Kind.Dict)) {
+		for (const val of valueList) {
+			const dict = adapter.toDict(val)
+
+			if (dict !== undefined) {
 				// If a dict then simply look up a property.
-				const newHval = hval.get(paths[i])
+				const newVal = adapter.get(dict, paths[i])
 
-				if (newHval) {
-					newHvalList.push(newHval)
+				if (newVal !== undefined && newVal !== null) {
+					newValueList.push(newVal)
 				}
 			} else if (typeof context.resolve === 'function') {
-				if (valueIsKind<HRef>(hval, Kind.Ref)) {
+				const ref = adapter.toRef(val)
+
+				if (ref) {
 					// If the value is a ref then look up the record. Then
 					// resolve record before resolving the value from it.
-					const newHVal = context.resolve(hval)?.get(paths[i])
+					const resolved = context.resolve(ref)
+					const newVal =
+						resolved !== undefined
+							? adapter.get(resolved, paths[i])
+							: undefined
 
-					if (newHVal) {
-						newHvalList.push(newHVal)
+					if (newVal !== undefined && newVal !== null) {
+						newValueList.push(newVal)
 					}
-				} else if (valueIsKind<HList>(hval, Kind.List)) {
+				} else if (adapter.isKind(val, Kind.List)) {
 					// If the value is a ref list then iterate through each
 					// ref in the list.
-					for (const val of hval) {
-						if (valueIsKind<HRef>(val, Kind.Ref)) {
-							const newHVal = context.resolve(val)?.get(paths[i])
+					for (const item of adapter.iterate(val)) {
+						const itemRef = adapter.toRef(item)
 
-							if (newHVal) {
-								newHvalList.push(newHVal)
+						if (itemRef) {
+							const resolved = context.resolve(itemRef)
+							const newVal =
+								resolved !== undefined
+									? adapter.get(resolved, paths[i])
+									: undefined
+
+							if (newVal !== undefined && newVal !== null) {
+								newValueList.push(newVal)
 							}
 						}
 					}
@@ -168,14 +198,14 @@ function get(context: EvalContext, paths: string[]): readonly HVal[] {
 			}
 		}
 
-		hvalList = newHvalList
+		valueList = newValueList
 
-		if (!hvalList.length) {
+		if (!valueList.length) {
 			break
 		}
 	}
 
-	return hvalList
+	return valueList
 }
 
 /**
@@ -226,7 +256,7 @@ export interface Node {
 	 * @param context The evaluation context.
 	 * @returns the resultant evaluation.
 	 */
-	eval(context: EvalContext): boolean
+	eval(context: EvalContext<unknown>): boolean
 }
 
 /**
@@ -270,7 +300,7 @@ export abstract class ParentNode implements Node {
 		this.nodes.forEach((node: Node): void => node.accept(visitor))
 	}
 
-	abstract eval(context: EvalContext): boolean
+	abstract eval(context: EvalContext<unknown>): boolean
 }
 
 /**
@@ -318,7 +348,7 @@ export abstract class LeafNode implements Node {
 
 	acceptChildNodes(): void {}
 
-	abstract eval(context: EvalContext): boolean
+	abstract eval(context: EvalContext<unknown>): boolean
 }
 
 /**
@@ -345,7 +375,7 @@ export class CondOrNode extends ParentNode {
 		visitor.visitCondOr(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		for (const condAnd of this.$nodes) {
 			if (condAnd.eval(context)) {
 				return true
@@ -388,7 +418,7 @@ export class CondAndNode extends ParentNode {
 		visitor.visitCondAnd(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		if (this.$nodes.length) {
 			for (const node of this.$nodes) {
 				if (!node.eval(context)) {
@@ -425,7 +455,7 @@ export class ParensNode extends ParentNode {
 		visitor.visitParens(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		return this.$nodes[0].eval(context)
 	}
 }
@@ -454,7 +484,7 @@ export class HasNode extends LeafNode {
 		visitor.visitHas(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		return !!get(context, this.path.paths).length
 	}
 }
@@ -483,7 +513,7 @@ export class MissingNode extends LeafNode {
 		visitor.visitMissing(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
 		return !get(context, this.path.paths).length
 	}
 }
@@ -528,39 +558,40 @@ export class CmpNode extends LeafNode {
 		visitor.visitCmp(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
+		const adapter = getAdapter(context)
 		const value = this.val.value
 
 		for (const pathValue of get(context, this.path.paths)) {
-			if (pathValue.isKind(value.getKind())) {
+			if (adapter.isKind(pathValue, value.getKind())) {
 				switch (this.cmpOp.type) {
 					case TokenType.equals:
-						if (pathValue.equals(value)) {
+						if (adapter.equals(pathValue, value)) {
 							return true
 						}
 						break
 					case TokenType.notEquals:
-						if (!pathValue.equals(value)) {
+						if (!adapter.equals(pathValue, value)) {
 							return true
 						}
 						break
 					case TokenType.greaterThan:
-						if (pathValue.compareTo(value) === 1) {
+						if (adapter.compareTo(pathValue, value) === 1) {
 							return true
 						}
 						break
 					case TokenType.greaterThanOrEqual:
-						if (pathValue.compareTo(value) >= 0) {
+						if (adapter.compareTo(pathValue, value) >= 0) {
 							return true
 						}
 						break
 					case TokenType.lessThan:
-						if (pathValue.compareTo(value) === -1) {
+						if (adapter.compareTo(pathValue, value) === -1) {
 							return true
 						}
 						break
 					case TokenType.lessThanOrEqual:
-						if (pathValue.compareTo(value) <= 0) {
+						if (adapter.compareTo(pathValue, value) <= 0) {
 							return true
 						}
 						break
@@ -596,7 +627,12 @@ export class IsANode extends LeafNode {
 		visitor.visitIsA(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
+		// isa is only supported when evaluating against a real HDict/namespace.
+		if (!valueIsKind<HDict>(context.dict, Kind.Dict)) {
+			return false
+		}
+
 		const value = this.val.value as HSymbol
 		return !!context?.namespace?.reflect(context.dict)?.fits(value)
 	}
@@ -664,17 +700,30 @@ export class RelationshipNode extends LeafNode {
 		visitor.visitRelationship(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
+		// Relationships are only supported when evaluating against a real HDict/namespace.
+		if (!valueIsKind<HDict>(context.dict, Kind.Dict)) {
+			return false
+		}
+
 		const relName = this.rel.relationship
 		const relTerm = this.term?.value as HSymbol
 		const ref = this.ref?.value as HRef
+		const resolve = context.resolve
 
 		return !!context?.namespace?.hasRelationship({
 			subject: context.dict,
 			relName,
 			relTerm,
 			ref,
-			resolve: context?.resolve,
+			resolve: resolve
+				? (dictRef: HRef): HDict | undefined => {
+						const resolved = resolve(dictRef)
+						return valueIsKind<HDict>(resolved, Kind.Dict)
+							? resolved
+							: undefined
+				  }
+				: undefined,
 		})
 	}
 }
@@ -707,7 +756,8 @@ export class WildcardEqualsNode extends LeafNode {
 		visitor.visitWildcardEquals(this)
 	}
 
-	eval(context: EvalContext): boolean {
+	eval(context: EvalContext<unknown>): boolean {
+		const adapter = getAdapter(context)
 		const wcRef = this.ref.value as HRef
 		const paths = this.id.paths
 
@@ -717,12 +767,13 @@ export class WildcardEqualsNode extends LeafNode {
 		// Keep resolving until we find the reference we're looking.
 		// Please note, this is purposely short circuited to only use the first value.
 		// Therefore ref lists are not supported in this context.
-		let ref = get(context, paths)[0]
+		let rawRef = get(context, paths)[0]
+		let ref = adapter.toRef(rawRef)
 
 		let matched = false
 
-		while (valueIsKind<HRef>(ref, Kind.Ref)) {
-			if (ref.equals(wcRef)) {
+		while (ref) {
+			if (adapter.equals(ref, wcRef)) {
 				matched = true
 				break
 			}
@@ -736,8 +787,9 @@ export class WildcardEqualsNode extends LeafNode {
 
 				const dict = context.resolve(ref)
 
-				if (dict) {
-					ref = get({ ...context, dict }, paths)[0]
+				if (dict !== undefined) {
+					rawRef = get({ ...context, dict }, paths)[0]
+					ref = adapter.toRef(rawRef)
 				} else {
 					break
 				}

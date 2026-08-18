@@ -190,6 +190,37 @@ export function toKind(kind: string): Kind | undefined {
 }
 
 /**
+ * Classify the kind of a raw Hayson value without decoding/allocating it
+ * into a real `HVal`.
+ *
+ * @param val The raw Hayson value to classify.
+ * @returns The kind of the value or undefined if it's null/undefined.
+ */
+export function getHaysonValueKind(
+	val: HaysonVal | undefined
+): Kind | undefined {
+	if (val === null || val === undefined) {
+		return undefined
+	}
+
+	switch (typeof val) {
+		case 'string':
+			return Kind.Str
+		case 'number':
+			return Kind.Number
+		case 'boolean':
+			return Kind.Bool
+	}
+
+	if (Array.isArray(val)) {
+		return Kind.List
+	}
+
+	// Support new and old Hayson for classifying values.
+	return toKind((val as { _kind?: string })._kind ?? '') ?? Kind.Dict
+}
+
+/**
  * Returns a default haystack value for the kind.
  *
  * @param kind The haystack data type's kind.
