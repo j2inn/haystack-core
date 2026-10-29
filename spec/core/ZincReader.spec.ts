@@ -23,6 +23,7 @@ import { HList } from '../../src/core/list/HList'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HVal } from '../../src/core/HVal'
 import { readFile } from '../file'
+import { LocalizedError } from '../../src/util/LocalizedError'
 
 describe('ZincReader', function (): void {
 	function makeReader(input: string): ZincReader {
@@ -80,16 +81,26 @@ describe('ZincReader', function (): void {
 			})
 
 			it('throws an error for an invalid \\u{x} escape', function (): void {
-				for (const bad of [
-					'"\\u{}"',
-					'"\\u{1234567}"',
-					'"\\u{110000}"',
-					'"\\u{12G}"',
-					'"\\u{12',
+				for (const [bad, arg] of [
+					['"\\u{}"', ''],
+					['"\\u{1234567}"', '1234567'],
+					['"\\u{110000}"', '110000'],
+					['"\\u{12G}"', '12G'],
+					['"\\u{12"', '12'],
+					['"\\u{12', '12'],
 				]) {
-					expect((): void => {
+					let error: unknown
+					try {
 						makeReader(bad).readValue()
-					}).toThrow()
+					} catch (err) {
+						error = err
+					}
+
+					expect(error).toBeInstanceOf(LocalizedError)
+					expect((error as LocalizedError).lex).toBe(
+						'lexerInvalidUnicodeEscape'
+					)
+					expect((error as LocalizedError).args).toEqual({ arg })
 				}
 			})
 

@@ -10,6 +10,7 @@ import {
 	valueIsKind,
 	valueMatches,
 	TEXT_ENCODER,
+	toUnicodeEscape,
 } from './HVal'
 import { Node } from '../filter/Node'
 import { HGrid } from './grid/HGrid'
@@ -203,17 +204,8 @@ export class HStr implements HVal {
 						buf += '$'
 						break
 					default:
-						// Escape each UTF-16 code unit so characters above U+FFFF
-						// are written as a surrogate pair.
-						for (let i = 0; i < c.length; ++i) {
-							// Make sure we have four characters for the unicode sequence.
-							const seq = c
-								.charCodeAt(i)
-								.toString(16)
-								.padStart(4, '0')
-
-							buf += `${i > 0 ? '\\' : ''}u${seq}`
-						}
+						// The leading backslash has already been written.
+						buf += toUnicodeEscape(c).substring(1)
 				}
 			} else {
 				buf += c

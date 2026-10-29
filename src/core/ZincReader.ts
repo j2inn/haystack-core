@@ -382,9 +382,19 @@ export class ZincReader {
 			let esc = ''
 
 			while (!this.scanner.is('}')) {
-				esc += this.scanner.current ?? ''
+				if (!this.scanner.isHex()) {
+					// Only report the bad char if it's part of the escape.
+					throw this.invalidUnicodeEscape(
+						this.scanner.isEof() ||
+							this.scanner.is('"') ||
+							this.scanner.is('`')
+							? esc
+							: esc + this.scanner.current
+					)
+				}
 
-				if (!this.scanner.isHex() || esc.length > 6) {
+				esc += this.scanner.current
+				if (esc.length > 6) {
 					throw this.invalidUnicodeEscape(esc)
 				}
 				this.scanner.consume()
