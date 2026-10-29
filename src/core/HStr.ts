@@ -203,14 +203,17 @@ export class HStr implements HVal {
 						buf += '$'
 						break
 					default:
-						let seq = code.toString(16)
+						// Escape each UTF-16 code unit so characters above U+FFFF
+						// are written as a surrogate pair.
+						for (let i = 0; i < c.length; ++i) {
+							// Make sure we have four characters for the unicode sequence.
+							const seq = c
+								.charCodeAt(i)
+								.toString(16)
+								.padStart(4, '0')
 
-						// Make sure we have four characters for the unicode sequence.
-						while (seq.length < 4) {
-							seq = `0${seq}`
+							buf += `${i > 0 ? '\\' : ''}u${seq}`
 						}
-
-						buf += `u${seq}`
 				}
 			} else {
 				buf += c

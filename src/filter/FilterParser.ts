@@ -74,7 +74,7 @@ export const enum booleanOperators {
  * <unicodeChar> := any 16-bit Unicode char >= 0x20 (except str/uri quote)
  * <strEscChar>  := "\b" | "\f" | "\n" | "\r" | "\r" | "\t" | "\"" | "\\" | "\$" | <uEscChar>
  * <uriEscChar>  := "\:" | "\/" | "\?" | "\#" | "\[" | "\]" | "\@" | "\`" | "\\" | "\&" | "\=" | "\;" | <uEscChar>
- * <uEscChar>    := "\u" <hexDigit> <hexDigit> <hexDigit> <hexDigit>
+ * <uEscChar>    := "\u" <hexDigit> <hexDigit> <hexDigit> <hexDigit> | "\u{" <hexDigit>{1,6} "}"
  * <hexDigit>    := ('a'-'f') | ('A'-'F') | digit
  * <id>          :=  <alphaLo> (<alphaLo> | <alphaHi> | <digit> | '_')*
  * <alphaLo>     := ('a' - 'z')

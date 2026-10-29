@@ -61,6 +61,38 @@ describe('ZincReader', function (): void {
 				)
 			})
 
+			it('parse a \\u{x} unicode character', function (): void {
+				expect(makeReader('"Hell\\u{D3}"').readValue()).toEqual(
+					HStr.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} character above U+FFFF', function (): void {
+				expect(makeReader('"a\\u{1F600}b"').readValue()).toEqual(
+					HStr.make('a😀b')
+				)
+			})
+
+			it('parse the smallest and largest \\u{x} values', function (): void {
+				expect(makeReader('"\\u{0}\\u{10FFFF}"').readValue()).toEqual(
+					HStr.make('\u0000\u{10FFFF}')
+				)
+			})
+
+			it('throws an error for an invalid \\u{x} escape', function (): void {
+				for (const bad of [
+					'"\\u{}"',
+					'"\\u{1234567}"',
+					'"\\u{110000}"',
+					'"\\u{12G}"',
+					'"\\u{12',
+				]) {
+					expect((): void => {
+						makeReader(bad).readValue()
+					}).toThrow()
+				}
+			})
+
 			it('parse a line break', function (): void {
 				expect(makeReader('"Hell\\b"').readValue()).toEqual(
 					HStr.make('Hell\b')
@@ -124,6 +156,18 @@ describe('ZincReader', function (): void {
 			it('parse a unicode character', function (): void {
 				expect(makeReader('`Hell\\u00D3`').readValue()).toEqual(
 					HUri.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} unicode character', function (): void {
+				expect(makeReader('`Hell\\u{D3}`').readValue()).toEqual(
+					HUri.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} character above U+FFFF', function (): void {
+				expect(makeReader('`a\\u{1F600}b`').readValue()).toEqual(
+					HUri.make('a😀b')
 				)
 			})
 
