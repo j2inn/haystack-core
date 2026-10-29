@@ -10,6 +10,7 @@ import {
 	valueIsKind,
 	valueMatches,
 	TEXT_ENCODER,
+	toUnicodeEscape,
 } from './HVal'
 import { HaysonUri } from './hayson'
 import { Node } from '../filter/Node'
@@ -202,14 +203,8 @@ export class HUri implements HVal {
 						buf += '`'
 						break
 					default:
-						let seq = code.toString(16)
-
-						// Make sure we have four characters for the unicode sequence.
-						while (seq.length < 4) {
-							seq = `0${seq}`
-						}
-
-						buf += `u${seq}`
+						// The leading backslash has already been written.
+						buf += toUnicodeEscape(c).substring(1)
 				}
 			} else {
 				buf += c

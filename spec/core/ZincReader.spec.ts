@@ -23,6 +23,7 @@ import { HList } from '../../src/core/list/HList'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HVal } from '../../src/core/HVal'
 import { readFile } from '../file'
+import { LocalizedError } from '../../src/util/LocalizedError'
 
 describe('ZincReader', function (): void {
 	function makeReader(input: string): ZincReader {
@@ -59,6 +60,48 @@ describe('ZincReader', function (): void {
 				expect(makeReader('"Hell\\u00D3"').readValue()).toEqual(
 					HStr.make('HellÓ')
 				)
+			})
+
+			it('parse a \\u{x} unicode character', function (): void {
+				expect(makeReader('"Hell\\u{D3}"').readValue()).toEqual(
+					HStr.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} character above U+FFFF', function (): void {
+				expect(makeReader('"a\\u{1F600}b"').readValue()).toEqual(
+					HStr.make('a😀b')
+				)
+			})
+
+			it('parse the smallest and largest \\u{x} values', function (): void {
+				expect(makeReader('"\\u{0}\\u{10FFFF}"').readValue()).toEqual(
+					HStr.make('\u0000\u{10FFFF}')
+				)
+			})
+
+			it('throws an error for an invalid \\u{x} escape', function (): void {
+				for (const [bad, arg] of [
+					['"\\u{}"', ''],
+					['"\\u{1234567}"', '1234567'],
+					['"\\u{110000}"', '110000'],
+					['"\\u{12G}"', '12G'],
+					['"\\u{12"', '12'],
+					['"\\u{12', '12'],
+				]) {
+					let error: unknown
+					try {
+						makeReader(bad).readValue()
+					} catch (err) {
+						error = err
+					}
+
+					expect(error).toBeInstanceOf(LocalizedError)
+					expect((error as LocalizedError).lex).toBe(
+						'lexerInvalidUnicodeEscape'
+					)
+					expect((error as LocalizedError).args).toEqual({ arg })
+				}
 			})
 
 			it('parse a line break', function (): void {
@@ -124,6 +167,18 @@ describe('ZincReader', function (): void {
 			it('parse a unicode character', function (): void {
 				expect(makeReader('`Hell\\u00D3`').readValue()).toEqual(
 					HUri.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} unicode character', function (): void {
+				expect(makeReader('`Hell\\u{D3}`').readValue()).toEqual(
+					HUri.make('HellÓ')
+				)
+			})
+
+			it('parse a \\u{x} character above U+FFFF', function (): void {
+				expect(makeReader('`a\\u{1F600}b`').readValue()).toEqual(
+					HUri.make('a😀b')
 				)
 			})
 
