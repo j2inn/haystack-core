@@ -251,7 +251,7 @@ export class HUnit {
 	private static parseNumber(str: string): number {
 		const num = Number(str.trim())
 
-		if (isNaN(num) || typeof num !== 'number') {
+		if (Number.isNaN(num) || typeof num !== 'number') {
 			throw new Error(`Unable to convert '${str}' to a number`)
 		}
 

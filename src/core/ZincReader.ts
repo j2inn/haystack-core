@@ -400,8 +400,12 @@ export class ZincReader {
 				this.scanner.consume()
 			}
 
-			const codePoint = parseInt(esc, 16)
-			if (esc.length === 0 || codePoint > 0x10ffff) {
+			const codePoint = Number.parseInt(esc, 16)
+			if (
+				Number.isNaN(codePoint) ||
+				esc.length === 0 ||
+				codePoint > 0x10ffff
+			) {
 				throw this.invalidUnicodeEscape(esc)
 			}
 
@@ -418,7 +422,7 @@ export class ZincReader {
 				}
 			}
 
-			return String.fromCharCode(parseInt(esc, 16))
+			return String.fromCharCode(Number.parseInt(esc, 16))
 		} else {
 			throw new LocalizedError({
 				message: `Invalid escape sequence ${this.scanner.current}`,
@@ -533,7 +537,7 @@ export class ZincReader {
 			}
 
 			// If we have a number then attempt to parse it and throw any errors.
-			if (isNaN(Number(str))) {
+			if (Number.isNaN(Number(str))) {
 				throw new LocalizedError({
 					message: `Invalid number: ${str}`,
 					lex: 'lexerInvalidNumber',
@@ -661,7 +665,7 @@ export class ZincReader {
 
 		const num = Number(buf)
 
-		if (isNaN(num)) {
+		if (Number.isNaN(num)) {
 			throw new LocalizedError({
 				message: `Invalid decimal number ${buf}`,
 				lex: 'lexerInvalidDecimal',
