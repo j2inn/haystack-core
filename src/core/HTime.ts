@@ -80,7 +80,7 @@ export class HTime implements HVal {
 
 	private static toJsDate(value: string): Date {
 		const time = Date.parse('1970-01-01T' + value + 'Z')
-		if (isNaN(time)) {
+		if (Number.isNaN(time)) {
 			throw new Error(`Invalid Time format ${value}`)
 		}
 		return new Date(time)

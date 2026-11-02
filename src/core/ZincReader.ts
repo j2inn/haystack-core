@@ -329,6 +329,19 @@ export class ZincReader {
 	}
 
 	/**
+	 * @param esc The invalid escape characters.
+	 * @returns An error for an invalid unicode escape.
+	 */
+	private invalidUnicodeEscape(esc: string): LocalizedError {
+		return new LocalizedError({
+			message: `Invalid unicode escape ${esc}`,
+			lex: 'lexerInvalidUnicodeEscape',
+			args: { arg: esc },
+			index: this.scanner.index,
+		})
+	}
+
+	/**
 	 * Consume an escape sequence within a string.
 	 *
 	 * @returns The unescaped character.
@@ -362,7 +375,42 @@ export class ZincReader {
 			}
 		}
 
-		if (this.scanner.is('u')) {
+		if (this.scanner.is('u') && this.scanner.next === '{') {
+			// Handle \u{x} where x is 1 to 6 hex digits.
+			this.scanner.consume() // u
+			this.scanner.consume() // {
+			let esc = ''
+
+			while (!this.scanner.is('}')) {
+				if (!this.scanner.isHex()) {
+					// Only report the bad char if it's part of the escape.
+					throw this.invalidUnicodeEscape(
+						this.scanner.isEof() ||
+							this.scanner.is('"') ||
+							this.scanner.is('`')
+							? esc
+							: esc + this.scanner.current
+					)
+				}
+
+				esc += this.scanner.current
+				if (esc.length > 6) {
+					throw this.invalidUnicodeEscape(esc)
+				}
+				this.scanner.consume()
+			}
+
+			const codePoint = Number.parseInt(esc, 16)
+			if (
+				Number.isNaN(codePoint) ||
+				esc.length === 0 ||
+				codePoint > 0x10ffff
+			) {
+				throw this.invalidUnicodeEscape(esc)
+			}
+
+			return String.fromCodePoint(codePoint)
+		} else if (this.scanner.is('u')) {
 			let esc = ''
 
 			for (let i = 0; i < 4; ++i) {
@@ -370,16 +418,11 @@ export class ZincReader {
 				esc += this.scanner.current
 
 				if (!this.scanner.isHex()) {
-					throw new LocalizedError({
-						message: `Invalid unicode escape ${esc}`,
-						lex: 'lexerInvalidUnicodeEscape',
-						args: { arg: esc },
-						index: this.scanner.index,
-					})
+					throw this.invalidUnicodeEscape(esc)
 				}
 			}
 
-			return String.fromCharCode(parseInt(esc, 16))
+			return String.fromCharCode(Number.parseInt(esc, 16))
 		} else {
 			throw new LocalizedError({
 				message: `Invalid escape sequence ${this.scanner.current}`,
@@ -494,7 +537,7 @@ export class ZincReader {
 			}
 
 			// If we have a number then attempt to parse it and throw any errors.
-			if (isNaN(Number(str))) {
+			if (Number.isNaN(Number(str))) {
 				throw new LocalizedError({
 					message: `Invalid number: ${str}`,
 					lex: 'lexerInvalidNumber',
@@ -622,7 +665,7 @@ export class ZincReader {
 
 		const num = Number(buf)
 
-		if (isNaN(num)) {
+		if (Number.isNaN(num)) {
 			throw new LocalizedError({
 				message: `Invalid decimal number ${buf}`,
 				lex: 'lexerInvalidDecimal',

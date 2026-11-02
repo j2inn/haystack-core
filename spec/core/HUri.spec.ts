@@ -3,6 +3,7 @@
  */
 
 import { HUri } from '../../src/core/HUri'
+import { ZincReader } from '../../src/core/ZincReader'
 import { Kind } from '../../src/core/Kind'
 import { HGrid } from '../../src/core/grid/HGrid'
 import { HList } from '../../src/core/list/HList'
@@ -119,6 +120,15 @@ describe('HUri', function (): void {
 			const str =
 				'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 			expect(HUri.make(str).toZinc()).toBe('`' + str + '`')
+		})
+
+		it('encodes characters above U+FFFF as a surrogate pair', function (): void {
+			expect(HUri.make('a😀b').toZinc()).toBe('`a\\ud83d\\ude00b`')
+		})
+
+		it('round trips characters above U+FFFF', function (): void {
+			const uri = HUri.make('a😀b')
+			expect(ZincReader.readValue(uri.toZinc())).toEqual(uri)
 		})
 
 		it('encodes non-ascii characters to unicode', function (): void {

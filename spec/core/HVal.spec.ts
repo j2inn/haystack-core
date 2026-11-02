@@ -10,6 +10,7 @@ import {
 	valueEquals,
 	valueToZinc,
 	valueToAxon,
+	toUnicodeEscape,
 	HVal,
 } from '../../src/core/HVal'
 import { HBool } from '../../src/core/HBool'
@@ -104,4 +105,15 @@ describe('HVal', function (): void {
 			expect(valueToAxon(null)).toBe('null')
 		})
 	}) // .valueToAxon()
+
+	describe('.toUnicodeEscape()', function (): void {
+		it('returns a four digit escape', function (): void {
+			expect(toUnicodeEscape('\u0001')).toBe('\\u0001')
+			expect(toUnicodeEscape('ῶ')).toBe('\\u1ff6')
+		})
+
+		it('returns a surrogate pair for characters above U+FFFF', function (): void {
+			expect(toUnicodeEscape('😀')).toBe('\\ud83d\\ude00')
+		})
+	}) // .toUnicodeEscape()
 })

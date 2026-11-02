@@ -106,6 +106,12 @@ describe('FilterLexer', function (): void {
 				expect(token.toString()).toBe('HellÓ')
 			})
 
+			it('parse a \\u{x} unicode character', function (): void {
+				const token = makeLexer('"a\\u{1F600}b"').nextToken()
+				expect(token.type).toBe(TokenType.string)
+				expect(token.toString()).toBe('a😀b')
+			})
+
 			it('parse a line break', function (): void {
 				const token = makeLexer('"Hell\\b"').nextToken()
 				expect(token.type).toBe(TokenType.string)
@@ -182,6 +188,12 @@ describe('FilterLexer', function (): void {
 				const token = makeLexer('`Hell\\u00D3`').nextToken()
 				expect(token.type).toBe(TokenType.uri)
 				expect(token.toString()).toBe('HellÓ')
+			})
+
+			it('parse a \\u{x} unicode character', function (): void {
+				const token = makeLexer('`a\\u{1F600}b`').nextToken()
+				expect(token.type).toBe(TokenType.uri)
+				expect(token.toString()).toBe('a😀b')
 			})
 
 			it('throws an error for a missing tick', function (): void {

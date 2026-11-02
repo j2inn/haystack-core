@@ -237,7 +237,7 @@ export class HNum implements HVal {
 			return POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
 			return NEGATIVE_INFINITY_ZINC
-		} else if (isNaN(this.value)) {
+		} else if (Number.isNaN(this.value)) {
 			return NOT_A_NUMBER_ZINC
 		} else {
 			const value = this.value.toLocaleString(locale, {
@@ -291,7 +291,7 @@ export class HNum implements HVal {
 			return POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
 			return NEGATIVE_INFINITY_ZINC
-		} else if (isNaN(this.value)) {
+		} else if (Number.isNaN(this.value)) {
 			return NOT_A_NUMBER_ZINC
 		} else {
 			return this.#unitSymbol
@@ -380,7 +380,7 @@ export class HNum implements HVal {
 			val = POSITIVE_INFINITY_ZINC
 		} else if (this.value === Number.NEGATIVE_INFINITY) {
 			val = NEGATIVE_INFINITY_ZINC
-		} else if (isNaN(this.value)) {
+		} else if (Number.isNaN(this.value)) {
 			val = NOT_A_NUMBER_ZINC
 		} else {
 			val = this.value

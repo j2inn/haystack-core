@@ -124,6 +124,23 @@ export function valueToZinc(val: HVal | null): string {
 }
 
 /**
+ * Returns a character as a `\uXXXX` escape sequence.
+ *
+ * Characters above U+FFFF are returned as a surrogate pair of escapes
+ * so they can be read by older readers that don't support `\u{x}`.
+ *
+ * @param c The character to escape.
+ * @returns The escape sequence.
+ */
+export function toUnicodeEscape(c: string): string {
+	let esc = ''
+	for (let i = 0; i < c.length; ++i) {
+		esc += `\\u${c.charCodeAt(i).toString(16).padStart(4, '0')}`
+	}
+	return esc
+}
+
+/**
  * The Axon symbol for null
  */
 export const AXON_NULL = 'null'
