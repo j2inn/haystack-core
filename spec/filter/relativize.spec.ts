@@ -948,6 +948,293 @@ describe('haystack', () => {
 			})
 		}) // other refs
 
+		describe('anchor refs', () => {
+			let equip: HDict
+			let coordinator: HDict
+			let subEquip: HDict
+			let equipPoint: HDict
+			let coordinatorPoint: HDict
+			let subEquipPoint: HDict
+			let sitePoint: HDict
+			let otherEquip: HDict
+			let resolve: RelativizeResolveFunc
+
+			beforeEach(() => {
+				equip = new HDict({
+					id: HRef.make('equipId'),
+					dis: 'an equip',
+					equip: HMarker.make(),
+					siteRef: HRef.make('siteId'),
+					cooRef: HRef.make('cooId'),
+				})
+
+				coordinator = new HDict({
+					id: HRef.make('cooId'),
+					dis: 'a coordinator',
+					equip: HMarker.make(),
+					siteRef: HRef.make('siteId'),
+				})
+
+				subEquip = new HDict({
+					id: HRef.make('subEquipId'),
+					dis: 'a sub equip',
+					equip: HMarker.make(),
+					equipRef: HRef.make('cooId'),
+					siteRef: HRef.make('siteId'),
+				})
+
+				otherEquip = new HDict({
+					id: HRef.make('otherEquipId'),
+					dis: 'another equip',
+					equip: HMarker.make(),
+					siteRef: HRef.make('siteId'),
+				})
+
+				equipPoint = new HDict({
+					id: HRef.make('equipPointId'),
+					dis: 'equip point',
+					point: HMarker.make(),
+					equipRef: HRef.make('equipId'),
+				})
+
+				coordinatorPoint = new HDict({
+					id: HRef.make('cooPointId'),
+					dis: 'coordinator point',
+					point: HMarker.make(),
+					equipRef: HRef.make('cooId'),
+				})
+
+				subEquipPoint = new HDict({
+					id: HRef.make('subEquipPointId'),
+					dis: 'sub equip point',
+					point: HMarker.make(),
+					equipRef: HRef.make('subEquipId'),
+				})
+
+				sitePoint = new HDict({
+					id: HRef.make('sitePointId'),
+					dis: 'site point',
+					point: HMarker.make(),
+					equipRef: HRef.make('otherEquipId'),
+				})
+
+				const dicts = [equip, coordinator, subEquip, otherEquip]
+
+				resolve = async (ref: HRef) =>
+					dicts.find((dict) => dict.get<HRef>('id')?.equals(ref))
+			})
+
+			it('relativizes to the target id', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					equip,
+					equipPoint,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'equipRef == $id and dis == "equip point" and point'
+				)
+			})
+
+			it('relativizes to a record contained under another ref on the target', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					equip,
+					coordinatorPoint,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'equipRef == $cooRef and dis == "coordinator point" and point'
+				)
+			})
+
+			it('relativizes to a record nested under another ref on the target', async () => {
+				const result = await makeRelativeHaystackFilterForTarget(
+					equip,
+					subEquipPoint,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'equipRef->equipRef == $cooRef and dis == "sub equip point" and point and equipRef->dis == "a sub equip" and equipRef->equip'
+				)
+			})
+
+			it('gives the target id precedence over other refs', async () => {
+				const target = new HDict({
+					id: HRef.make('equipId'),
+					cooRef: HRef.make('equipId'),
+				})
+
+				const result = await makeRelativeHaystackFilterForTarget(
+					target,
+					equipPoint,
+					{ resolve }
+				)
+
+				expect(result).toBe(
+					'equipRef == $id and dis == "equip point" and point'
+				)
+			})
+
+			it('throws for a contained record when includeOtherRefs is false', async () => {
+				await expect(
+					makeRelativeHaystackFilterForTarget(
+						equip,
+						coordinatorPoint,
+						{
+							resolve,
+							includeOtherRefs: false,
+						}
+					)
+				).rejects.toThrow()
+			})
+
+			it('never automatically uses containment refs on the target', async () => {
+				await expect(
+					makeRelativeHaystackFilterForTarget(equip, sitePoint, {
+						resolve,
+					})
+				).rejects.toThrow()
+			})
+
+			it('excludes containment refs defined in the namespace', async () => {
+				const target = new HDict({
+					id: HRef.make('equipId'),
+					fooRef: HRef.make('cooId'),
+				})
+
+				const namespace = {
+					getContainmentRefs: () => [
+						HDict.make({ def: HSymbol.make('fooRef') }),
+					],
+				} as unknown as HNamespace
+
+				await expect(
+					makeRelativeHaystackFilterForTarget(
+						target,
+						coordinatorPoint,
+						{
+							resolve,
+							namespace,
+						}
+					)
+				).rejects.toThrow()
+			})
+
+			it('skips anchor names that are not refs', async () => {
+				await expect(
+					makeRelativeHaystackFilterForTarget(
+						equip,
+						coordinatorPoint,
+						{
+							resolve,
+							targetRefNames: ['dis'],
+						}
+					)
+				).rejects.toThrow()
+			})
+
+			describe('targetRefNames', () => {
+				it('uses a single ref name', async () => {
+					const result = await makeRelativeHaystackFilterForTarget(
+						equip,
+						coordinatorPoint,
+						{ resolve, targetRefNames: 'cooRef' }
+					)
+
+					expect(result).toBe(
+						'equipRef == $cooRef and dis == "coordinator point" and point'
+					)
+				})
+
+				it('replaces automatic discovery so id is not used unless listed', async () => {
+					await expect(
+						makeRelativeHaystackFilterForTarget(equip, equipPoint, {
+							resolve,
+							targetRefNames: 'cooRef',
+						})
+					).rejects.toThrow()
+				})
+
+				it('does not discover other refs that are not listed', async () => {
+					await expect(
+						makeRelativeHaystackFilterForTarget(
+							equip,
+							coordinatorPoint,
+							{ resolve, targetRefNames: ['id'] }
+						)
+					).rejects.toThrow()
+				})
+
+				it('uses the list in priority order', async () => {
+					const target = new HDict({
+						id: HRef.make('equipId'),
+						cooRef: HRef.make('equipId'),
+					})
+
+					const result = await makeRelativeHaystackFilterForTarget(
+						target,
+						equipPoint,
+						{ resolve, targetRefNames: ['cooRef', 'id'] }
+					)
+
+					expect(result).toBe(
+						'equipRef == $cooRef and dis == "equip point" and point'
+					)
+				})
+
+				it('falls back to automatic discovery for an empty list', async () => {
+					for (const targetRefNames of [[], '']) {
+						expect(
+							await makeRelativeHaystackFilterForTarget(
+								equip,
+								equipPoint,
+								{ resolve, targetRefNames }
+							)
+						).toBe(
+							'equipRef == $id and dis == "equip point" and point'
+						)
+
+						expect(
+							await makeRelativeHaystackFilterForTarget(
+								equip,
+								coordinatorPoint,
+								{ resolve, targetRefNames }
+							)
+						).toBe(
+							'equipRef == $cooRef and dis == "coordinator point" and point'
+						)
+					}
+				})
+
+				it('resolves both ids and other refs from a list', async () => {
+					const options = {
+						resolve,
+						targetRefNames: ['id', 'cooRef'],
+					}
+
+					expect(
+						await makeRelativeHaystackFilterForTarget(
+							equip,
+							equipPoint,
+							options
+						)
+					).toBe('equipRef == $id and dis == "equip point" and point')
+
+					expect(
+						await makeRelativeHaystackFilterForTarget(
+							equip,
+							coordinatorPoint,
+							options
+						)
+					).toBe(
+						'equipRef == $cooRef and dis == "coordinator point" and point'
+					)
+				})
+			})
+		}) // anchor refs
+
 		describe('options', () => {
 			let equip: HDict
 			let point: HDict

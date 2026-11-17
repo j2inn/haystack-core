@@ -116,57 +116,76 @@ export interface RelativizeForTargetOptions extends RelativizeOptions {
 	includeTargetMacro?: boolean
 
 	/**
-	 * True (or undefined) if other references on the target record should be included when relativizing.
+	 * True (or undefined) if other references on the target record should be automatically
+	 * discovered and used as anchors when relativizing.
 	 *
-	 * If this is false, only the containment references will be used to relativize the filter.
-	 * If this is true, other references on the target record will be used to relativize the filter
-	 * if they match the record being relativized.
+	 * The target's `id` is always tried first. If this is true, any other references on the
+	 * target that aren't containment references (i.e. `siteRef`, `equipRef` etc) are then
+	 * tried in turn. A record matches one of these anchors if it either...
+	 *
+	 * - Has the same reference value as the target (i.e. `cooRef == $cooRef`).
+	 * - Is contained under the referenced record (i.e. `equipRef == $cooRef`).
+	 *
+	 * If a namespace is specified, it's used to determine the containment references to exclude.
+	 *
+	 * This is ignored if `targetRefNames` is specified.
 	 */
 	includeOtherRefs?: boolean
+
+	/**
+	 * An optional explicit priority list of reference names on the target to use as
+	 * anchors for relativization (i.e. `['id', 'cooRef']`).
+	 *
+	 * When specified, this replaces automatic discovery and the names are used exactly
+	 * as given. If `id` should be used, it must be included in the list. An empty list
+	 * falls back to automatic discovery.
+	 */
+	targetRefNames?: string | string[]
 }
 
 /**
  * Make a relative haystack filter for a target record.
  *
- * The target record doesn't need to be the direct parent of
- * the record, but it must be an ancestor in the containment hierarchy.
+ * The target record doesn't need to be the direct parent of the record. The record
+ * must either be contained under the target or be reachable through one of the target's
+ * anchor references (see `includeOtherRefs` and `targetRefNames`).
  *
  * @param target The target record to set the relative filter for.
  * @param record The child record to make the relative filter for.
  * @param options The options for relativizing the filter.
  * @returns A promise that resolves to the relative haystack filter.
+ * @throws An error if the record can't be relativized to the target.
  */
 export async function makeRelativeHaystackFilterForTarget(
 	target: HDict,
 	record: HDict,
 	options?: RelativizeForTargetOptions
 ): Promise<string> {
-	let refMacroName = 'id'
+	const anchorRefNames = getAnchorRefNames(target, options)
 
-	// 1. Resolve a path to the target record using containment.
-	let dictPathInfo = await resolveDictPathForId(target, record, options)
+	let targetRefName = ''
+	let dictPathInfo: DictPathInfo | undefined
 
-	const includeOtherRefs = options?.includeOtherRefs ?? true
+	for (const refName of anchorRefNames) {
+		dictPathInfo = await resolvePathForAnchor(
+			target,
+			refName,
+			record,
+			options
+		)
 
-	// 2. If that can't be found then search through the target for other refs that could be used
-	// for relativization.
-	if (includeOtherRefs && !dictPathInfo) {
-		for (const refName of extractRefNamesFromTarget(target)) {
-			if (record.get<HRef>(refName)?.equals(target.get<HRef>(refName))) {
-				refMacroName = refName
-
-				dictPathInfo = {
-					dicts: [record],
-					path: [refName],
-				}
-
-				break
-			}
+		if (dictPathInfo) {
+			targetRefName = refName
+			break
 		}
 	}
 
 	if (!dictPathInfo) {
-		throw new Error('Could not resolve relative path for target record')
+		throw new Error(
+			`Could not resolve relative path for target record using refs: ${anchorRefNames.join(
+				', '
+			)}`
+		)
 	}
 
 	const includeTargetMacro = options?.includeTargetMacro ?? true
@@ -178,7 +197,7 @@ export async function makeRelativeHaystackFilterForTarget(
 	const builder = new HFilterBuilder()
 
 	const prefix = includeTargetMacro
-		? dictPathInfo.path.join('->') + ` == $${refMacroName} and `
+		? dictPathInfo.path.join('->') + ` == $${targetRefName} and `
 		: ''
 
 	for (let i = 0; i < dicts.length; ++i) {
@@ -202,19 +221,65 @@ interface DictPathInfo {
 	path: string[]
 }
 
-async function resolveDictPathForId(
+/**
+ * Return the ordered list of reference names on the target to use as anchors.
+ */
+function getAnchorRefNames(
 	target: HDict,
+	options?: RelativizeForTargetOptions
+): string[] {
+	const targetRefNames = [options?.targetRefNames ?? []]
+		.flat()
+		.filter((name) => !!name)
+
+	// An explicit list replaces automatic discovery.
+	if (targetRefNames.length) {
+		return targetRefNames
+	}
+
+	// Automatic discovery always gives the target's id precedence.
+	const includeOtherRefs = options?.includeOtherRefs ?? true
+
+	return [
+		'id',
+		...(includeOtherRefs
+			? extractRefNamesFromTarget(target, options?.namespace)
+			: []),
+	]
+}
+
+/**
+ * Attempt to resolve a path from the record to the anchor reference on the target.
+ */
+async function resolvePathForAnchor(
+	target: HDict,
+	refName: string,
 	record: HDict,
 	options?: RelativizeForTargetOptions
 ): Promise<DictPathInfo | undefined> {
-	// Follow the containment refs to build a tree of records
-	// with the target as the root.
-	const targetRef = target.get<HRef>('id')
+	const anchorRef = target.get(refName)
 
-	if (!targetRef) {
+	if (!valueIsKind<HRef>(anchorRef, Kind.Ref)) {
 		return undefined
 	}
 
+	// A record that shares the same reference as the target.
+	if (refName !== 'id' && record.get<HRef>(refName)?.equals(anchorRef)) {
+		return { dicts: [record], path: [refName] }
+	}
+
+	// A record that's contained under the referenced record.
+	return resolveContainedPath(anchorRef, record, options)
+}
+
+/**
+ * Follow the containment refs from the record until the anchor reference is found.
+ */
+async function resolveContainedPath(
+	anchorRef: HRef,
+	record: HDict,
+	options?: RelativizeForTargetOptions
+): Promise<DictPathInfo | undefined> {
 	let dictPathInfo: DictPathInfo | undefined = undefined
 	let currentRecord: HDict | undefined = record
 	let count = 0
@@ -239,7 +304,7 @@ async function resolveDictPathForId(
 		dictPathInfo.path.push(parentRefTag)
 
 		// If we're found the target ref we can stop traversing up the tree.
-		if (parentRef.equals(targetRef)) {
+		if (parentRef.equals(anchorRef)) {
 			break
 		}
 
@@ -300,10 +365,23 @@ const IGNORE_REF_NAMES = new Set([
 	'siteRef',
 ])
 
-function extractRefNamesFromTarget(target: HDict): string[] {
+/**
+ * Return the names of the non-containment references on the target record.
+ *
+ * If a namespace is specified, any containment references it defines are also excluded.
+ */
+function extractRefNamesFromTarget(
+	target: HDict,
+	namespace?: HNamespace
+): string[] {
+	const containmentRefNames = new Set(
+		namespace?.getContainmentRefs().map((def) => def.defName) ?? []
+	)
+
 	return target.keys.filter(
 		(key) =>
 			!IGNORE_REF_NAMES.has(key) &&
+			!containmentRefNames.has(key) &&
 			valueIsKind<HRef>(target.get(key), Kind.Ref)
 	)
 }
